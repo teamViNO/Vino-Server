@@ -74,7 +74,7 @@ jobs:
         with:
           aws_access_key: ${{secrets.AWS_ACTION_ACCESS_KEY_ID}}
           aws_secret_key: ${{secrets.AWS_ACTION_SECRET_ACCESS_KEY}}
-          application_name: vino-server-dev
+          application_name: Vino-server-dev
           environment_name: Vino-server-dev-env
           version_label: github-action-${{ steps.current-time.outputs.formattedTime }}  # version_label은 이전에 배포한 label과 중복되면 안됨!
           use_existing_version_if_available: true
