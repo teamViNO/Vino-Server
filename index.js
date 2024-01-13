@@ -9,6 +9,7 @@ import { response } from './config/response.js';
 import { BaseError } from './config/error.js';
 import { status } from './config/response.status.js';
 import { healthRoute } from './src/routes/health.route.js';
+import { videoRoute } from './src/routes/video.route.js';
 
 
 
@@ -27,16 +28,18 @@ app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형�
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 app.use('/health', healthRoute);
-
+app.use('/videos',videoRoute);
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
+
 
 // error handling
 app.use((req, res, next) => {
     const err = new BaseError(status.NOT_FOUND);
     next(err);
 });
+
 
 app.use((err, req, res, next) => {
     // 템플릿 엔진 변수 설정

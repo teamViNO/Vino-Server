@@ -1,0 +1,152 @@
+/videos/{userId}/{videoID}/{version}:
+  get:
+    tags:
+      - Video
+    summary: 영상 정보 상세 조회
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: videoID
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [original, revision]
+    responses:
+      '200':
+        description: 영상 정보 성공!
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  example: 200
+                isSuccess:
+                  type: boolean
+                  example: true
+                code:
+                  type: integer
+                  example: 2000
+                message:
+                  type: string
+                  example: "success!"
+                data:
+                  type: object
+                  example: {{
+  "video": {
+    "id": "1",
+    "title": "아파트 대표의 혁신적인 비용 절감 전략",
+    "link": "영상링크",
+    "created_at": "생성날짜",
+    "updated_at": "수정날짜",
+    "open_at": "읽은 날짜",
+    "subheading": [
+      {
+        "title": "낙엽 처리 비용 무료로 해결",
+        "start_time": "0",
+        "end_time": "7.96",
+        "content": "네 다음은 박인 아파트 대표가 일을 아주 잘 하신다고요 예 한 아파트 대표자가 낙엽 처리 비용을 중고 거래를 통해서 무료로 해결해서 화제가 되고 있습니다."
+      },
+      {
+        "title": "농작물에 활용되는 친환경 낙엽 처리",
+        "start_time": "9.92",
+        "end_time": "49.36",
+        "content": "지난 5일 소셜 미디어 이용자 씨는 내가 사는 이번 아파트 대표자 진짜 아파트 운영에 인생을 걸었나 보다라는 아파트에 붙은 안내문을 사진 찍어서 올렸는데요. 이 안내문에는 전년과 비교해 겨울철 발생하는 낙엽을 어떻게 처리했는지 적혀 있습니다. 아파트 측은 중고거래 플랫폼을 이용해서 낙엽을 무상으로 농작물을 운영하는 사람에게 제공하여 처리비를 지급하지 않아 관리비를 절감했습니다."
+      },
+      {
+        "title": "페인트 작업 90% 비용 절감",
+        "start_time": "61.079",
+        "end_time": "69.159",
+        "content": "아파트 대표자는 낙엽 처리 뿐만 아니라 이전에는 도로 선 긋는 거 업체에 의뢰하면 660만 원이 들었던 작업을 페인트만 사서 자체 작업으로 진행하여 비용을 90% 절감했다고 밝혔습니다."
+      },
+      {
+        "title": "자체 작업의 경제성과 환경 친화성",
+        "start_time": "69.159",
+        "end_time": "71.6",
+        "content": "페인트 작업 뿐만 아니라 자체 작업을 통한 비용 절감은 아파트에 농작물에서 사용되는 퇴비로 낙엽을 활용하고, 친환경적인 결과를 가져오며, 효율적인 경제성과 환경 친화성을 동시에 이끌어내었습니다."
+      },
+      {
+        "title": "전략적인 비용 절감으로 아파트 운영 혁신",
+        "start_time": "82.24",
+        "end_time": "82.24",
+        "content": "아파트 대표자의 전략적인 비용 절감은 운영 비용을 효과적으로 줄이고, 동시에 환경 친화적인 방향으로 나아가며 아파트 운영에서 혁신적인 전환을 이루고 있습니다."
+      }
+    ],
+    "summary": [
+      {
+        "content": "아파트 대표가 중고 거래를 활용하여 낙엽 처리 비용을 무료로 해결하는 혁신적인 전략 소개."
+      },
+      {
+        "content": "아파트에서 발생한 낙엽을 중고거래 플랫폼을 통해 농작물에 무상으로 제공하여 처리비를 아낀 친환경적인 실천 사례 소개."
+      },
+      {
+        "content": "아파트 대표자가 자체 작업으로 페인트 작업을 진행하여 비용을 90% 절감한 사례 소개."
+      },
+      {
+        "content": "자체 작업을 통한 경제성과 환경 친화성의 중요성과 효과적인 실천 사례 소개."
+      },
+      {
+        "content": "아파트 대표의 전략적인 비용 절감이 아파트 운영에서 혁신적인 변화를 이끌어내는 사례 소개."
+      }
+    ],
+    "tag": [
+      {
+        "name": "아파트 운영"
+      },
+      {
+        "name": "비용 절감"
+      },
+      {
+        "name": "친환경"
+      }
+    ]
+  }
+}}  # 영상 정보 객체
+      '400':
+        description: 잘못된 요청
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  example: 400
+                isSuccess:
+                  type: boolean
+                  example: false
+                code:
+                  type: integer
+                  example: COMMON001
+                message:
+                  type: string
+                  example: 잘못된 요청입니다
+      '500':
+        description: 서버 에러
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+                  example: 500
+                isSuccess:
+                  type: boolean
+                  example: false
+                code:
+                  type: integer
+                  example: COMMON000
+                message:
+                  type: string
+                  example: 서버 에러, 관리자에게 문의 바랍니다.
