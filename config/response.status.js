@@ -33,4 +33,7 @@ export const status = {
 
     // paging err
 
+    //video error
+    VIDEO_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "MEMBER4003", "message": "이미 동일한 링크로 생성이 되어있습니다."},
+
 };

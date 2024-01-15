@@ -10,6 +10,7 @@ import { BaseError } from './config/error.js';
 import { status } from './config/response.status.js';
 import { healthRoute } from './src/routes/health.route.js';
 import { videoRoute } from './src/routes/video.route.js';
+import { s3Router } from './src/routes/s3.route.js';
 
 
 
@@ -29,6 +30,8 @@ app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 
 app.use('/health', healthRoute);
 app.use('/videos',videoRoute);
+app.use('/images',s3Router);
+
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
