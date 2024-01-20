@@ -10,7 +10,6 @@ export const getCategoryResponseDTO = (category) => {
     "userId": category.user_id,
     "topCategory": category.top_category
     };
-   
 }
 
 // 카테고리 추가
@@ -20,14 +19,13 @@ export const addCategoryRequestDTO = (category) => {
         "userID": category.params.userID,
     };
 };
-export const addCategoryResponseDTO = (category) => {
+
+// 카테고리 수정
+export const renameCategoryRequestDTO = (category) => {
     return {
-        "id": category.id,
-        "name": category.name,
-        "is_fix": category.is_fix,
-        "fixed_at": category.fixed_at,
-        "userId": category.user_id,
-        "top_category": category.top_category,
+        "name": category.body.name,
+        "userID": category.params.userID,
+        "categoryID": category.params.categoryID,
     };
 };
 

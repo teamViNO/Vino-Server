@@ -2,8 +2,8 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { addCategoryResponseDTO,getCategoryResponseDTO } from "../dtos/category.dto.js";
-import { addCategoryDAO,getCategoryDAO } from "../models/category.dao.js"
+import { getCategoryResponseDTO } from "../dtos/category.dto.js";
+import { addCategoryDAO,getCategoryDAO,renameCategoryDAO } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -28,5 +28,12 @@ export const addCategoryService = async (requestDTO) => {
     };
     const result = await addCategoryDAO(categoryData);
     console.log('데이터:',categoryData);
-    return addCategoryResponseDTO(result);
+    return getCategoryResponseDTO(result);
 }
+
+// 카테고리 수정 => result가 null인 것도 해결해야 함
+export const renameCategoryService = async (requestDTO) => {
+    console.log("서비스 요청 정보", requestDTO);
+    const result = await renameCategoryDAO(requestDTO);
+    return getCategoryResponseDTO(result);
+};
