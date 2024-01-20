@@ -48,3 +48,19 @@ export const renameCategoryDAO = async (req) => {
     }
 };
 
+// 카테고리 상단 고정
+export const fixCategoryDAO = async (categoryData) => {
+    try {
+        const conn = await pool.getConnection();
+        const [result] = await pool.query(
+            "UPDATE category SET is_fix = 1, fixed_at = NOW() WHERE id = ? and user_id = ?;",
+            [categoryData.categoryID, categoryData.userID]
+        );
+        conn.release();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+

@@ -2,8 +2,8 @@
 
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { addCategoryService,getCategoryService,renameCategoryService } from "../services/category.service.js";
-import { addCategoryRequestDTO,renameCategoryRequestDTO } from "../dtos/category.dto.js";
+import { addCategoryService,getCategoryService,renameCategoryService,fixCategoryService  } from "../services/category.service.js";
+import { addCategoryRequestDTO,renameCategoryRequestDTO,fixCategoryRequestDTO  } from "../dtos/category.dto.js";
 
 // 카테고리 조회
 export const getCategoryData= async (req, res) => {
@@ -36,6 +36,19 @@ export const renameCategoryData = async (req, res) => {
         console.log("카테고리 이름 수정 요청");
         const requestDTO = renameCategoryRequestDTO(req);
         const result = await renameCategoryService(requestDTO);
+
+        res.send(response(status.SUCCESS, result));
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// 카테고리 상단 고정
+export const fixCategoryData = async (req, res, next) => {
+    try {
+        console.log("카테고리 상단 고정 요청");
+        const requestDTO = fixCategoryRequestDTO(req);
+        const result = await fixCategoryService(requestDTO);
 
         res.send(response(status.SUCCESS, result));
     } catch (error) {

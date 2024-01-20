@@ -3,7 +3,7 @@
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import { getCategoryResponseDTO } from "../dtos/category.dto.js";
-import { addCategoryDAO,getCategoryDAO,renameCategoryDAO } from "../models/category.dao.js"
+import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,fixCategoryDAO  } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -36,4 +36,15 @@ export const renameCategoryService = async (requestDTO) => {
     console.log("서비스 요청 정보", requestDTO);
     const result = await renameCategoryDAO(requestDTO);
     return getCategoryResponseDTO(result);
+};
+
+// 카테고리 상단 고정
+export const fixCategoryService = async (requestDTO) => {
+    try {
+        console.log("서비스 요청 정보", requestDTO);
+        const result = await fixCategoryDAO(requestDTO);
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
 };

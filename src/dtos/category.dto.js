@@ -29,3 +29,10 @@ export const renameCategoryRequestDTO = (category) => {
     };
 };
 
+// 카테고리 상단 고정
+export const fixCategoryRequestDTO = (category) => {
+    return {
+        "userID": category.params.userID,
+        "categoryID": category.params.categoryID,
+    };
+};
