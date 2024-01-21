@@ -22,7 +22,7 @@ export const addCategory2RequestDTO = (category) => {
     return {
         "name": category.body.name,
         "userID": category.params.userID,
-        "categoryID":category.params.categoryID
+        "categoryID":category.params.topCategoryID
     };
 };
 

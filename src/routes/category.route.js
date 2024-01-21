@@ -16,7 +16,7 @@ categoryRoute.post('/:userID/add', async(req,res) => {
 })
 
 // 하위 카테고리 추가
-categoryRoute.post('/:userID/:categoryID/add', async(req,res) => {
+categoryRoute.post('/:userID/:topCategoryID/add', async(req,res) => {
     const result = await addCategory2Data(req,res);
 })
 

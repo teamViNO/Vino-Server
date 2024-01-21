@@ -30,12 +30,12 @@ export const addCategory1Service = async (data) => {
 // 하위 카테고리 추가 => result가 null인 것도 해결해야 함
 export const addCategory2Service = async (data) => {
     const id = Math.floor(Math.random() * 1000000); // id 랜덤 생성 -> 나중에 수정
-    const top_category = data.categoryID;
+    const top_category = data.categoryID
     const categoryData = {
         id,
         name : data.name,
         user_id : data.userID,
-        top_category : data.categoryID
+        top_category
     };
     const result = await addCategory2DAO(categoryData);
     console.log('데이터:',categoryData);
