@@ -18,12 +18,12 @@ export const getCategoryDAO=async (userID) => {
 };
 
 // 카테고리 추가
-export const addCategoryDAO=async (req) =>{
+export const addCategory1DAO=async (req) =>{
     try{
         const conn =await pool.getConnection();
         const result = await pool.query(
-        "insert into category(name, is_fix, fixed_at, user_id, top_category) values(?,?,?,?,?);",
-        [req.name, req.is_fix, req.fixed_at, req.user_id, req.top_category]);
+        "insert into category(name, user_id, top_category) values(?,?,?);",
+        [req.name, req.user_id, req.top_category]);
         conn.release();
         return result;
     }catch(err){
@@ -48,23 +48,7 @@ export const renameCategoryDAO = async (req) => {
     }
 };
 
-// 카테고리 상단 고정/해제
-export const fixCategoryDAO = async (req) => {
-    try {
-        const conn = await pool.getConnection();
-        const [result] = await pool.query(
-            "UPDATE category SET is_fix = 1, fixed_at = NOW() WHERE id = ? and user_id = ?;",
-            [req.categoryID, req.userID]
-        );
-        conn.release();
-        return result;
-    } catch (err) {
-        console.error(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
-    }
-};
-
-// 카테고리 삭제
+// 카테고리 삭제 
 export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();

@@ -5,20 +5,26 @@ export const getCategoryResponseDTO = (category) => {
     return {
     "id": category.id,
     "name": category.name,
-    "isFix": category.is_fix,
-    "fixedAt": category.fixed_at,
-    "userId": category.user_id,
     "topCategory": category.top_category
     };
 }
 
-// 카테고리 추가
-export const addCategoryRequestDTO = (category) => {
+// 상위 카테고리 추가
+export const addCategory1RequestDTO = (category) => {
     return {
         "name": category.body.name,
         "userID": category.params.userID,
     };
 };
+
+// 하위 카테고리 추가
+// export const addCategoryRequest2DTO = (category) => {
+//     return {
+//         "name": category.body.name,
+//         "userID": category.params.userID,
+//         "categoryID":category.params.categoryID
+//     };
+// };
 
 // 카테고리 수정
 export const renameCategoryRequestDTO = (category) => {
@@ -26,15 +32,6 @@ export const renameCategoryRequestDTO = (category) => {
         "name": category.body.name,
         "userID": category.params.userID,
         "categoryID": category.params.categoryID,
-    };
-};
-
-// 카테고리 상단 고정/해제
-export const fixCategoryRequestDTO = (category) => {
-    return {
-        "userID": category.params.userID,
-        "categoryID": category.params.categoryID,
-        "is_fix": category.is_fix,
     };
 };
 

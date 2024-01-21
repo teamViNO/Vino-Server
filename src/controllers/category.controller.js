@@ -2,8 +2,8 @@
 
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { addCategoryService,getCategoryService,renameCategoryService,fixCategoryService, deleteCategoryService   } from "../services/category.service.js";
-import { addCategoryRequestDTO,renameCategoryRequestDTO,fixCategoryRequestDTO,deleteCategoryRequestDTO  } from "../dtos/category.dto.js";
+import {addCategory1Service,getCategoryService,renameCategoryService,deleteCategoryService} from "../services/category.service.js";
+import {addCategory1RequestDTO,renameCategoryRequestDTO,deleteCategoryRequestDTO} from "../dtos/category.dto.js";
 
 // 카테고리 조회
 export const getCategoryData= async (req, res) => {
@@ -18,18 +18,31 @@ export const getCategoryData= async (req, res) => {
     }
 }
 
-// 카테고리 추가
-export const addCategoryData= async (req,res,next)=>{
+// 상위 카테고리 추가
+export const addCategory1Data= async (req,res,next)=>{
     try{
-        console.log("카테고리 추가 요청");
-        const data = addCategoryRequestDTO(req);
+        console.log("상위 카테고리 추가 요청");
+        const data = addCategory1RequestDTO(req);
         console.log("컨트롤러 요청정보",data);
-        const result = await addCategoryService(data);
+        const result = await addCategory1Service(data);
         res.send(response(status.SUCCESS, result));
     } catch(error){
         console.error(error);
     }
 }
+
+// 하위 카테고리 추가
+// export const addCategory2Data= async (req,res,next)=>{
+//     try{
+//         console.log("하위 카테고리 추가 요청");
+//         const data = addCategory2RequestDTO(req);
+//         console.log("컨트롤러 요청정보",data);
+//         const result = await addCategory2Service(data);
+//         res.send(response(status.SUCCESS, result));
+//     } catch(error){
+//         console.error(error);
+//     }
+// }
 
 // 카테고리 수정
 export const renameCategoryData = async (req, res) => {
@@ -38,19 +51,6 @@ export const renameCategoryData = async (req, res) => {
         const data = renameCategoryRequestDTO(req);
         console.log("컨트롤러 요청정보",data);
         const result = await renameCategoryService(data);
-        res.send(response(status.SUCCESS, result));
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-// 카테고리 상단 고정/해제
-export const fixCategoryData = async (req, res, next) => {
-    try {
-        console.log("카테고리 상단 고정/해제 요청");
-        const data = fixCategoryRequestDTO(req);
-        console.log("컨트롤러 요청정보",data);
-        const result = await fixCategoryService(data);
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
