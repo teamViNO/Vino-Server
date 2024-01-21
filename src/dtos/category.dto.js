@@ -42,3 +42,12 @@ export const deleteCategoryRequestDTO = (category) => {
         "categoryID": category.params.categoryID
     };
 };
+
+// 카테고리 이동 (하위 -> 하위)
+export const moveCategoryRequestDTO = (category) => {
+    return {
+        "userID": category.params.userID,
+        "categoryID": category.params.categoryID,
+        "topCategoryID": category.params.topCategoryID,
+    };
+};

@@ -75,3 +75,19 @@ export const deleteCategoryDAO = async (req) => {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
+
+// 카테고리 이동 (하위 -> 하위)
+export const moveCategoryDAO = async (data) => {
+    try {
+        const conn = await pool.getConnection();
+        const result = await pool.query(
+            "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
+            [data.topCategoryID, data.categoryID, data.userID]
+        );
+        conn.release();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
