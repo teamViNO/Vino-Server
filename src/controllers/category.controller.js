@@ -2,8 +2,8 @@
 
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import {addCategory1Service,getCategoryService,renameCategoryService,deleteCategoryService} from "../services/category.service.js";
-import {addCategory1RequestDTO,renameCategoryRequestDTO,deleteCategoryRequestDTO} from "../dtos/category.dto.js";
+import {addCategory1Service,addCategory2Service,getCategoryService,renameCategoryService,deleteCategoryService} from "../services/category.service.js";
+import {addCategory1RequestDTO,addCategory2RequestDTO,renameCategoryRequestDTO,deleteCategoryRequestDTO} from "../dtos/category.dto.js";
 
 // 카테고리 조회
 export const getCategoryData= async (req, res) => {
@@ -32,17 +32,17 @@ export const addCategory1Data= async (req,res,next)=>{
 }
 
 // 하위 카테고리 추가
-// export const addCategory2Data= async (req,res,next)=>{
-//     try{
-//         console.log("하위 카테고리 추가 요청");
-//         const data = addCategory2RequestDTO(req);
-//         console.log("컨트롤러 요청정보",data);
-//         const result = await addCategory2Service(data);
-//         res.send(response(status.SUCCESS, result));
-//     } catch(error){
-//         console.error(error);
-//     }
-// }
+export const addCategory2Data= async (req,res,next)=>{
+    try{
+        console.log("하위 카테고리 추가 요청");
+        const data = addCategory2RequestDTO(req);
+        console.log("컨트롤러 요청정보",data);
+        const result = await addCategory2Service(data);
+        res.send(response(status.SUCCESS, result));
+    } catch(error){
+        console.error(error);
+    }
+}
 
 // 카테고리 수정
 export const renameCategoryData = async (req, res) => {

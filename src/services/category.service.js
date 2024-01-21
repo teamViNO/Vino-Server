@@ -2,8 +2,8 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { getCategoryResponseDTO} from "../dtos/category.dto.js";
-import { addCategory1DAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO  } from "../models/category.dao.js"
+import { getCategoryResponseDTO } from "../dtos/category.dto.js";
+import { addCategory1DAO,addCategory2DAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -30,17 +30,14 @@ export const addCategory1Service = async (data) => {
 // 하위 카테고리 추가 => result가 null인 것도 해결해야 함
 export const addCategory2Service = async (data) => {
     const id = Math.floor(Math.random() * 1000000); // id 랜덤 생성 -> 나중에 수정
-    const is_fix = 0;
-    const fixed_at = null;
+    const top_category = data.categoryID;
     const categoryData = {
         id,
         name : data.name,
-        is_fix,
-        fixed_at,
         user_id : data.userID,
-        top_category : data.c
+        top_category : data.categoryID
     };
-    const result = await addCategoryDAO(categoryData);
+    const result = await addCategory2DAO(categoryData);
     console.log('데이터:',categoryData);
     return getCategoryResponseDTO(result);
 }

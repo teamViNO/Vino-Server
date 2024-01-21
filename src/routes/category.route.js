@@ -1,7 +1,7 @@
 //category.route.js
 
 import express from "express";
-import {getCategoryData,addCategory1Data,renameCategoryData, deleteCategoryData} from "../controllers/category.controller.js";
+import {getCategoryData,addCategory1Data,addCategory2Data,renameCategoryData, deleteCategoryData} from "../controllers/category.controller.js";
 
 export const categoryRoute = express.Router();
 
@@ -16,9 +16,9 @@ categoryRoute.post('/:userID/add', async(req,res) => {
 })
 
 // 하위 카테고리 추가
-//categoryRoute.post('/:userID/:categoryID/add', async(req,res) => {
-//    const result = await addCategory2Data(req,res);
-//})
+categoryRoute.post('/:userID/:categoryID/add', async(req,res) => {
+    const result = await addCategory2Data(req,res);
+})
 
 // 카테고리 수정
 categoryRoute.put('/:userID/:categoryID/rename', async (req,res) => {

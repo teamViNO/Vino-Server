@@ -17,8 +17,23 @@ export const getCategoryDAO=async (userID) => {
     }
 };
 
-// 카테고리 추가
+// 상위 카테고리 추가
 export const addCategory1DAO=async (req) =>{
+    try{
+        const conn =await pool.getConnection();
+        const result = await pool.query(
+        "insert into category(name, user_id, top_category) values(?,?,?);",
+        [req.name, req.user_id, req.top_category]);
+        conn.release();
+        return result;
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+
+// 하위 카테고리 추가
+export const addCategory2DAO=async (req) =>{
     try{
         const conn =await pool.getConnection();
         const result = await pool.query(

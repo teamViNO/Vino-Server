@@ -18,13 +18,13 @@ export const addCategory1RequestDTO = (category) => {
 };
 
 // 하위 카테고리 추가
-// export const addCategoryRequest2DTO = (category) => {
-//     return {
-//         "name": category.body.name,
-//         "userID": category.params.userID,
-//         "categoryID":category.params.categoryID
-//     };
-// };
+export const addCategory2RequestDTO = (category) => {
+    return {
+        "name": category.body.name,
+        "userID": category.params.userID,
+        "categoryID":category.params.categoryID
+    };
+};
 
 // 카테고리 수정
 export const renameCategoryRequestDTO = (category) => {
