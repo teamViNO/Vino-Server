@@ -37,3 +37,11 @@ export const fixCategoryRequestDTO = (category) => {
         "is_fix": category.is_fix,
     };
 };
+
+// 카테고리 삭제
+export const deleteCategoryRequestDTO = (category) => {
+    return {
+        "userID": category.params.userID,
+        "categoryID": category.params.categoryID
+    };
+};

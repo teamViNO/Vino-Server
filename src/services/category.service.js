@@ -3,7 +3,7 @@
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import { getCategoryResponseDTO} from "../dtos/category.dto.js";
-import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,fixCategoryDAO  } from "../models/category.dao.js"
+import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,fixCategoryDAO,deleteCategoryDAO  } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -44,3 +44,10 @@ export const fixCategoryService = async (data) => {
     const result = await fixCategoryDAO(data);
     return getCategoryResponseDTO(result);
 };
+
+// 카테고리 삭제
+export const deleteCategoryService = async (data) => {
+    console.log("서비스 요청 정보", data);
+    const result = await deleteCategoryDAO(data);
+    return getCategoryResponseDTO(result);
+}

@@ -2,8 +2,8 @@
 
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { addCategoryService,getCategoryService,renameCategoryService,fixCategoryService  } from "../services/category.service.js";
-import { addCategoryRequestDTO,renameCategoryRequestDTO,fixCategoryRequestDTO  } from "../dtos/category.dto.js";
+import { addCategoryService,getCategoryService,renameCategoryService,fixCategoryService, deleteCategoryService   } from "../services/category.service.js";
+import { addCategoryRequestDTO,renameCategoryRequestDTO,fixCategoryRequestDTO,deleteCategoryRequestDTO  } from "../dtos/category.dto.js";
 
 // 카테고리 조회
 export const getCategoryData= async (req, res) => {
@@ -52,6 +52,19 @@ export const fixCategoryData = async (req, res, next) => {
         console.log("컨트롤러 요청정보",data);
         const result = await fixCategoryService(data);
         res.send(response(status.SUCCESS, result));
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// 카테고리 삭제
+export const deleteCategoryData = async (req, res) => {
+    try {
+        console.log("카테고리 삭제 요청");
+        const data = deleteCategoryRequestDTO(req);
+        console.log("컨트롤러 요청정보",data);
+        const result = await deleteCategoryService(data);
+        res.send(result);
     } catch (error) {
         console.error(error);
     }
