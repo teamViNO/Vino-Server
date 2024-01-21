@@ -9,9 +9,10 @@ import { addCategoryRequestDTO,renameCategoryRequestDTO,fixCategoryRequestDTO  }
 export const getCategoryData= async (req, res) => {
     try {
         console.log("카테고리 정보 조회 요청");
-        const data = req.params.userID; //req.params.userID로
+        const data = req.params.userID;
         console.log("컨트롤러 요청정보",data);
-        res.send(response(status.SUCCESS, await getCategoryService(data)));
+        const result = await getCategoryService(data)
+        res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
     }
@@ -21,9 +22,9 @@ export const getCategoryData= async (req, res) => {
 export const addCategoryData= async (req,res,next)=>{
     try{
         console.log("카테고리 추가 요청");
-        const requestDTO = addCategoryRequestDTO(req);
-        const result = await addCategoryService(requestDTO);
-
+        const data = addCategoryRequestDTO(req);
+        console.log("컨트롤러 요청정보",data);
+        const result = await addCategoryService(data);
         res.send(response(status.SUCCESS, result));
     } catch(error){
         console.error(error);
@@ -34,22 +35,22 @@ export const addCategoryData= async (req,res,next)=>{
 export const renameCategoryData = async (req, res) => {
     try {
         console.log("카테고리 이름 수정 요청");
-        const requestDTO = renameCategoryRequestDTO(req);
-        const result = await renameCategoryService(requestDTO);
-
+        const data = renameCategoryRequestDTO(req);
+        console.log("컨트롤러 요청정보",data);
+        const result = await renameCategoryService(data);
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
     }
 };
 
-// 카테고리 상단 고정
+// 카테고리 상단 고정/해제
 export const fixCategoryData = async (req, res, next) => {
     try {
-        console.log("카테고리 상단 고정 요청");
-        const requestDTO = fixCategoryRequestDTO(req);
-        const result = await fixCategoryService(requestDTO);
-
+        console.log("카테고리 상단 고정/해제 요청");
+        const data = fixCategoryRequestDTO(req);
+        console.log("컨트롤러 요청정보",data);
+        const result = await fixCategoryService(data);
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);

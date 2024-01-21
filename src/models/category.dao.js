@@ -48,7 +48,7 @@ export const renameCategoryDAO = async (req) => {
     }
 };
 
-// 카테고리 상단 고정
+// 카테고리 상단 고정/해제
 export const fixCategoryDAO = async (categoryData) => {
     try {
         const conn = await pool.getConnection();
