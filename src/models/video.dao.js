@@ -1,9 +1,14 @@
 import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag} from "../models/video.sql.js"
+import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql} from "../models/video.sql.js"
 
 
+
+export const setReadTime=async(data,time)=>{
+    const conn =await pool.getConnection();
+    const [video] =await pool.query(setTimeSql,[time,data.videoID]);
+}
 export const getVideo=async (req) =>{
     try {
         console.log("dao에서 받아온 정보",req);
@@ -110,4 +115,50 @@ export const setTag=async (tag)=>{
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
+export const updateSummary=async (summary)=>{
+    try{
+        const conn = await pool.getConnection();
+        const summaryData= await pool.query(updateSummarySql,[summary.content,summary.id,summary.video_id]);
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+export const updateSubheading=async (subheading)=>{
+    try{
+        const conn = await pool.getConnection();
+        const subheadingData= await pool.query(updateSubheadingSql,[subheading.name,subheading.content,subheading.id,subheading.video_id,]);
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+export const updateVideo=async (video)=>{
+    try{
+        console.log("비디오",video);
+        const conn = await pool.getConnection();
+        const videoData= await pool.query(updateVideoSql,[video.title,video.readed_at,video.updated_at,video.category_id,video.id]);
+        return video.id;
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const dropVideo=async (data)=>{
+    try{
+        console.log("삭제 요청 : ",data.videoID);
+        const conn = await pool.getConnection();
+        const deleteVideoTag= await pool.query(deleteVideoTagSql,[data.videoID]);
+        const deleteSummary= await pool.query(deleteSummarySql,[data.videoID]);
+        const deleteSubheading= await pool.query(deleteSubheadingSql,[data.videoID]);
+        const deleteVideo= await pool.query(deleteVideoSql,[data.videoID]);
+        conn.release();
+        return "success";
+
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
 
