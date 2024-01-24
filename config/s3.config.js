@@ -21,7 +21,7 @@ export const imageUploader = multer({
     storage: multerS3({
         s3: s3,
         bucket : process.env.BUCKET_NAME,
-        
+        contentType: multerS3.AUTO_CONTENT_TYPE,
         key: function (req, file, cb) {
             const token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
