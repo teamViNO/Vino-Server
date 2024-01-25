@@ -8,8 +8,8 @@ import { status } from "../../config/response.status.js";
 export const getCategoryDAO=async (userID) => {
     try {
         const conn = await pool.getConnection();
-        const result = await pool.query("select * from category where user_id = ?",[userID])
-        console.log(result);
+        const [result] = await pool.query("select * from category where user_id = ?",[userID])
+        //console.log(result);
         conn.release();
         return result;
     }catch(err){
@@ -53,14 +53,27 @@ export const renameCategoryDAO = async (req) => {
 export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
-        const result = await pool.query("delete from category where id = ? and user_id = ?", [req.categoryID,req.userID]);
+        
+        // 1. 삭제할 카테고리의 하위 카테고리 ID를 가져오기
+        const [subCategories] = await pool.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [req.userID, req.categoryID]);
+
+        // 2. 하위 카테고리들 삭제
+        for (const subCategory of subCategories) {
+            await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.userID, subCategory.id]);
+        }
+
+        // 3. 현재 카테고리 삭제
+        await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.userID, req.categoryID]);
+
         conn.release();
-        return result;
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
+
+
+
 
 // 카테고리 이동 (하위 -> 하위)
 export const moveCategoryDAO = async (data) => {

@@ -5,10 +5,10 @@ import { status } from "../../config/response.status.js";
 import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService,moveCategoryService} from "../services/category.service.js";
 import { addCategoryRequestDTO,renameCategoryRequestDTO,moveCategoryRequestDTO} from "../dtos/category.dto.js";
 
-// 카테고리 조회
+// 카테고리 전체 조회
 export const getCategoryData= async (req, res) => {
     try {
-        console.log("카테고리 정보 조회 요청");
+        console.log("카테고리 전체 정보 조회 요청");
         const data = req.params.userID;
         console.log("컨트롤러 요청정보",data);
         const result = await getCategoryService(data)

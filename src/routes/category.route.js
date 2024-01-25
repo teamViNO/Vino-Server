@@ -25,7 +25,7 @@ categoryRoute.put('/:userID/:categoryID', async (req,res) => {
     const result = await renameCategoryData(req,res);
 })
 
-// 카테고리 삭제 => result값 수정필요
+// 카테고리 삭제
 categoryRoute.delete('/:userID/:categoryID', async (req,res) => {
     const result = await deleteCategoryData(req,res);
 })
