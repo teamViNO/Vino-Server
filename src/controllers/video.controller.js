@@ -40,6 +40,9 @@ export const videoSimpleInfo=async (req,res,next)=>{
 export const videoInsert=async (req,res,next)=>{
     try{
         console.log("비디오 추가를 요청하셨습니다.");
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
         const data= {
             "userID":req.userId
         };
@@ -51,6 +54,9 @@ export const videoInsert=async (req,res,next)=>{
 }
 export const videoDelete=async(req,res,next)=>{
     try{
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
         console.log("비디오 삭제를 요청하셨습니다");
         const data= {
             "userID":req.userId,
@@ -64,6 +70,9 @@ export const videoDelete=async(req,res,next)=>{
 
 export const videoUpdate=async(req,res,next)=>{
     try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
         console.log("비디오 수정을 요청하셨습니다.");
         console.log(req.body);
         const data= {
