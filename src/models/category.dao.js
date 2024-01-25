@@ -9,6 +9,7 @@ export const getCategoryDAO=async (userID) => {
     try {
         const conn = await pool.getConnection();
         const [result] = await pool.query("select * from category where user_id = ?",[userID])
+        console.log(result);
         conn.release();
         return result;
     }catch(err){
@@ -21,10 +22,11 @@ export const getCategoryDAO=async (userID) => {
 export const addCategory1DAO=async (req) =>{
     try{
         const conn =await pool.getConnection();
-        const result = await pool.query(
-        "insert into category(name, user_id, top_category) values(?,?,?);",
-        [req.name, req.user_id, req.top_category]);
+        const [result] = await pool.query(
+        "insert into category(name, user_id, top_category, created_at) values(?,?,?,?);",
+        [req.name, req.user_id, req.top_category, req.created_at]);
         conn.release();
+        console.log("DAO에선 ", result)
         return result;
     }catch(err){
         console.error(err);
