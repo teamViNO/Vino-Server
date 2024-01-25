@@ -33,22 +33,6 @@ export const addCategoryDAO=async (req) =>{
     }
 };
 
-// 카테고리 수정
-export const renameCategoryDAO = async (req) => {
-    try {
-        const conn = await pool.getConnection();
-        const result = await pool.query(
-            "update category set name = ? where id = ? and user_id = ?;",
-            [req.name, req.categoryID, req.userID]
-        );
-        conn.release();
-        return result;
-    } catch (err) {
-        console.error(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
-    }
-};
-
 // 카테고리 삭제 => video가 삭제할 카테고리를 참조하고 있다면 참조무결성 오류 => 나중에 해결
 export const deleteCategoryDAO = async (req) => {
     try {
@@ -72,19 +56,44 @@ export const deleteCategoryDAO = async (req) => {
     }
 };
 
+// 카테고리 수정
+export const renameCategoryDAO = async (req) => {
+    try {
+        const conn = await pool.getConnection();
+        const result = await pool.query(
+            "update category set name = ? where id = ? and user_id = ?;",
+            [req.name, req.categoryID, req.userID]
+        );
 
+        const [updatedCategory] = await pool.query("SELECT * FROM category WHERE id = ? AND user_id = ?", [req.categoryID, req.userID]);
+        conn.release();
+        return {
+            categoryID: updatedCategory[0].id,
+            name: updatedCategory[0].name,
+            topCategoryID: updatedCategory[0].top_category
+        };
 
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
 
 // 카테고리 이동 (하위 -> 하위)
-export const moveCategoryDAO = async (data) => {
+export const moveCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
         const result = await pool.query(
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
-            [data.topCategoryID, data.categoryID, data.userID]
+            [req.topCategoryID, req.categoryID, req.userID]
         );
+        const [movedCategory] = await pool.query("SELECT * FROM category WHERE id = ? AND user_id = ?", [req.categoryID, req.userID]);
         conn.release();
-        return result;
+        return {
+            categoryID: movedCategory[0].id,
+            name: movedCategory[0].name,
+            topCategoryID: movedCategory[0].top_category
+        };
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);

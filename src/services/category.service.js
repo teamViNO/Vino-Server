@@ -51,8 +51,8 @@ export const addCategory2Service = async (data) => {
 // 카테고리 수정 
 export const renameCategoryService = async (data) => {
     console.log("서비스 요청 정보", data);
-    await renameCategoryDAO(data);
-    return categoryResponseDTO(data);
+    const result = await renameCategoryDAO(data);
+    return categoryResponseDTO(result);
 };
 
 // 카테고리 삭제
@@ -64,6 +64,6 @@ export const deleteCategoryService = async (data) => {
 // 카테고리 이동 (하위 -> 하위)
 export const moveCategoryService = async (data) => {
     console.log("서비스 요청 정보", data);
-    await moveCategoryDAO(data);
-    return categoryResponseDTO(data);
+    const result = await moveCategoryDAO(data);
+    return categoryResponseDTO(result);
 }
