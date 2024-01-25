@@ -23,7 +23,7 @@ export const getSimpleVideoResponseDTO=(video)=>{
         videoData.push({"video_id":video[i].id,"category":video[i].category_id,"title":video[i].title,"image":video[i].image,"link":video[i].link,"created_at":video[i].updated_at,"youtube_created_at":video[i].youtube_created_at,"open_at":video[i].open_at});
         
     }
-    return {"videos:":videoData};
+    return {"videos":videoData};
 }
 
 export const joinVideoResponseDTO= (video)=>{

@@ -1,5 +1,8 @@
 import bcrypt from 'bcryptjs';
 import {pool} from '../../config/db.connect.js';
+import { BaseError } from "../../config/error.js";
+import { status } from "../../config/response.status.js";
+import { insertVideoAlarmSql,insertNoticeAlarmSql,getAlarmSql,setConfirmSql,deleteAlarmSql } from './user.sql.js';
 
 export const createUser = async (name, birth_date, gender, phone_number, email, password, platform, theme) => {
   const salt = await bcrypt.genSalt(10);
@@ -48,3 +51,62 @@ export const updateUserNickname = async (userId, nickname) => {
   await pool.query(query, values);
 
 };
+
+export const addVideoAlarm=async(req)=>{
+  try {
+    const conn =await pool.getConnection();
+    console.log(req);
+    const videoAlarm = await pool.query(insertVideoAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.status,req.user_id,req.video_id]);
+    return videoAlarm[0].insertId;
+  } catch (error) {
+    console.error(error);
+    throw new BaseError(status.PARAMETER_IS_WRONG);
+  }
+}
+export const addNoticeAlarm=async(req)=>{
+  try {
+    const conn = await pool.getConnection();
+    console.log(req);
+    const noticeAlarm=await pool.query(insertNoticeAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.user_id]);
+    return noticeAlarm[0].insertId;
+  } catch (error) {
+    console.error(error);
+    throw new BaseError(status.PARAMETER_IS_WRONG);
+  }
+}
+
+export const getAlarm=async(user)=>{
+  try{
+    const conn = await pool.getConnection();
+    console.log(user);
+    const [alarmData]=await pool.query(getAlarmSql,[user]);
+    return alarmData;
+  } catch(error){
+    console.error(error);
+    throw new BaseError(status.PARAMETER_IS_WRONG);
+  }
+}
+
+export const setConfirm=async(data)=>{
+  try {
+    const conn = await pool.getConnection();
+    console.log(data);
+    const alarm=await pool.query(setConfirmSql,[data.alarm_id,data.userId]);
+    return "success";
+  } catch (error) {
+    console.error(error);
+    throw new BaseError(status.PARAMETER_IS_WRONG);
+  }
+}
+
+export const deleteAlarm=async(data)=>{
+  try {
+    const conn = await pool.getConnection();
+    console.log(data);
+    const alarm=await pool.query(deleteAlarmSql,[data.alarm_id,data.userId]);
+    return "success";
+  } catch (error) {
+    console.error(error);
+    throw new BaseError(status.PARAMETER_IS_WRONG);
+  }
+}
