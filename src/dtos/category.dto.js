@@ -49,14 +49,6 @@ export const renameCategoryRequestDTO = (category) => {
     };
 };
 
-// 카테고리 삭제
-export const deleteCategoryRequestDTO = (category) => {
-    return {
-        "userID": category.params.userID,
-        "categoryID": category.params.categoryID
-    };
-};
-
 // 카테고리 이동 (하위 -> 하위)
 export const moveCategoryRequestDTO = (category) => {
     return {

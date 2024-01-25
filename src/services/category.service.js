@@ -50,7 +50,6 @@ export const renameCategoryService = async (data) => {
 export const deleteCategoryService = async (data) => {
     console.log("서비스 요청 정보", data);
     await deleteCategoryDAO(data);
-    return categoryResponseDTO(data);
 }
 
 // 카테고리 이동 (하위 -> 하위)

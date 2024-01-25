@@ -3,7 +3,7 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService,moveCategoryService} from "../services/category.service.js";
-import { addCategory1RequestDTO,addCategory2RequestDTO,renameCategoryRequestDTO,deleteCategoryRequestDTO,moveCategoryRequestDTO} from "../dtos/category.dto.js";
+import { addCategory1RequestDTO,addCategory2RequestDTO,renameCategoryRequestDTO,moveCategoryRequestDTO} from "../dtos/category.dto.js";
 
 // 카테고리 조회
 export const getCategoryData= async (req, res) => {
@@ -61,10 +61,9 @@ export const renameCategoryData = async (req, res) => {
 export const deleteCategoryData = async (req, res) => {
     try {
         console.log("카테고리 삭제 요청");
-        const data = deleteCategoryRequestDTO(req);
-        console.log("컨트롤러 요청정보",data);
-        const result = await deleteCategoryService(data);
-        res.send(result);
+        const data = req.params;
+        await deleteCategoryService(data);
+        res.send(response(status.SUCCESS,"카테고리가 삭제되었습니다."));
     } catch (error) {
         console.error(error);
     }
