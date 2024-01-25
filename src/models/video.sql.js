@@ -8,8 +8,8 @@ export const getEntireVideoSql='select * from video where user_id=? and version 
 export const setTimeSql='update video set readed_at=? where id=?;'
 //video add 관련 sql
 
-export const insertVideoOriginSql="insert into video(version, title, link, image, created_at, readed_at, updated_at, category_id, user_id) values(?,?,?,?,?,?,?,?,?);"
-export const insertVideoRevisionSql="insert into video(id, version, title, link, image, created_at, readed_at, updated_at, category_id, user_id) values(?,?,?,?,?,?,?,?,?,?);"
+export const insertVideoOriginSql="insert into video(version, title, link, image,youtube_created_at, created_at, readed_at, updated_at, category_id, user_id) values(?,?,?,?,?,?,?,?,?,?);"
+export const insertVideoRevisionSql="insert into video(id, version, title, link, image,youtube_created_at, created_at, readed_at, updated_at, category_id, user_id) values(?,?,?,?,?,?,?,?,?,?,?);"
 export const connectSubheading="insert into subheading(name, start_time, end_time, content, video_id, version_id)values (?,?,?,?,?,?);";
 export const connectSummary="insert into summary(content, video_id, version_id) VALUES (?,?,?);";
 export const connectTag="INSERT INTO tag(name) VALUES (?);";
