@@ -24,7 +24,7 @@ export const addCategory1Data= async (req,res,next)=>{
         console.log("상위 카테고리 추가 요청");
         const data = addCategoryRequestDTO(req);
         console.log("컨트롤러 요청정보",data);
-        const result = await addCategory1Service(data); //여기 result가 출력되는 것
+        const result = await addCategory1Service(data);
         res.send(response(status.SUCCESS, result));
     } catch(error){
         console.error(error);

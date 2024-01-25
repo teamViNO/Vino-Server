@@ -49,7 +49,7 @@ export const renameCategoryDAO = async (req) => {
     }
 };
 
-// 카테고리 삭제 
+// 카테고리 삭제 => video가 삭제할 카테고리를 참조하고 있다면 참조무결성 오류 => 나중에 해결
 export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
