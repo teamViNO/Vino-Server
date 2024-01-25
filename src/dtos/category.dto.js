@@ -21,22 +21,14 @@ export const categoryResponseDTO = (category) => {
 
 //--------------------------------------------------------------------------------------
 
-// 상위 카테고리 추가
-export const addCategory1RequestDTO = (category) => {
+// 상위 또는 하위 카테고리 추가
+export const addCategoryRequestDTO = (category) => {
+    const time = new Date
     return {
         "name": category.body.name,
         "userID": category.params.userID,
-        "topCategory" : null,
-        "createdAt" : null
-    };
-};
-
-// 하위 카테고리 추가
-export const addCategory2RequestDTO = (category) => {
-    return {
-        "name": category.body.name,
-        "userID": category.params.userID,
-        "categoryID":category.params.topCategoryID
+        "topCategoryID" : category.params.topCategoryID,
+        "createdAt" : time
     };
 };
 

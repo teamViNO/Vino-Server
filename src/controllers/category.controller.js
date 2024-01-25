@@ -3,7 +3,7 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService,moveCategoryService} from "../services/category.service.js";
-import { addCategory1RequestDTO,addCategory2RequestDTO,renameCategoryRequestDTO,moveCategoryRequestDTO} from "../dtos/category.dto.js";
+import { addCategoryRequestDTO,renameCategoryRequestDTO,moveCategoryRequestDTO} from "../dtos/category.dto.js";
 
 // 카테고리 조회
 export const getCategoryData= async (req, res) => {
@@ -22,7 +22,7 @@ export const getCategoryData= async (req, res) => {
 export const addCategory1Data= async (req,res,next)=>{
     try{
         console.log("상위 카테고리 추가 요청");
-        const data = addCategory1RequestDTO(req);
+        const data = addCategoryRequestDTO(req);
         console.log("컨트롤러 요청정보",data);
         const result = await addCategory1Service(data); //여기 result가 출력되는 것
         res.send(response(status.SUCCESS, result));
@@ -35,7 +35,7 @@ export const addCategory1Data= async (req,res,next)=>{
 export const addCategory2Data= async (req,res,next)=>{
     try{
         console.log("하위 카테고리 추가 요청");
-        const data = addCategory2RequestDTO(req);
+        const data = addCategoryRequestDTO(req);
         console.log("컨트롤러 요청정보",data);
         const result = await addCategory2Service(data);
         res.send(response(status.SUCCESS, result));

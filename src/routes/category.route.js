@@ -6,7 +6,7 @@ import {getCategoryData,addCategory1Data,addCategory2Data,renameCategoryData, de
 export const categoryRoute = express.Router();
 
 // 카테고리 모든 정보 조회
-categoryRoute.get('/:userID/', async (req, res) => {
+categoryRoute.get('/:userID', async (req, res) => {
     const result = await getCategoryData(req, res);
 });
 
