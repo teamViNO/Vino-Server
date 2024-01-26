@@ -144,7 +144,56 @@ export const tempPasswordService = async (name, phone_number, email) => {
     from: process.env.EMAIL, // 보내는 이메일 주소
     to: user.email, // 받는 이메일 주소
     subject: '[VI.NO] 임시 비밀번호 발급',
-    text: `${name}님의 임시 비밀번호는 ${tempPassword} 입니다.`,
+    html: `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          .email-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.1);
+            font-family: Arial, sans-serif;
+            color: #333;
+          }
+          .header {
+            text-align: center;
+            padding: 20px 0;
+          }
+          .content {
+            margin: 20px 0;
+            line-height: 1.5;
+          }
+          .footer {
+            text-align: center;
+            color: #888;
+            padding: 20px 0;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="header">
+            <img src="https://your-logo-url.com/logo.png" alt="Company Logo" width="200">
+          </div>
+          <div class="content">
+            <h2>안녕하세요, ${name}님</h2>
+            <p>아래는 ${name}님의 임시 비밀번호입니다:</p>
+            <p style="text-align: center; font-size: 22px; color: #2196F3; font-weight: bold;">${tempPassword}</p>
+            <p>로그인 후에 바로 비밀번호를 변경해 주세요.</p>
+          </div>
+          <div class="footer">
+            <p>이 이메일에 대해 문의사항이 있으시면 답장해 주세요.</p>
+            <p>&copy; 2024 [VI.NO]</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `
+    // text: `${name}님의 임시 비밀번호는 ${tempPassword} 입니다.`,
   };
   // 이메일 전송
   await transporter.sendMail(mailOptions);
