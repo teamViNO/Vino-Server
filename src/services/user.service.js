@@ -1,17 +1,17 @@
 import jwt from 'jsonwebtoken';
 import { findUserByEmail, createUser, comparePassword } from '../models/user.dao.js';
-import { findUserById, updatePassword} from '../models/user.dao.js';
+import { findUserById, updatePassword, findUserByNamePhoneAndEmail,updateUserNickname} from '../models/user.dao.js';
 import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm} from '../models/user.dao.js';
 import bcrypt from 'bcryptjs';
-import { updateUserNickname } from '../models/user.dao.js';
 import {joinAlarmResponseDto,getAlarmResponseDTO,updateConfirmResponseDTO,deleteAlarmResponseDTO} from '../dtos/user.dto.js'
+import nodemailer from 'nodemailer'
 
 // 일반 회원가입
-export const registerService = async ({ name, birth_date, gender, phone_number, email, password, platform, checkPassword,theme, nickname }) => {
+export const registerService = async ({ name, birth_date, gender, phone_number, email, password, platform, check_password,theme, nickname }) => {
   const existingUser = await findUserByEmail(email);
   theme = "0";
   nickname ="";
-  if (!(password == checkPassword)){
+  if (!(password == check_password)){
     return { status: 409, success: false, message: '비밀번호가 일치하지 않습니다.'}
   }
 
@@ -41,23 +41,23 @@ export const loginService = async ({ email, password }) => {
 
 
 // 비번 바꾸기
-export const updatePasswordService = async (userId, { oldPassword, newPassword, confirmPassword }) => {
+export const updatePasswordService = async (userId, { old_password, new_password, confirm_password }) => {
   const user = await findUserById(userId);
 
   if (!user) {
     return { status: 404, success: false, message: '사용자를 찾을 수 없습니다.' };
   }
 
-  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  const isMatch = await bcrypt.compare(old_password, user.password);
   if (!isMatch) {
     return { status: 400, success: false, message: '기존 비밀번호가 일치하지 않습니다.' };
   }
 
-  if (newPassword !== confirmPassword) {
+  if (new_password !== confirm_password) {
     return { status: 400, success: false, message: '새 비밀번호가 일치하지 않습니다.' };
   }
 
-  await updatePassword(userId, newPassword);
+  await updatePassword(userId, new_password);
   return { status: 200, success: true, message: '비밀번호가 성공적으로 변경되었습니다.' };
 };
 
@@ -115,3 +115,42 @@ export const removeAlarm=async(data)=>{
   const removeAlarmData=await deleteAlarm(data);
   return deleteAlarmResponseDTO(removeAlarmData);
 }
+
+
+// 임시 비밀번호 발급 -> 이메일로 전송
+export const tempPasswordService = async (name, phone_number, email) => {
+  const user = await findUserByNamePhoneAndEmail(name, phone_number, email);
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
+  }
+
+  // 임시 비밀번호 생성 (영어 대소문자, 숫자 혼합)
+  const tempPassword = Math.random().toString(36).slice(2) + Math.random().toString(36).toUpperCase().slice(2);
+  // 임시 비밀번호로 사용자 비밀번호 변경
+  await updatePassword(user.id, tempPassword);
+
+  // 이메일 전송을 위한 설정
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587, 
+    auth: {
+      user: process.env.EMAIL, // 이메일 전송을 위한 이메일 주소
+      pass: process.env.EMAIL_PASSWORD, // 이메일 전송을 위한 이메일 비밀번호
+    },
+  });
+  // 이메일 옵션 설정
+  let mailOptions = {
+    from: process.env.EMAIL, // 보내는 이메일 주소
+    to: user.email, // 받는 이메일 주소
+    subject: '[VI.NO] 임시 비밀번호 발급',
+    text: `${name}님의 임시 비밀번호는 ${tempPassword} 입니다.`,
+  };
+  // 이메일 전송
+  await transporter.sendMail(mailOptions);
+
+  return {
+    success: true,
+    message: '임시 비밀번호가 이메일로 전송되었습니다.',
+  };
+};

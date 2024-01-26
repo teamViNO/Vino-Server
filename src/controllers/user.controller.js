@@ -1,5 +1,5 @@
-import { registerService, loginService, setNicknameService,joinVideoAlarm,joinNoticeAlarm, viewAlarm,updateConfirm,removeAlarm} from '../services/user.service.js';
-import { findUserByEmail } from '../models/user.dao.js';
+import { registerService, loginService, setNicknameService,joinVideoAlarm,joinNoticeAlarm, viewAlarm,updateConfirm,removeAlarm, tempPasswordService} from '../services/user.service.js';
+import { findUserByEmail, findUserByNameAndPhone} from '../models/user.dao.js';
 import jwt from 'jsonwebtoken';
 
 import { response } from "../../config/response.js";
@@ -151,3 +151,49 @@ export const deleteAlarm=async(req,res)=>{
   }
   
 }
+
+// 이메일 반환
+export const returnEmail = async (req, res) => {
+  const { name, phone_number } = req.body;
+  console.log(name, phone_number)
+  
+  try {
+    const user = await findUserByNameAndPhone(name, phone_number);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: '사용자를 찾을 수 없습니다.',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: '이메일 반환.',
+      email: user.email
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '서버 에러',
+    });
+  }
+};
+
+// 임시비밀번호 발급
+export const sendTempPassword = async (req, res) => {
+  const {name, phone_number, email } = req.body;
+  
+  try {
+    const result = await tempPasswordService(name, phone_number, email);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      error,
+      message: '서버 에러',
+    });
+  }
+};
+
