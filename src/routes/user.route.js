@@ -17,6 +17,6 @@ userRoute.get('/alarm',async(req,res)=>{
     const result=await getAlarm(req,res);
 });
 
-userRoute.patch('/alarm/:alarm_id',setConfirm);
+userRoute.patch('/alarm/:alarmId',setConfirm);
 
-userRoute.delete('/alarm/:alarm_id/delete',deleteAlarm);
+userRoute.delete('/alarm/:alarmId/delete',deleteAlarm);

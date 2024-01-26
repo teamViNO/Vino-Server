@@ -125,7 +125,7 @@ export const setConfirm=async(req,res)=>{
     req.userId = decoded.id;
     const data={
       "userId":req.userId,
-      "alarm_id":req.params.alarm_id
+      "alarm_id":req.params.alarmId
     }
     res.send(response(status.SUCCESS,await updateConfirm(data)));
 
@@ -142,7 +142,7 @@ export const deleteAlarm=async(req,res)=>{
     req.userId = decoded.id;
     const data={
       "userId":req.userId,
-      "alarm_id":req.params.alarm_id
+      "alarm_id":req.params.alarmId
     }
     res.send(response(status.SUCCESS,await removeAlarm(data)));
 
