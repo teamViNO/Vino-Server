@@ -110,3 +110,29 @@ export const deleteAlarm=async(data)=>{
     throw new BaseError(status.PARAMETER_IS_WRONG);
   }
 }
+
+export const findUserByNameAndPhone = async (name, phone_number) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM user WHERE name = ? AND phone_number = ?',
+      [name, phone_number]
+    );
+    return rows[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const findUserByNamePhoneAndEmail = async (name, phone_number, email) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM user WHERE name = ? AND phone_number = ? AND email = ?',
+      [name, phone_number, email]
+    );
+    return rows[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
