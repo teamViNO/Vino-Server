@@ -27,7 +27,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 app.use(cors());                            // cors 방식 허용
@@ -67,3 +66,4 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
     console.log(`Example app listening on port ${app.get('port')}`);
 });
+
