@@ -14,8 +14,12 @@ import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 
-const smsRoute = require('./src/routes/sms.route.cjs');
-const session = require('express-session');
+import session from 'express-session';
+import smsRouter from './src/routes/sms.route.cjs';
+
+
+// const smsRoute = require('./src/routes/sms.route.cjs');
+// const session = require('express-session');
 
 dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 
@@ -41,7 +45,7 @@ app.use('/videos',videoRoute);
 app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute)
-app.use(smsRoute)
+app.use('/sms',smsRouter);
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
