@@ -14,11 +14,18 @@ import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 
+const smsRoute = require('./src/routes/sms.route.cjs');
+const session = require('express-session');
 
 dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 
 const app = express();
 
+app.use(session({
+    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
+    resave: false,
+    saveUninitialized: true
+}));
 
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
@@ -34,6 +41,7 @@ app.use('/videos',videoRoute);
 app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute)
+app.use(smsRoute)
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
@@ -58,3 +66,4 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
     console.log(`Example app listening on port ${app.get('port')}`);
 });
+
