@@ -33,7 +33,6 @@ async function sendVerificationCode(req, res) {
 async function checkVerificationCode(req, res){
   const userCode = req.body.verification_code;
   const serverCode = req.session.verification_code.code; // 저장된 인증코드 가져오기
-  console.log(userCode, serverCode)
   if (userCode === serverCode) {
     res.status(200).json({
       success: true,
