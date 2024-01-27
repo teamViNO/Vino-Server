@@ -15,7 +15,7 @@ import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 
 import session from 'express-session';
-import smsRouter from './src/routes/sms.route.cjs';
+import {smsRoute} from './src/routes/sms.route.js';
 
 
 // const smsRoute = require('./src/routes/sms.route.cjs');
@@ -45,7 +45,7 @@ app.use('/videos',videoRoute);
 app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute)
-app.use('/sms',smsRouter);
+app.use('/sms',smsRoute);
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
