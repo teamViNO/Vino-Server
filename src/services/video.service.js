@@ -19,6 +19,7 @@ export const viewVideo=async(data)=>{
 }
 export const viewSimpleVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
+    console.log("123");
     const getVideoData=await getSimpleVideo(data);
     console.log("비디오 정보: ",getVideoData);
     return getSimpleVideoResponseDTO(getVideoData);
