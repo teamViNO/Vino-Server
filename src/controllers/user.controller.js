@@ -155,7 +155,6 @@ export const deleteAlarm=async(req,res)=>{
 // 이메일 반환
 export const returnEmail = async (req, res) => {
   const { name, phone_number } = req.body;
-  console.log(name, phone_number)
   
   try {
     const user = await findUserByNameAndPhone(name, phone_number);
