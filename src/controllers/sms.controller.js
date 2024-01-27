@@ -1,9 +1,12 @@
-const coolsms = require("coolsms-node-sdk").default;
-const messageService = new coolsms(process.env.COOLSMS_KEY, process.env.COOLSMS_SECRET);
 
-async function sendVerificationCode(req, res) {
+import CoolsmsMessageService from "coolsms-node-sdk";
+
+
+
+export const sendVerificationCode=(req, res)=>{
   const { phone_number } = req.body;
 
+  const messageService= new CoolsmsMessageService(process.env.COOLSMS_KEY, process.env.COOLSMS_SECRET);
 
   // 인증코드 생성
   const verificationCode = Math.floor(1000000 + Math.random() * 9000000); // 7자리
@@ -30,8 +33,11 @@ async function sendVerificationCode(req, res) {
 };
 
 // 인증코드 확인
-async function checkVerificationCode(req, res){
+export const checkVerificationCode=(req, res)=>{
+  try {
+    console.log(req.session);
   const userCode = req.body.verification_code;
+  console.log(userCode);
   const serverCode = req.session.verification_code.code; // 저장된 인증코드 가져오기
   if (userCode === serverCode) {
     res.status(200).json({
@@ -44,9 +50,12 @@ async function checkVerificationCode(req, res){
       message: '인증 코드가 일치하지 않습니다.',
     });
   }
+  } catch (error) {
+    res.status(403).json({
+      success: false,
+      message: '인증 코드가 전송이 제대로 되지 않았습니다'
+    });
+    }
+  
 };
 
-module.exports = {
-  sendVerificationCode,
-  checkVerificationCode
-};
