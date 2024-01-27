@@ -25,14 +25,11 @@ dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 
 const app = express();
 
-app.use(session({
-    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
-    resave: false,
-    saveUninitialized: true
-}));
+
 
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
+
 app.use(cors());                            // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
@@ -46,6 +43,11 @@ app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute)
 app.use('/sms',smsRoute);
+app.use(session({
+    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
+    resave: false,
+    saveUninitialized: true
+}));
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
