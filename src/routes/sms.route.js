@@ -3,5 +3,7 @@ import { sendVerificationCode,checkVerificationCode } from '../controllers/sms.c
 
 export const smsRoute = express.Router();
 
-smsRoute.post('/sendSMS', sendVerificationCode);
+smsRoute.post('/sendSMS', async(req,res)=>{
+const result =sendVerificationCode(req,res);
+} );
 smsRoute.post('/checkSMS', checkVerificationCode);
