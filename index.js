@@ -14,7 +14,7 @@ import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 import { smsRoute } from './src/routes/sms.route.js';
-
+import session from 'express-session';
 
 
 
@@ -31,7 +31,11 @@ app.use(cors());                            // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형태로 본문 데이터 해석
-
+app.use((req,res,next)=>{session({
+    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
+    resave: false,
+    saveUninitialized: true
+})});
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 app.use('/sms',smsRoute);
 app.use('/health', healthRoute);
