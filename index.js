@@ -14,10 +14,8 @@ import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 
-
-
-
-
+import session from 'express-session';
+import {smsRoute} from './src/routes/sms.route.js';
 
 dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 
@@ -34,13 +32,17 @@ app.use(express.json());                    // request의 본문을 json으로 �
 app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형태로 본문 데이터 해석
 
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
-
+app.use((req,res,next)=>{session({
+    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
+    resave: false,
+    saveUninitialized: true
+})});
 app.use('/health', healthRoute);
 app.use('/videos',videoRoute);
 app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute);
-
+app.use('/sms',smsRoute);
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
