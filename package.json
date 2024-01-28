@@ -32,6 +32,7 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
+    "coolsms-node-sdk": "^2.0.1",
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.7",
     "@babel/node": "^7.22.19",
