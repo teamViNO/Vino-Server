@@ -13,6 +13,7 @@ import { videoRoute } from './src/routes/video.route.js';
 import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
+import { smsRoute } from './src/routes/sms.route.js';
 
 
 
@@ -32,7 +33,7 @@ app.use(express.json());                    // request의 본문을 json으로 �
 app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형태로 본문 데이터 해석
 
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
-
+app.use('/sms',smsRoute);
 app.use('/health', healthRoute);
 app.use('/videos',videoRoute);
 app.use('/images',s3Router);
