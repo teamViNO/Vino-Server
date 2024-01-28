@@ -32,11 +32,7 @@ app.use(express.json());                    // request의 본문을 json으로 �
 app.use(express.urlencoded({extended: false})); // 단순 객체 문자열 형태로 본문 데이터 해석
 
 app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
-app.use((req,res,next)=>{session({
-    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
-    resave: false,
-    saveUninitialized: true
-})});
+
 app.use('/health', healthRoute);
 app.use('/videos',videoRoute);
 app.use('/images',s3Router);
