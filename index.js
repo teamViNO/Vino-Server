@@ -41,11 +41,7 @@ app.use('/videos',videoRoute);
 app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute);
-app.use((req,res,next)=>{session({
-    secret: process.env.SESSION_KEY, // 이곳에는 고유한 키를 입력하세요.
-    resave: false,
-    saveUninitialized: true
-})});
+
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
