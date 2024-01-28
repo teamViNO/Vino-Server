@@ -14,7 +14,7 @@ import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 
-import session from 'express-session';
+
 import {smsRoute} from './src/routes/sms.route.js';
 
 dotenv.config();    // .env 파일 사용 (환경 변수 관리)
