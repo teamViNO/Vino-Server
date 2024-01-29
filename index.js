@@ -23,8 +23,6 @@ dotenv.config();    // .env 파일 사용 (환경 변수 관리)
 
 const app = express();
 
-
-
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 
