@@ -35,6 +35,7 @@ export const updatePassword = async (id, newPassword) => {
   );
 };
 
+
 export const findUserById = async (id) => {
   const [rows] = await pool.query('SELECT * FROM user WHERE id = ?', [id]);
   return rows[0];
