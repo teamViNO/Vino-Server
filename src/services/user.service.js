@@ -12,11 +12,11 @@ export const registerService = async ({ name, birth_date, gender, phone_number, 
   theme = "0";
   nickname ="";
   if (!(password == check_password)){
-    return { status: 409, success: false, message: '비밀번호가 일치하지 않습니다.'}
+    return { status: 409, success: false, code:'WRONG_PASSWORD', message: '비밀번호가 일치하지 않습니다.'}
   }
 
   if (existingUser) {
-    return { status: 409, success: false, message: '이미 사용중인 이메일입니다.' };
+    return { status: 409, success: false, code:'UNAVAILABLE_EMAIL', message: '이미 사용중인 이메일입니다.' };
   }
 
   await createUser(name, birth_date, gender, phone_number, email, password, platform, theme);
@@ -28,11 +28,11 @@ export const loginService = async ({ email, password }) => {
   const user = await findUserByEmail(email);
 
   if (!user) {
-    return { status: 401, success: false, message: '이메일이 잘못되었습니다.' };
+    return { status: 404, success: false, code:"NOT_FOUND_EMAIL", message: '이메일이 잘못되었습니다.' };
   }
 
   if (!await comparePassword(password, user.password)) {
-    return { status: 401, success: false, message: '비밀번호가 잘못되었습니다.' };
+    return { status: 400, success: false, code:"WRONG_PASSWORD",message: '비밀번호가 잘못되었습니다.' };
   }
   
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET); 
@@ -45,16 +45,16 @@ export const updatePasswordService = async (userId, { old_password, new_password
   const user = await findUserById(userId);
 
   if (!user) {
-    return { status: 404, success: false, message: '사용자를 찾을 수 없습니다.' };
+    return { status: 404, success: false, code:'NOT_FOUND_USER', message: '사용자를 찾을 수 없습니다.' };
   }
 
   const isMatch = await bcrypt.compare(old_password, user.password);
   if (!isMatch) {
-    return { status: 400, success: false, message: '기존 비밀번호가 일치하지 않습니다.' };
+    return { status: 400, success: false, code:'WRONG_ORIGIN_PASSWORD', message: '기존 비밀번호가 일치하지 않습니다.' };
   }
 
   if (new_password !== confirm_password) {
-    return { status: 400, success: false, message: '새 비밀번호가 일치하지 않습니다.' };
+    return { status: 400, success: false, code:'WRONG_NEW_PASSWORD', message: '새 비밀번호가 일치하지 않습니다.' };
   }
 
   await updatePassword(userId, new_password);
@@ -121,7 +121,7 @@ export const removeAlarm=async(data)=>{
 export const tempPasswordService = async (name, phone_number, email) => {
   const user = await findUserByNamePhoneAndEmail(name, phone_number, email);
   if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
+    return { status: 404, success: false, code:'NOT_FOUND_USER', message: '사용자를 찾을 수 없습니다.' };
   }
 
   // 임시 비밀번호 생성 (영어 대소문자, 숫자 혼합)

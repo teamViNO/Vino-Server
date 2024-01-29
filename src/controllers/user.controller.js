@@ -53,11 +53,13 @@ export const checkEmail = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({
         success: false,
+        code: "UNAVAILABLE_EMAIL",
         message: '이미 사용중인 이메일입니다.',
       });
     } else {
       return res.status(200).json({
         success: true,
+        code: "AVAILABLE_EMAIL",
         message: '사용 가능한 이메일입니다.',
       });
     }
@@ -161,6 +163,7 @@ export const returnEmail = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
+        code: 'NOT_FOUND_USER',
         message: '사용자를 찾을 수 없습니다.',
       });
     }
