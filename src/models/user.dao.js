@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import {pool} from '../../config/db.connect.js';
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { insertVideoAlarmSql,insertNoticeAlarmSql,getAlarmSql,setConfirmSql,deleteAlarmSql } from './user.sql.js';
+import { insertVideoAlarmSql,insertNoticeAlarmSql,getAlarmSql,setConfirmSql,deleteAlarmSql, deleteAllAlarmSql } from './user.sql.js';
 
 export const createUser = async (name, birth_date, gender, phone_number, email, password, platform, theme) => {
   const salt = await bcrypt.genSalt(10);
@@ -109,6 +109,18 @@ export const deleteAlarm=async(data)=>{
   } catch (error) {
     console.error(error);
     throw new BaseError(status.PARAMETER_IS_WRONG);
+  }
+}
+export const deleteAllAlarm=async(data)=>{
+  try {
+    const conn = await pool.getConnection();
+    console.log(data);
+    const alarm=await pool.query(deleteAllAlarmSql,[data.userId]);
+    return "success";
+  } catch (error) {
+    console.error(error);
+    throw new BaseError(status.PARAMETER_IS_WRONG);
+    
   }
 }
 
