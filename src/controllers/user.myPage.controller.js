@@ -1,4 +1,4 @@
-import { updatePasswordService } from '../services/user.service.js';
+import { updatePasswordService, setInfoService } from '../services/user.service.js';
 import { getUserInfo } from '../models/user.dao.js';
 import jwt from 'jsonwebtoken';
 
@@ -31,6 +31,24 @@ export const viewUserInfo = async(req, res) => {
     const result = await getUserInfo(req.userId);
     return res.status(200).json(result);
 
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: '서버 에러',
+    });
+  }
+}
+
+// 유저 정보 변경 (닉네임, 성별)
+export const changeInfo = async(req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+
+    const result = await setInfoService(req.body.nick_name, req.body.gender, req.userId);
+    res.status(result.status).json(result);
   }catch(error){
     console.log(error);
     return res.status(500).json({

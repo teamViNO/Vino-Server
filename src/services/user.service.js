@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { findUserByEmail, createUser, comparePassword } from '../models/user.dao.js';
+import { findUserByEmail, createUser, comparePassword, updateInfo } from '../models/user.dao.js';
 import { findUserById, updatePassword, findUserByNamePhoneAndEmail,updateUserNickname} from '../models/user.dao.js';
 import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm} from '../models/user.dao.js';
 import bcrypt from 'bcryptjs';
@@ -68,6 +68,12 @@ export const setNicknameService = async (userId, nickname) => {
 
     await updateUserNickname(userId, nickname);
     return { status: 200, success: true, message: '닉네임을 성공적으로 설정했습니다.' };
+};
+
+// 닉네임 , 성별 변경
+export const setInfoService = async(nickname, gender, userId) => {
+  await updateInfo(nickname, gender, userId);
+  return { status: 200, success: true, message: '닉네임과 성별을 성공적으로 변경하였습니다.' };
 };
 
 export const joinVideoAlarm=async(data,user)=>{
