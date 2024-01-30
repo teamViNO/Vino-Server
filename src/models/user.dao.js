@@ -153,5 +153,15 @@ export const getUserInfo = async (userId) => {
     console.error(error);
     throw error;
   }
-  
+}
+
+export const updateInfo = async(nickname, gender, userId) => {
+  const query = `
+    UPDATE user
+    SET nick_name = ?
+    ,gender = ?
+    WHERE id = ?;
+  `;
+  const values = [nickname, gender, userId];
+  await pool.query(query, values);
 }
