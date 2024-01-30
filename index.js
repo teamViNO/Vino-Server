@@ -16,6 +16,7 @@ import {myPageRoute} from './src/routes/user.myPage.route.js';
 import { smsRoute } from './src/routes/sms.route.js';
 import session from 'express-session';
 import { dummyRoute } from './src/routes/dummy.route.js';
+import { searchRoute } from './src/routes/search.route.js';
 
 
 
@@ -43,6 +44,7 @@ app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute);
 app.use('/dummies',dummyRoute);
+app.use('/search',searchRoute);
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
