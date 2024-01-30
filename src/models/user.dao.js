@@ -137,3 +137,16 @@ export const findUserByNamePhoneAndEmail = async (name, phone_number, email) => 
     throw error;
   }
 };
+
+export const getUserInfo = async (userId) => {
+  try {
+    const [row] = await pool.query(
+      'SELECT name, birth_date, gender, phone_number, email, nick_name FROM user WHERE id = ?',[userId]
+    );
+    return row[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+  
+}
