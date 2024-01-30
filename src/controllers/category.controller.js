@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 import jwt from 'jsonwebtoken'
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService,moveCategoryService} from "../services/category.service.js";
-import { moveCategoryRequestDTO } from "../dtos/category.dto.js";
+import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService } from "../services/category.service.js";
+import { move1CategoryService,move2CategoryService,move3CategoryService } from "../services/category.service.js";
 
 // 카테고리 전체 조회
 export const getCategoryData= async (req, res) => {
@@ -85,20 +85,47 @@ export const deleteCategoryData = async (req, res) => {
     }
 };
 
-// 카테고리 이동 (하위 -> 하위)
-export const moveCategoryData = async (req, res, next) => {
+// 카테고리 이동1 (하위의 상위 카테고리가 변경될 때)
+export const move1CategoryData = async (req, res, next) => {
     try {
-        console.log("카테고리 이동 요청");
+        console.log("카테고리 이동1 요청");
         const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userID = decoded.id;
-        const data = moveCategoryRequestDTO(req);
-        console.log("컨트롤러 요청정보", data);
-        const result = await moveCategoryService(data);
+
+        const result = await move1CategoryService(req);
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
     }
 }
 
+// 카테고리 이동2 (하위가 새로운 상위가 될 때)
+export const move2CategoryData = async (req, res, next) => {
+    try {
+        console.log("카테고리 이동2 요청");
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userID = decoded.id;
 
+        const result = await move2CategoryService(req);
+        res.send(response(status.SUCCESS, result));
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// 카테고리 이동3 (상위가 다른 상위의 새로운 하위가 될 때)
+export const move3CategoryData = async (req, res, next) => {
+    try {
+        console.log("카테고리 이동3 요청");
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userID = decoded.id;
+
+        const result = await move3CategoryService(req);
+        res.send(response(status.SUCCESS, result));
+    } catch (error) {
+        console.error(error);
+    }
+}

@@ -27,13 +27,3 @@ export const fixCategoryResponseDTO = (category) => {
         "name": category.name,
     };
 }
-//--------------------------------------------------------------------------------------
-
-// 카테고리 이동 (하위 -> 하위)
-export const moveCategoryRequestDTO = (category) => {
-    return {
-        "categoryID": category.params.categoryID,
-        "userID": category.userID,
-        "topCategoryID": category.params.topCategoryID,
-    };
-};

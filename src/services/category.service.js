@@ -3,7 +3,8 @@
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import { getCategoryResponseDTO,addCategoryResponseDTO,fixCategoryResponseDTO } from "../dtos/category.dto.js";
-import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO,moveCategoryDAO } from "../models/category.dao.js"
+import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
+import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -66,9 +67,37 @@ export const deleteCategoryService = async (req) => {
     await deleteCategoryDAO(categoryData);
 }
 
-// 카테고리 이동 (하위 -> 하위)
-export const moveCategoryService = async (data) => {
-    console.log("서비스 요청 정보", data);
-    const result = await moveCategoryDAO(data);
-    return fixCategoryResponseDTO(result);
+// 카테고리 이동1 (하위의 상위 카테고리가 변경될 때)
+export const move1CategoryService = async (req) => {
+    const categoryData =  {
+        user_id : req.userID,
+        category_id : req.params.categoryID,
+        top_category : req.params.topCategoryID
+    };
+    console.log("서비스 요청 정보", categoryData);
+    await move1CategoryDAO(categoryData);
+    return fixCategoryResponseDTO(categoryData);
+}
+
+// 카테고리 이동2 (하위가 새로운 상위가 될 때)
+export const move2CategoryService = async (req) => {
+    const categoryData =  {
+        user_id : req.userID,
+        category_id : req.params.categoryID,
+    };
+    console.log("서비스 요청 정보", categoryData);
+    await move2CategoryDAO(categoryData);
+    return fixCategoryResponseDTO(categoryData);
+}
+
+// 카테고리 이동3 (하위가 새로운 상위가 될 때)
+export const move3CategoryService = async (req) => {
+    const categoryData =  {
+        user_id : req.userID,
+        category_id : req.params.categoryID,
+        top_category : req.params.topCategoryID
+    };
+    console.log("서비스 요청 정보", categoryData);
+    await move3CategoryDAO(categoryData);
+    return fixCategoryResponseDTO(categoryData);
 }

@@ -70,21 +70,45 @@ export const deleteCategoryDAO = async (req) => {
 
 
 
-// 카테고리 이동 (하위 -> 하위)
-export const moveCategoryDAO = async (req) => {
+// 카테고리 이동1 (하위의 상위 카테고리가 변경될 때)
+export const move1CategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
-        const result = await pool.query(
+        await pool.query(
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
-            [req.topCategoryID, req.categoryID, req.userID]
+            [req.top_category, req.category_id, req.user_id]
         );
-        const [movedCategory] = await pool.query("SELECT * FROM category WHERE id = ? AND user_id = ?", [req.categoryID, req.userID]);
         conn.release();
-        return {
-            categoryID: movedCategory[0].id,
-            name: movedCategory[0].name,
-            topCategoryID: movedCategory[0].top_category
-        };
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+
+// 카테고리 이동2 (하위가 새로운 상위가 될 때)
+export const move2CategoryDAO = async (req) => {
+    try {
+        const conn = await pool.getConnection();
+        await pool.query(
+            "UPDATE category SET top_category = NULL WHERE id = ? AND user_id = ?;",
+            [req.category_id, req.user_id]
+        );
+        conn.release();
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+
+// 카테고리 이동3 (하위가 새로운 상위가 될 때)
+export const move3CategoryDAO = async (req) => {
+    try {
+        const conn = await pool.getConnection();
+        await pool.query(
+            "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
+            [req.top_category, req.category_id, req.user_id]
+        );
+        conn.release();
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
