@@ -9,7 +9,6 @@ export const getCategoryDAO=async (userID) => {
     try {
         const conn = await pool.getConnection();
         const [result] = await pool.query("select * from category where user_id = ?",[userID])
-        //console.log(result);
         conn.release();
         return result;
     }catch(err){
@@ -25,8 +24,9 @@ export const addCategoryDAO=async (req) =>{
         const result = await pool.query(
         "insert into category(name, user_id, top_category, created_at) values(?,?,?,?);",
         [req.name, req.user_id, req.top_category, req.created_at]);
+        const categoryId = result[0] && result[0].insertId;
         conn.release();
-        return result;
+        return categoryId;
     }catch(err){
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -38,15 +38,15 @@ export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
         
-        // 1. 삭제할 카테고리의 하위 카테고리 ID를 가져오기
+        // 삭제할 현재 카테고리의 하위 카테고리 ID를 가져오기
         const [subCategories] = await pool.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [req.userID, req.categoryID]);
 
-        // 2. 하위 카테고리들 삭제
+        // 하위 카테고리들 삭제
         for (const subCategory of subCategories) {
             await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.userID, subCategory.id]);
         }
 
-        // 3. 현재 카테고리 삭제
+        // 현재 카테고리 삭제
         await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.userID, req.categoryID]);
 
         conn.release();

@@ -13,39 +13,36 @@ export const getCategoryService = async (data) => {
 }
 
 // 상위 카테고리 추가 
-export const addCategory1Service = async (data) => {
-    console.log("서비스 요청 정보", data);
+export const addCategory1Service = async (req) => {
     const categoryData = {
-        name : data.name,
-        user_id : data.userID,
+        name : req.body.name,
+        user_id : req.userID,
         top_category : null,
-        created_at : data.createdAt
+        created_at : new Date
     };
-    const [topCategoryResult] = await addCategoryDAO(categoryData);
+    const categoryID = await addCategoryDAO(categoryData);
 
     const defaultSubCategoryData = {
         name: "기본",
-        user_id: data.userID,
-        top_category: topCategoryResult.insertId, // 상위 카테고리의 ID를 사용
-        created_at: data.createdAt,
+        user_id: req.userID,
+        top_category: categoryID, // 상위 카테고리의 ID를 사용
+        created_at: new Date
     };
-    await addCategoryDAO(defaultSubCategoryData);
-    
-    return categoryResponseDTO(categoryData);
+
+    await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
+    return categoryResponseDTO(categoryData,categoryID);
 }
 
 // 하위 카테고리 추가 
-export const addCategory2Service = async (data) => {
-    console.log("서비스 요청 정보", data);
-    //const top_category = 
+export const addCategory2Service = async (req) => {
     const categoryData = {
-        name : data.name,
-        user_id : data.userID,
-        top_category : data.topCategoryID,
-        created_at : data.createdAt
+        name : req.body.name,
+        user_id : req.userID,
+        top_category : req.params.topCategoryID,
+        created_at : new Date
     };
-    await addCategoryDAO(categoryData);
-    return categoryResponseDTO(categoryData);
+    const categoryID = await addCategoryDAO(categoryData);
+    return categoryResponseDTO(categoryData,categoryID);
 }
 
 // 카테고리 수정 

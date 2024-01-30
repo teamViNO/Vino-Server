@@ -3,19 +3,19 @@
 // 카테고리 조회
 export const getCategoryResponseDTO = (category) => {
     return {
-    "categoryID": category.id,
-    "name": category.name,
-    "topCategoryID": category.top_category,
-    "createdAt": category.created_at
+        "categoryID": category.id,
+        "name": category.name,
+        "topCategoryID": category.top_category,
+        "createdAt": category.created_at
     };
 }
 
 // 카테고리 변경 사항 있을 때
-export const categoryResponseDTO = (category) => {
+export const categoryResponseDTO = (category,categoryID) => {
     return {
-    "categoryID": category.categoryID,
-    "name": category.name,
-    "topCategoryID": category.topCategoryID
+        "topCategoryId": category.top_category,
+        "categoryId": categoryID,
+        "name": category.name,
     };
 }
 
@@ -25,9 +25,10 @@ export const categoryResponseDTO = (category) => {
 export const addCategoryRequestDTO = (category) => {
     const time = new Date
     return {
-        "name": category.body.name,
+        "name": category.name,
         "userID": category.userID,
-        "topCategoryID" : category.params.topCategoryID,
+        "categoryID": category.categoryID,
+        "topCategoryID" : category.topCategoryID,
         "createdAt" : time
     };
 };

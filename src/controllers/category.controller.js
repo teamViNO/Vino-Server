@@ -33,10 +33,8 @@ export const addCategory1Data= async (req,res,next)=>{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userID = decoded.id;
 
-        const data = addCategoryRequestDTO(req);
-        console.log("컨트롤러 요청정보",data);
-        const result = await addCategory1Service(data);
-        res.send(response(status.SUCCESS, result));
+        const result = await addCategory1Service(req);
+        res.send(result);
     } catch(error){
         console.error(error);
     }
@@ -50,10 +48,8 @@ export const addCategory2Data= async (req,res,next)=>{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userID = decoded.id;
 
-        const data = addCategoryRequestDTO(req);
-        console.log("컨트롤러 요청정보",data);
-        const result = await addCategory2Service(data);
-        res.send(response(status.SUCCESS, result));
+        const result = await addCategory2Service(req);
+        res.send(result);
     } catch(error){
         console.error(error);
     }
