@@ -143,7 +143,12 @@ export const getUserInfo = async (userId) => {
     const [row] = await pool.query(
       'SELECT name, birth_date, gender, phone_number, email, nick_name FROM user WHERE id = ?',[userId]
     );
-    return row[0];
+    return {status: 200,
+            success: true, 
+            message: '정보를 성공적으로 조회 했습니다.' , 
+            data: row[0]
+          };
+  
   } catch (error) {
     console.error(error);
     throw error;
