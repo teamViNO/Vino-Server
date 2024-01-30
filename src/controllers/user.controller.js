@@ -1,4 +1,4 @@
-import { registerService, loginService, setNicknameService,joinVideoAlarm,joinNoticeAlarm, viewAlarm,updateConfirm,removeAlarm, tempPasswordService} from '../services/user.service.js';
+import { registerService, loginService, setNicknameService,joinVideoAlarm,joinNoticeAlarm, viewAlarm,updateConfirm,removeAlarm, tempPasswordService, removeAllAlarm} from '../services/user.service.js';
 import { findUserByEmail, findUserByNameAndPhone} from '../models/user.dao.js';
 import jwt from 'jsonwebtoken';
 
@@ -147,6 +147,23 @@ export const deleteAlarm=async(req,res)=>{
       "alarm_id":req.params.alarmId
     }
     res.send(response(status.SUCCESS,await removeAlarm(data)));
+
+  }catch(error){
+    console.log(error);
+  }
+  
+}
+
+export const deleteAllAlarm=async(req,res)=>{
+  try{
+    console.log("모든알림 삭제를 요청하셨습니다.");
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+    const data={
+      "userId":req.userId
+    }
+    res.send(response(status.SUCCESS,await removeAllAlarm(data)));
 
   }catch(error){
     console.log(error);

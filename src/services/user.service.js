@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { findUserByEmail, createUser, comparePassword, updateInfo } from '../models/user.dao.js';
+import { findUserByEmail, createUser, comparePassword, updateInfo, deleteAllAlarm } from '../models/user.dao.js';
 import { findUserById, updatePassword, findUserByNamePhoneAndEmail,updateUserNickname} from '../models/user.dao.js';
 import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm} from '../models/user.dao.js';
 import bcrypt from 'bcryptjs';
-import {joinAlarmResponseDto,getAlarmResponseDTO,updateConfirmResponseDTO,deleteAlarmResponseDTO} from '../dtos/user.dto.js'
+import {joinAlarmResponseDto,getAlarmResponseDTO,updateConfirmResponseDTO,deleteAlarmResponseDTO, deleteAllAlarmResponseDTO} from '../dtos/user.dto.js'
 import nodemailer from 'nodemailer'
 
 // 일반 회원가입
@@ -121,6 +121,12 @@ export const removeAlarm=async(data)=>{
   const removeAlarmData=await deleteAlarm(data);
   return deleteAlarmResponseDTO(removeAlarmData);
 }
+
+export const removeAllAlarm=async(data)=>{
+  const removeAlarmData=await deleteAllAlarm(data);
+  return deleteAllAlarmResponseDTO(removeAlarmData);
+}
+
 
 
 // 임시 비밀번호 발급 -> 이메일로 전송
