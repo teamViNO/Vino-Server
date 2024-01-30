@@ -3,15 +3,15 @@
 // 카테고리 조회
 export const getCategoryResponseDTO = (category) => {
     return {
-        "categoryID": category.id,
+        "categoryId": category.id,
         "name": category.name,
-        "topCategoryID": category.top_category,
+        "topCategoryId": category.top_category,
         "createdAt": category.created_at
     };
 }
 
-// 카테고리 변경 사항 있을 때
-export const categoryResponseDTO = (category,categoryID) => {
+// 상위 또는 하위 카테고리 추가
+export const addCategoryResponseDTO = (category,categoryID) => {
     return {
         "topCategoryId": category.top_category,
         "categoryId": categoryID,
@@ -19,37 +19,15 @@ export const categoryResponseDTO = (category,categoryID) => {
     };
 }
 
-//--------------------------------------------------------------------------------------
-
-// 상위 또는 하위 카테고리 추가
-export const addCategoryRequestDTO = (category) => {
-    const time = new Date
+// 카테고리 수정 또는 카테고리 이동
+export const fixCategoryResponseDTO = (category) => {
     return {
+        "topCategoryId": category.top_category,
+        "categoryId": category.category_id,
         "name": category.name,
-        "userID": category.userID,
-        "categoryID": category.categoryID,
-        "topCategoryID" : category.topCategoryID,
-        "createdAt" : time
     };
-};
-
-// 카테고리 삭제
-export const deleteCategoryRequestDTO = (category) => {
-    return {
-        "name": category.body.name,
-        "userID": category.userID,
-        "categoryID": category.params.categoryID,
-    };
-};
- 
-// 카테고리 수정
-export const renameCategoryRequestDTO = (category) => {
-    return {
-        "name": category.body.name,
-        "userID": category.userID,
-        "categoryID": category.params.categoryID,
-    };
-};
+}
+//--------------------------------------------------------------------------------------
 
 // 카테고리 이동 (하위 -> 하위)
 export const moveCategoryRequestDTO = (category) => {

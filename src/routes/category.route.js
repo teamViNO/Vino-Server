@@ -30,7 +30,7 @@ categoryRoute.delete('/:categoryID', async (req,res) => {
     const result = await deleteCategoryData(req,res);
 })
 
-// 카테고리 이동 (하위가 다른 상위의 새로운 하위가 될 때)
+// 카테고리 이동 (하위의 상위가 변경될 때)
 categoryRoute.put('/:categoryID/:topCategoryID', async (req,res) =>{
     const result = await moveCategoryData(req,res);
 })
