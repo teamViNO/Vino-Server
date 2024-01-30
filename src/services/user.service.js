@@ -36,7 +36,7 @@ export const loginService = async ({ email, password }) => {
   }
   
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET); 
-  return { status: 200, success: true, message: '로그인 성공', data: { token } };
+  return { status: 200, success: true, message: '로그인 성공', result: { token } };
 };
 
 

@@ -146,7 +146,7 @@ export const getUserInfo = async (userId) => {
     return {status: 200,
             success: true, 
             message: '정보를 성공적으로 조회 했습니다.' , 
-            data: row[0]
+            result: row[0]
           };
   
   } catch (error) {
