@@ -58,6 +58,7 @@ export const addVideoAlarm=async(req)=>{
     const conn =await pool.getConnection();
     console.log(req);
     const videoAlarm = await pool.query(insertVideoAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.status,req.user_id,req.video_id]);
+    conn.release();
     return videoAlarm[0].insertId;
   } catch (error) {
     console.error(error);
@@ -69,6 +70,7 @@ export const addNoticeAlarm=async(req)=>{
     const conn = await pool.getConnection();
     console.log(req);
     const noticeAlarm=await pool.query(insertNoticeAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.user_id]);
+    conn.release();
     return noticeAlarm[0].insertId;
   } catch (error) {
     console.error(error);
@@ -81,6 +83,7 @@ export const getAlarm=async(user)=>{
     const conn = await pool.getConnection();
     console.log(user);
     const [alarmData]=await pool.query(getAlarmSql,[user]);
+    conn.release();
     return alarmData;
   } catch(error){
     console.error(error);
@@ -93,6 +96,7 @@ export const setConfirm=async(data)=>{
     const conn = await pool.getConnection();
     console.log(data);
     const alarm=await pool.query(setConfirmSql,[data.alarm_id,data.userId]);
+    conn.release();
     return "success";
   } catch (error) {
     console.error(error);
@@ -105,6 +109,7 @@ export const deleteAlarm=async(data)=>{
     const conn = await pool.getConnection();
     console.log(data);
     const alarm=await pool.query(deleteAlarmSql,[data.alarm_id,data.userId]);
+    conn.release();
     return "success";
   } catch (error) {
     console.error(error);
@@ -116,6 +121,7 @@ export const deleteAllAlarm=async(data)=>{
     const conn = await pool.getConnection();
     console.log(data);
     const alarm=await pool.query(deleteAllAlarmSql,[data.userId]);
+    conn.release();
     return "success";
   } catch (error) {
     console.error(error);
