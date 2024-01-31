@@ -1,8 +1,9 @@
-// import multer from "multer";
-// import multerS3 from 'multer-s3';
-// import AWS from 'aws-sdk';
-// import dotenv from "dotenv";
-// import path from 'path';
+import multer from "multer";
+import multerS3 from 'multer-s3';
+import AWS from 'aws-sdk';
+import dotenv from "dotenv";
+import path from 'path';
+import jwt from 'jsonwebtoken';
 
 // AWS.config.update({
 //     accessKeyId: process.env.S3_KEYID,  // keyID 입력 
@@ -16,19 +17,22 @@
 
 
 
-// export const imageUploader = multer({
-//     storage: multerS3({
-//         s3: s3,
-//         bucket : process.env.BUCKET_NAME,
-        
-//         key: function (req, file, cb) {
-//             const userId=req.query.userId ??''
-//             const videoId=req.query.videoId ?? ''
-//             const extension = path.extname(file.originalname)
-//             cb(null,`user/${userId}/videos/${videoId}/_${videoId+'.'+file.originalname.split('.').pop()}`);// 객체의 키로 고유한 식별자 이기 때문에 겹치면 안됨
-//           },
-//         acl: 'public-read-write'
-//     })
+export const imageUploader = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket : process.env.BUCKET_NAME,
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        key: function (req, file, cb) {
+            const token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.userId = decoded.id;
+            const userId=req.userId 
+            const videoId=req.query.videoId ?? ''
+            const extension = path.extname(file.originalname)
+            cb(null,`user/${userId}/videos/${videoId}/_${videoId+'.'+file.originalname.split('.').pop()}`);// 객체의 키로 고유한 식별자 이기 때문에 겹치면 안됨
+          },
+        acl: 'public-read-write'
+    })
 
 // })
 
