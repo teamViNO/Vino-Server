@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql} from "../models/video.sql.js"
+import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql} from "../models/video.sql.js"
 
 
 
@@ -189,3 +189,14 @@ export const dropSelectedVideo=async (user,video)=>{
     }
 }
 
+export const getEntireTag=async(req)=>{
+    try {
+        const conn=await pool.getConnection();
+        const [getTagData]= await pool.query(entireTagSql,req.userId);
+        conn.release();
+        return getTagData
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}

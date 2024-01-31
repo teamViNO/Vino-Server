@@ -31,5 +31,5 @@ export const updateSubheadingSql="update subheading set name=?,content=? where i
 export const updateSummarySql="update summary set content =? where id=? and video_id=? and version_id='revision';";
 
 
-
+export const entireTagSql="select DISTINCT tag.id, tag.name from video_tag join tag on video_tag.tag_id = tag.id join video on video_tag.video_id = video.id where user_id=?;"
 

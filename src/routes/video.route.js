@@ -1,5 +1,5 @@
 import express from "express";
-import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate,vidoeSelectDelete} from "../controllers/video.controller.js";
+import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate,vidoeSelectDelete, getEntireTag} from "../controllers/video.controller.js";
 
 
 export const videoRoute = express.Router();
@@ -16,7 +16,9 @@ videoRoute.get('/',async(req,res)=>{
 }
 
 );
-
+videoRoute.get('/tag',async(req,res)=>{
+    const result =await getEntireTag(req,res);
+})
 videoRoute.post('/new-video',async(req,res)=>{
     const result = await videoInsert(req,res);
 })

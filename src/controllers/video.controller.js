@@ -1,7 +1,7 @@
 import { Billingconductor } from "aws-sdk";
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { viewVideo,viewSimpleVideo,joinVideo,deleteVideo,  updateVideoService,deleteSelectVideo} from "../services/video.service.js";
+import { viewVideo,viewSimpleVideo,joinVideo,deleteVideo,  updateVideoService,deleteSelectVideo, viewTag} from "../services/video.service.js";
 import  jwt  from "jsonwebtoken";
 
 export const videoInfo=async (req,res,next)=>{
@@ -99,4 +99,18 @@ export const videoUpdate=async(req,res,next)=>{
     } catch (error) {
         console.error(error)
     }
+}
+export const getEntireTag=async(req,res,next)=>{
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        const data={
+            "userId":req.userId
+        };
+        res.send(response(status.SUCCESS,await viewTag(data)));
+    } catch (error) {
+        console.error(error)
+    }
+   
 }
