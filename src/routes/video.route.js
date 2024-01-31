@@ -1,5 +1,5 @@
 import express from "express";
-import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate} from "../controllers/video.controller.js";
+import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate,vidoeSelectDelete} from "../controllers/video.controller.js";
 
 
 export const videoRoute = express.Router();
@@ -30,3 +30,6 @@ videoRoute.patch('/:videoID',async(req,res)=>{
     const result =await videoUpdate(req,res);
 })
 
+videoRoute.delete('/selectDelete',async(req,res)=>{
+    const result = await vidoeSelectDelete(req,res);
+})

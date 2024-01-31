@@ -10,6 +10,7 @@ export const setReadTime=async(data,time)=>{
     const [video] =await pool.query(setTimeSql,[time,data.videoID]);
     conn.release();
 }
+
 export const getVideo=async (req) =>{
     try {
         console.log("dao에서 받아온 정보",req);
@@ -162,6 +163,23 @@ export const dropVideo=async (data)=>{
         const deleteSummary= await pool.query(deleteSummarySql,[data.videoID]);
         const deleteSubheading= await pool.query(deleteSubheadingSql,[data.videoID]);
         const deleteVideo= await pool.query(deleteVideoSql,[data.videoID]);
+        conn.release();
+        return "success";
+
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const dropSelectedVideo=async (user,video)=>{
+    try{
+        console.log("삭제 요청 : ",video);
+        const conn = await pool.getConnection();
+        const deleteVideoTag= await pool.query(deleteVideoTagSql,[video]);
+        const deleteSummary= await pool.query(deleteSummarySql,[video]);
+        const deleteSubheading= await pool.query(deleteSubheadingSql,[video]);
+        const deleteVideo= await pool.query(deleteVideoSql,[video]);
         conn.release();
         return "success";
 

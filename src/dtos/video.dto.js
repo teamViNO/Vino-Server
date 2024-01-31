@@ -16,13 +16,20 @@ export const getVideoResponseDTO=(video,subHeading,summary,tag)=>{
 export const updateVideoResponseDTO=(video) =>{
    return {"status": video}
 }
-export const getSimpleVideoResponseDTO=(video)=>{
+export const getSimpleVideoResponseDTO=(video,tag)=>{
     const videoData=[]
-
-    for(let i=0;i<video.length;i++){
-        videoData.push({"video_id":video[i].id,"category":video[i].category_id,"title":video[i].title,"image":video[i].image,"link":video[i].link,"created_at":video[i].updated_at,"youtube_created_at":video[i].youtube_created_at,"open_at":video[i].open_at});
+    
+    console.log("태그 데이터",tag);
+    for(let i=0;i<tag.length;i++){
+        const tagData=[]
+        for(let j=0;j<tag[i].length;j++){
+            tagData.push({"name":tag[i][j].name});
+        }
+        videoData.push({"video_id":video[i].id,"category":video[i].category_id,"title":video[i].title,"image":video[i].image,"link":video[i].link,"created_at":video[i].updated_at,"youtube_created_at":video[i].youtube_created_at,"open_at":video[i].open_at,"tag":tagData});
+            
         
     }
+  
     return {"videos":videoData};
 }
 
