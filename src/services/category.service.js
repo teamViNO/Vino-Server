@@ -4,7 +4,7 @@ import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import { getCategoryResponseDTO,addCategoryResponseDTO,fixCategoryResponseDTO } from "../dtos/category.dto.js";
 import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
-import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO } from "../models/category.dao.js"
+import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,move4CategoryDAO } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -99,5 +99,23 @@ export const move3CategoryService = async (req) => {
     };
     console.log("서비스 요청 정보", categoryData);
     await move3CategoryDAO(categoryData);
+    return fixCategoryResponseDTO(categoryData);
+}
+
+// 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+export const move4CategoryService = async (req) => {
+    const categoryData =  {
+        user_id : req.userID,
+        top_category : req.params.topCategoryID, // 이동할 상위가
+        category_id : req.params.categoryID // 얘랑 합쳐짐
+    };
+    console.log("서비스 요청 정보", categoryData);
+    await move4CategoryDAO(categoryData);
+    
+    const data =  { //삭제할 카테고리
+        user_id : req.userID,
+        category_id : req.params.topCategoryID,
+    };
+    await deleteCategoryDAO(data);
     return fixCategoryResponseDTO(categoryData);
 }

@@ -114,3 +114,8 @@ export const move3CategoryDAO = async (req) => {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
+
+// 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+export const move4CategoryDAO = async (req) => {
+    //넘어온 top_category 연동 데이터를 없애고, 콘텐츠들을 category_id와 연동
+};
