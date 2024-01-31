@@ -8,6 +8,7 @@ import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getTagSql,i
 export const setReadTime=async(data,time)=>{
     const conn =await pool.getConnection();
     const [video] =await pool.query(setTimeSql,[time,data.videoID]);
+    conn.release();
 }
 export const getVideo=async (req) =>{
     try {
@@ -15,6 +16,7 @@ export const getVideo=async (req) =>{
         const conn = await pool.getConnection();
         const [video]= await pool.query(getVideoSql,[req.videoID,req.userID,req.version]);
         console.log("비디오값",video[0]);
+        conn.release();
         return video;
     }catch(err){
         console.error(err);
@@ -25,6 +27,7 @@ export const getSimpleVideo=async (req)=>{
     try{
         const conn =await pool.getConnection();
         const [video]=await pool.query(getEntireVideoSql,[req.userID])
+        conn.release();
         return video;
     }catch(err){
         console.error(err);
@@ -37,6 +40,7 @@ export const getSubHeading=async (req) =>{
         const conn = await pool.getConnection();
         const [subHeading]= await pool.query(getSubHeadingSql,[req.videoID,req.version]);
         console.log("소제목값",subHeading);
+        conn.release();
         return subHeading;
     }catch(err){
         console.error(err);
@@ -48,6 +52,7 @@ export const getSummary=async (req) =>{
         const conn = await pool.getConnection();
         const [summary]= await pool.query(getSummarySql,[req.videoID,req.version]);
         console.log("요약값",summary);
+        conn.release();
         return summary;
     }catch(err){
         console.error(err);
@@ -58,6 +63,7 @@ export const getTag=async (req) =>{
     try {
         const conn = await pool.getConnection();
         const [tag]= await pool.query(getTagSql,[req.videoID,req.version]);
+        conn.release();
         return tag;
     }catch(err){
         console.error(err);
@@ -119,6 +125,7 @@ export const updateSummary=async (summary)=>{
     try{
         const conn = await pool.getConnection();
         const summaryData= await pool.query(updateSummarySql,[summary.content,summary.id,summary.video_id]);
+        conn.release();
     }catch(err){
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -128,6 +135,7 @@ export const updateSubheading=async (subheading)=>{
     try{
         const conn = await pool.getConnection();
         const subheadingData= await pool.query(updateSubheadingSql,[subheading.name,subheading.content,subheading.id,subheading.video_id,]);
+        conn.release();
     }catch(err){
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -138,6 +146,7 @@ export const updateVideo=async (video)=>{
         console.log("비디오",video);
         const conn = await pool.getConnection();
         const videoData= await pool.query(updateVideoSql,[video.title,video.readed_at,video.updated_at,video.category_id,video.id]);
+        conn.release();
         return video.id;
     }catch(err){
         console.error(err);
