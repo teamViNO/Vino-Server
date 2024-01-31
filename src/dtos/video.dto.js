@@ -40,3 +40,7 @@ export const joinVideoResponseDTO= (video)=>{
 export const deleteVideoResponseDTO=(video)=>{
     return {"status": video}
 }
+
+export const getEntireTagResponseDTO=(tag)=>{
+    return tag;
+}
