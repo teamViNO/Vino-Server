@@ -116,11 +116,10 @@ export const deleteAlarm=async(data)=>{
     throw new BaseError(status.PARAMETER_IS_WRONG);
   }
 }
-export const deleteAllAlarm=async(data)=>{
+export const deleteSelectAlarm=async(user,alarm)=>{
   try {
     const conn = await pool.getConnection();
-    console.log(data);
-    const alarm=await pool.query(deleteAllAlarmSql,[data.userId]);
+    const alarms=await pool.query(deleteAllAlarmSql,[user,alarm]);
     conn.release();
     return "success";
   } catch (error) {
