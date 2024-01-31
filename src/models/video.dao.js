@@ -162,3 +162,18 @@ export const dropVideo=async (data)=>{
     }
 }
 
+export const dropVideoByCateogry = async(cateogry_id)=>{
+    try{
+        console.log("삭제 요청 : ",cateogry_id);
+        const conn = await pool.getConnection();
+        const deleteVideoTag= await pool.query(deleteVideoTagSql,[cateogry_id]);
+        const deleteSummary= await pool.query(deleteSummarySql,[cateogry_id]);
+        const deleteSubheading= await pool.query(deleteSubheadingSql,[cateogry_id]);
+        const deleteVideo= await pool.query(deleteVideoSql,[cateogry_id]);
+        conn.release();
+        return "success";
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
