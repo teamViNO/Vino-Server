@@ -72,7 +72,7 @@ export const vidoeSelectDelete=async(req,res,next)=>{
         const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userId = decoded.id;
-        console.log("비디오 삭제를 요청하셨습니다");
+        console.log("비디오 선택 삭제를 요청하셨습니다");
         const data={
             "userId":req.userId,
             "videos":req.body.videos
