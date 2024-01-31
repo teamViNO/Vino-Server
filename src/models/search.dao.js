@@ -10,7 +10,8 @@ export const getVideoKeyword =async(req)=>{
         console.log(req);
         const conn = await pool.getConnection();
         const [video]=await pool.query(getVideoKeywordSql,[req.userId,'%'+req.keyword+'%','%'+req.keyword+'%','%'+req.keyword+'%']);
-        console.log("비디오 데이터",video);
+        console.log("비디오 데이터 원본 ",video);
+        conn.release();
         return video;
     } catch (error) {
         console.error(error);
@@ -25,6 +26,7 @@ export const getVideoTag = async(req)=>{
         const conn = await pool.getConnection();
         const [video]=await pool.query(getVideoTagSql,[req.userId,'%'+req.tag+'%']);
         console.log("비디오 데이터",video);
+        conn.release();
         return video;
     }catch(error){
         console.error(error);

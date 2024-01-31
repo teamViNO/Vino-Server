@@ -1,6 +1,6 @@
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime} from "../models/video.dao.js"
+import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo} from "../models/video.dao.js"
 import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO} from "../dtos/video.dto.js"
 
 
@@ -20,16 +20,34 @@ export const viewVideo=async(data)=>{
 export const viewSimpleVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
     console.log("123");
+    const TagData=[];
     const getVideoData=await getSimpleVideo(data);
+    console.log(getVideoData[0].id);
+    for(let i =0; i<getVideoData.length;i++){
+        TagData.push(await getTag({
+            "videoID":getVideoData[i].id,
+            "version":"revision"
+        }));
+    }
     console.log("비디오 정보: ",getVideoData);
-    return getSimpleVideoResponseDTO(getVideoData);
-
+    return getSimpleVideoResponseDTO(getVideoData,TagData);
 
 }
 export const deleteVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청 정보",data);
     const deleteVideoStatus= await dropVideo(data);
     return deleteVideoResponseDTO(deleteVideoStatus);
+}
+
+export const deleteSelectVideo=async(data)=>{
+    console.log("서비스에서 전달되는 요청 정보",data);
+    const deleteVideoStatus=[];
+    for(let i =0; i<data.videos.length;i++){
+        deleteVideoStatus.push(await dropSelectedVideo(data.userId,data.videos[i]));
+
+    }
+
+    return deleteVideoResponseDTO(deleteVideoStatus[0]);
 }
 
 export const joinVideo=async(body,data)=>{
@@ -42,6 +60,7 @@ export const joinVideo=async(body,data)=>{
         'user_id':data.userID,
         'title': body.title,
         'link':body.link,
+        "youtube_created_at":body.youtube_created_at,
         'image':body.image,
         'category_id':body.category_id,
         'created_at':time,
