@@ -34,6 +34,7 @@ export const status = {
     // paging err
 
     //video error
-    VIDEO_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "MEMBER4003", "message": "이미 동일한 링크로 생성이 되어있습니다."},
-    VIDEO_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "MEMBER4003", "message": "검색결과를 찾지 못했습니다."}
+    VIDEO_ALREADY_EXIST: {status: StatusCodes.BAD_REQUEST, "isSuccess": false, "code": "VIDEO4001", "message": "이미 동일한 링크로 생성이 되어있습니다."},
+    VIDEO_NOT_FOUND: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "VIDEO4002", "message": "검색결과를 찾지 못했습니다."},
+    CATEGORY_IS_EMPTY: {status: StatusCodes.NOT_FOUND, "isSuccess": false, "code": "VIDEO4003", "message": "카테고리에 포함된 영상을 찾지 못했습니다."}
 };
