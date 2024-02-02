@@ -86,7 +86,16 @@ export const move2CategoryService = async (req) => {
         category_id : req.params.categoryID,
     };
     console.log("서비스 요청 정보", categoryData);
-    await move2CategoryDAO(categoryData);
+
+    const defaultSubCategoryData = {
+        name: "기본",
+        user_id: req.userID,
+        top_category: req.params.categoryID, // 상위 카테고리의 ID를 사용
+        created_at: new Date
+    };
+    const newId = await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
+
+    await move2CategoryDAO(categoryData,newId);
     return fixCategoryResponseDTO(categoryData);
 }
 
