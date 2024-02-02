@@ -95,6 +95,7 @@ export const joinVideoAlarm=async(data,user)=>{
 export const joinNoticeAlarm=async(data,user)=>{
     const time = new Date
     const joinNoticeAlarmData = await addNoticeAlarm({
+      'title': data.title,
       'user_id':user,
       'is_confirm': data.is_confirm,
       'created_at': time,
