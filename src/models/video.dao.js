@@ -1,8 +1,8 @@
 import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql} from "../models/video.sql.js"
-
+import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql} from "../models/video.sql.js"
+import {getSimpleVideoWithVideoSql} from "../models/video.sql.js";
 
 
 export const setReadTime=async(data,time)=>{
@@ -10,6 +10,7 @@ export const setReadTime=async(data,time)=>{
     const [video] =await pool.query(setTimeSql,[time,data.videoID]);
     conn.release();
 }
+
 export const getVideo=async (req) =>{
     try {
         console.log("dao에서 받아온 정보",req);
@@ -181,8 +182,64 @@ export const dropVideoByCateogry = async(cateogry_id)=>{
         const deleteVideo= await pool.query(deleteVideoSql,[cateogry_id]);
         conn.release();
         return "success";
+    } catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const dropSelectedVideo=async (user,video)=>{
+    try{
+        console.log("삭제 요청 : ",video);
+        const conn = await pool.getConnection();
+        const deleteVideoTag= await pool.query(deleteVideoTagSql,[video]);
+        const deleteSummary= await pool.query(deleteSummarySql,[video]);
+        const deleteSubheading= await pool.query(deleteSubheadingSql,[video]);
+        const deleteVideo= await pool.query(deleteVideoSql,[video]);
+        conn.release();
+        return "success";
+
     }catch(err){
         console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getEntireTag=async(req)=>{
+    try {
+        const conn=await pool.getConnection();
+        const [getTagData]= await pool.query(entireTagSql,req.userId);
+        conn.release();
+        return getTagData
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getCategory=async(category,user)=>{
+    try {
+        
+        const conn=await pool.getConnection();
+        const [getCategoryData]=await pool.query(getCategorySql,[user,category]);
+        
+        conn.release();
+        return getCategoryData;
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getSimpleVideoWithVideo=async(data)=>{
+    try {
+        const conn=await pool.getConnection();
+        const [getVideoData]=await pool.query(getSimpleVideoWithVideoSql,[data]);
+        
+        conn.release;
+        return getVideoData;
+    } catch (error) {
+        console.error(error);
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 }

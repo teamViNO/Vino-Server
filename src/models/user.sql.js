@@ -8,4 +8,4 @@ export const setConfirmSql='update alarm set is_confirm = 1 where id=? and user_
 
 export const deleteAlarmSql='delete from alarm where id=? and user_id=?;';
 
-export const deleteAllAlarmSql='delete from alarm where user_id=?;';
+export const deleteAllAlarmSql='delete from alarm where user_id=? and id=?;';

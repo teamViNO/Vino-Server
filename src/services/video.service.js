@@ -1,8 +1,9 @@
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime} from "../models/video.dao.js"
-import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO} from "../dtos/video.dto.js"
-
+import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
+import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO, getEntireTagResponseDTO} from "../dtos/video.dto.js"
+import {getSimpleVideoWithVideo} from "../models/video.dao.js";
+import {getCategoryVideoResponseDTO} from "../dtos/video.dto.js";
 
 export const viewVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
@@ -17,19 +18,99 @@ export const viewVideo=async(data)=>{
 
 
 }
+export const viewTag=async(data)=>{
+    const getTagData=await getEntireTag(data);
+    return getEntireTagResponseDTO(getTagData);
+}
+
 export const viewSimpleVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
     console.log("123");
+    const TagData=[];
     const getVideoData=await getSimpleVideo(data);
+    console.log(getVideoData[0].id);
+    for(let i =0; i<getVideoData.length;i++){
+        TagData.push(await getTag({
+            "videoID":getVideoData[i].id,
+            "version":"revision"
+        }));
+    }
     console.log("비디오 정보: ",getVideoData);
-    return getSimpleVideoResponseDTO(getVideoData);
+    return getSimpleVideoResponseDTO(getVideoData,TagData);
+
+}
+export const viewCategoryVideo=async(data)=>{
+    try {
+        const categoryData=[];
+        const tagData=[];
+        const getVideoData=[];
+        const categoryResult=await findCategory(categoryData,data.category_id,data.user_id);
+        
+        for(let i=0; i<categoryResult.length;i++){
+            
+            const result=[];
+            result.push(await getSimpleVideoWithVideo(categoryResult[i]));
+            
+            if(result[0].length!==0){
+                getVideoData.push(result[0]);
+            }
+            
+            
+        }
+        
+        for(let j=0;j<getVideoData.length;j++){
+            for(let k=0;k<getVideoData[j].length;k++){
+                tagData.push(await getTag({
+                    "videoID":getVideoData[j][k].id,
+                    "version":"revision"
+                }));
+            }
+            
+        }
+       
 
 
+        return getCategoryVideoResponseDTO(getVideoData,tagData);
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.CATEGORY_IS_EMPTY);
+    }
+}
+async function findCategory(categoryData, category, user) {
+    
+    if (typeof category == "undefined" || category == null) {
+       
+        return categoryData;
+    } else {
+        categoryData.push(category);
+        const result = await getCategory(category, user);
+        for (let i = 0; i < result.length; i++) {
+            await findCategory(categoryData, result[i].id, user);
+        }
+
+        if (typeof result[0] == "undefined") {
+            await findCategory(categoryData, result[0], user);
+        }
+        
+        // 이 부분에서 루프가 끝난 후 값을 반환하도록 수정
+        return categoryData;
+    }
 }
 export const deleteVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청 정보",data);
     const deleteVideoStatus= await dropVideo(data);
     return deleteVideoResponseDTO(deleteVideoStatus);
+}
+
+export const deleteSelectVideo=async(data)=>{
+    console.log("서비스에서 전달되는 요청 정보",data);
+    const deleteVideoStatus=[];
+    for(let i =0; i<data.videos.length;i++){
+        deleteVideoStatus.push(await dropSelectedVideo(data.userId,data.videos[i]));
+
+    }
+
+    return deleteVideoResponseDTO(deleteVideoStatus[0]);
 }
 
 export const joinVideo=async(body,data)=>{
@@ -42,6 +123,7 @@ export const joinVideo=async(body,data)=>{
         'user_id':data.userID,
         'title': body.title,
         'link':body.link,
+        "youtube_created_at":body.youtube_created_at,
         'image':body.image,
         'category_id':body.category_id,
         'created_at':time,
@@ -113,6 +195,4 @@ export const updateVideoService=async(body,data)=>{
         console.log("전달되는 정보",updateVideoData);
         return updateVideoResponseDTO(updateVideoData);
     }
-    
-    
 }

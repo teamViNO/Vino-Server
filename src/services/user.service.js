@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { findUserByEmail, createUser, comparePassword, updateInfo, deleteAllAlarm } from '../models/user.dao.js';
+import { findUserByEmail, createUser, comparePassword, updateInfo, deleteSelectAlarm } from '../models/user.dao.js';
 import { findUserById, updatePassword, findUserByNamePhoneAndEmail,updateUserNickname} from '../models/user.dao.js';
 import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm} from '../models/user.dao.js';
 import bcrypt from 'bcryptjs';
@@ -122,9 +122,13 @@ export const removeAlarm=async(data)=>{
   return deleteAlarmResponseDTO(removeAlarmData);
 }
 
-export const removeAllAlarm=async(data)=>{
-  const removeAlarmData=await deleteAllAlarm(data);
-  return deleteAllAlarmResponseDTO(removeAlarmData);
+export const removeSelectAlarm=async(data)=>{
+  const deleteAlarmStatus=[];
+  for(let i =0; i<data.alarms.length;i++){
+    deleteAlarmStatus.push(await deleteSelectAlarm(data.userId,data.alarms[i]));
+  }
+  
+  return deleteAllAlarmResponseDTO( deleteAlarmStatus[0]);
 }
 
 
