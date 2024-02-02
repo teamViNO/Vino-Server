@@ -49,33 +49,41 @@ export const renameCategoryDAO = async (req) => {
     }
 };
 
-// 하위 카테고리 삭제 => 카테고리에 포함된 모든 컨텐츠 삭제
+// 카테고리 삭제 => 카테고리에 포함된 모든 컨텐츠 삭제
 export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
-
-        // 삭제할 상위 카테고리의 하위 카테고리 ID를 가져오기
-        //const [subCategories] = await pool.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [req.user_id, req.category_id]);
+        const [categoryInfo] = await conn.query("SELECT top_category FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
+        const isNull = categoryInfo[0].top_category;
         
-        // 이 카테고리 ID를 참조하는 비디오 ID 가져오기
-        const [vid] = await pool.query("SELECT id FROM video WHERE user_id = ? AND category_id = ?",[req.user_id, req.category_id])
-        console.log("비디오 ID: ", [vid])
+        if(isNull===null){ // 상위 카테고리일 때
+            
+            // 하위 카테고리 id 가져오기 
+            const [subCategories] = await pool.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [req.user_id, req.category_id]);
+            
+            for (const subCategory of subCategories) {
+                // 비디오 삭제
+                const [videoIds] = await pool.query("SELECT id FROM video WHERE user_id = ? AND category_id = ?", [req.user_id, subCategory.id]);
+                for (const videoIdObj of videoIds) {
+                    await dropVideo({ videoID: videoIdObj.id });
+                }
+                // 하위 카테고리 삭제
+                await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, subCategory.id]);
+            }
 
-        const data= {
-            "userID":req.userId,
-            "videoID":vid[0]
-        };
+            // 상위 카테고리 삭제하기
+            await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
 
-        await dropVideo(data); //비디오 삭제
+        } else { // 하위 카테고리일 때
+            // 비디오 삭제
+            const [videoIds] = await pool.query("SELECT id FROM video WHERE user_id = ? AND category_id = ?", [req.user_id, req.category_id]);
+            for (const videoIdObj of videoIds) {
+                await dropVideo({ videoID: videoIdObj.id });
+            }
 
-        // // 하위 카테고리들 삭제
-        // for (const subCategory of subCategories) {
-        //     dropVideoByCateogry(subCategory.id) //비디오 삭제
-        //     await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, subCategory.id]);
-        // }
-
-        // 현재 카테고리 삭제
-        //await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
+            // 해당 카테고리 삭제
+            await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
+        }
 
         conn.release();
     } catch (err) {
@@ -95,8 +103,6 @@ export const move1CategoryDAO = async (req) => {
             [req.top_category, req.category_id, req.user_id]
         );
         
-       
-
         conn.release();
     } catch (err) {
         console.error(err);
