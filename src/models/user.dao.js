@@ -69,7 +69,7 @@ export const addNoticeAlarm=async(req)=>{
   try {
     const conn = await pool.getConnection();
     console.log(req);
-    const noticeAlarm=await pool.query(insertNoticeAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.user_id]);
+    const noticeAlarm=await pool.query(insertNoticeAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.user_id,req.title]);
     conn.release();
     return noticeAlarm[0].insertId;
   } catch (error) {

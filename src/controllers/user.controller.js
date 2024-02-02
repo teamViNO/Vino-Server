@@ -108,7 +108,7 @@ export const createNoticeAlarm=async(req,res)=>{
 }
 export const getAlarm=async(req,res,next)=>{
   try{
-      console.log("일반 알림 추가를 요청하셨습니다.");
+      console.log("알림 조회를 요청하셨습니다.");
       const token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.userId = decoded.id;
