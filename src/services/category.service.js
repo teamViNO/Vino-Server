@@ -120,11 +120,5 @@ export const move4CategoryService = async (req) => {
     };
     console.log("서비스 요청 정보", categoryData);
     await move4CategoryDAO(categoryData);
-    
-    const data =  { //삭제할 카테고리
-        user_id : req.userID,
-        category_id : req.params.topCategoryID,
-    };
-    await deleteCategoryDAO(data);
     return fixCategoryResponseDTO(categoryData);
 }
