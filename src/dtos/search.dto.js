@@ -1,4 +1,4 @@
-import { BaseError } from "../../config/error";
+import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import { getSimpleVideoResponseDTO } from "./video.dto.js";
 import { getTag } from "../models/video.dao.js";
