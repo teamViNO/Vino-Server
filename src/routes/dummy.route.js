@@ -1,5 +1,5 @@
 import express from 'express';
-import { dummyProgressSuccess,dummyProgressFail } from '../controllers/dummy.controller';
+import { dummyProgressSuccess,dummyProgressFail } from '../controllers/dummy.controller.js';
 
 
 export const dummyRoute = express.Router();

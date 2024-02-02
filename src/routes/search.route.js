@@ -1,5 +1,5 @@
 import express from 'express';
-import {vidoeSearchKeyWord,vidoeSearchTag} from '../controllers/search.controller';
+import {vidoeSearchKeyWord,vidoeSearchTag} from '../controllers/search.controller.js';
 
 export const searchRoute = express.Router();
 
