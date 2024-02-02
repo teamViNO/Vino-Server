@@ -44,7 +44,7 @@ export const getCategoryVideoResponseDTO=(video,tag)=>{
             }
             videoData.push({
                 "video_id": video[i][j].id,
-                "category": video[i][j].category_id,
+                "category_id": video[i][j].category_id,
                 "title": video[i][j].title,
                 "image": video[i][j].image,
                 "link": video[i][j].link,
