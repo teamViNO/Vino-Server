@@ -99,7 +99,7 @@ export const move2CategoryService = async (req) => {
     return fixCategoryResponseDTO(categoryData);
 }
 
-// 카테고리 이동3 (하위가 새로운 상위가 될 때)
+// 카테고리 이동3 (상위가 다른 상위의 새로운 하위가 될 때)
 export const move3CategoryService = async (req) => {
     const categoryData =  {
         user_id : req.userID,

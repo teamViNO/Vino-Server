@@ -125,14 +125,28 @@ export const move2CategoryDAO = async (data,newId) => {
     }
 };
 
-// 카테고리 이동3 (하위가 새로운 상위가 될 때)
-export const move3CategoryDAO = async (req) => {
+// 카테고리 이동3 (상위가 다른 상위의 새로운 하위가 될 때) => 해당 상위의 
+export const move3CategoryDAO = async (data) => {
     try {
         const conn = await pool.getConnection();
+
+        // 1. :categoryID를 top_Category로 갖는 하위 카테고리들의 id를 모두 가져오기
+        const [subCategories] = await conn.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [data.user_id, data.category_id]);
+        
+        // 2. 1번에서 가져온 id들을 category_id로 갖는 비디오들의 category_id를 :categoryID로 변경
+        for (const subCategory of subCategories) {
+            await conn.query("UPDATE video SET category_id = ? WHERE category_id = ?", [data.category_id, subCategory.id]);
+        }
+
+        // 3. 1번에서 가져온 하위 카테고리들을 삭제
+        await conn.query("DELETE FROM category WHERE user_id = ? AND top_category = ?", [data.user_id, data.category_id]);
+
+        // 4. :categoryID에 해당하는 카테고리의 top_category를 :topCategoryID로 변경
         await pool.query(
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
-            [req.top_category, req.category_id, req.user_id]
+            [data.top_category, data.category_id, data.user_id]
         );
+
         conn.release();
     } catch (err) {
         console.error(err);
