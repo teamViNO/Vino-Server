@@ -10,13 +10,14 @@ import { BaseError } from './config/error.js';
 import { status } from './config/response.status.js';
 import { healthRoute } from './src/routes/health.route.js';
 import { videoRoute } from './src/routes/video.route.js';
-import { s3Router } from './src/routes/s3.route.js';
+//import { s3Router } from './src/routes/s3.route.js';
 import { userRoute } from './src/routes/user.route.js';
 import {myPageRoute} from './src/routes/user.myPage.route.js';
 import { smsRoute } from './src/routes/sms.route.js';
 import session from 'express-session';
 import { dummyRoute } from './src/routes/dummy.route.js';
 import { searchRoute } from './src/routes/search.route.js';
+import { categoryRoute } from './src/routes/category.route.js';
 
 
 
@@ -40,11 +41,12 @@ app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 app.use('/sms',smsRoute);
 app.use('/health', healthRoute);
 app.use('/videos',videoRoute);
-app.use('/images',s3Router);
+//app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute);
 app.use('/dummies',dummyRoute);
-app.use('/search',searchRoute);
+app.use('/search',searchRoute);app.use('/category',categoryRoute);
+
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
