@@ -13,7 +13,13 @@ export const createUser = async (name, birth_date, gender, phone_number, email, 
     [name, birth_date, gender, phone_number, email, hashedPassword, platform, theme]
   );
 
-  return rows;
+  const [idRows] = await pool.query('SELECT LAST_INSERT_ID() as id');
+  const userId = idRows[0].id;
+
+  const [nameRows] = await pool.query('SELECT name FROM user WHERE id = ?', [userId]);
+  const userName = nameRows[0].name;
+
+  return { id: userId, name: userName };
 };
 
 export const findUserByEmail = async (email) => {
@@ -52,6 +58,27 @@ export const updateUserNickname = async (userId, nickname) => {
   await pool.query(query, values);
 
 };
+
+// 환영인사 알림 추가
+export const addWelcomeAlarm = async(req) => {
+  const [rows] = await pool.query(
+    'INSERT INTO alarm (is_confirm, created_at, updated_at, type, content, user_id, title) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+    [req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.user_id, req.title]
+  );
+  return rows;
+}
+
+// 회원 가입시 기본 카테고리 추가
+export const createDefaultCategory = async(data) => {
+  const [rows] = await pool.query(
+    "INSERT INTO category (user_id, name, created_at, top_category) VALUES (?, ?, ?, ?)",
+    [data.user_id, data.name, data.created_at, data.top_category]
+  );
+  const [idRows] = await pool.query('SELECT LAST_INSERT_ID() as id');
+  const catecoryId = idRows[0].id;
+
+  return { id: catecoryId};
+}
 
 export const addVideoAlarm=async(req)=>{
   try {

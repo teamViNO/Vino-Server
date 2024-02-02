@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { findUserByEmail, createUser, comparePassword, updateInfo, deleteSelectAlarm } from '../models/user.dao.js';
+import { findUserByEmail, createUser, comparePassword, updateInfo, deleteSelectAlarm, addWelcomeAlarm, createDefaultCategory } from '../models/user.dao.js';
 import { findUserById, updatePassword, findUserByNamePhoneAndEmail,updateUserNickname} from '../models/user.dao.js';
 import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm} from '../models/user.dao.js';
 import bcrypt from 'bcryptjs';
@@ -18,8 +18,37 @@ export const registerService = async ({ name, birth_date, gender, phone_number, 
   if (existingUser) {
     return { status: 409, success: false, code:'UNAVAILABLE_EMAIL', message: '이미 사용중인 이메일입니다.' };
   }
+  const time = new Date
+  const user = await createUser(name, birth_date, gender, phone_number, email, password, platform, theme);
+  const alarmdata={
+    'user_id':user.id,
+    'title': user.name+"님 반가워요!",
+    'is_confirm': false,
+    "created_at": time,
+    "updated_at": time,
+    "content": '이제부터 어떻게 vino를 사용하면 좋을지 소개해드릴게요 :)',
+    "type": "notice"
+  }
+  // // 환영 인사 알림 추가
+  await addWelcomeAlarm(alarmdata);
 
-  await createUser(name, birth_date, gender, phone_number, email, password, platform, theme);
+  const categoryData1={
+    "user_id":user.id,
+    "name":"전체",
+    "created_at": time
+  }
+   // // 기본 카테고리 생성
+  const category = await createDefaultCategory(categoryData1);
+
+  const categoryData2={
+    "user_id": user.id,
+    "name":"기본",
+    "top_category": category.id,
+    "created_at": time
+  };
+  
+  await createDefaultCategory(categoryData2);
+
   return { status: 201, success: true, message: '회원가입 성공' };
 };
 
