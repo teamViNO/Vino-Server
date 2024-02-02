@@ -20,6 +20,7 @@ export const getSearchKeywordResponseDTO = async (video) => {
                     videoData.push({
                         "id": video[j][i].id,
                         "title": video[j][i].title,
+                        "description":video[j][i].description,
                         "image": video[j][i].image,
                         "created_at": video[j][i].created_at,
                         "name": video[j][i].summary,
@@ -62,6 +63,7 @@ export const getSearchTagResponseDTO = async(video) => {
                     videoData.push({
                         "id": video[j][i].id,
                         "title": video[j][i].title,
+                        "description":video[j][i].description,
                         "image": video[j][i].image,
                         "created_at": video[j][i].created_at,
                         "name": video[j][i].summary,
@@ -101,6 +103,7 @@ export const getCombinedResultDTO=(video,tag)=>{
             "video_id":video[i].id,
             "category":video[i].category_id,
             "title":video[i].title,
+            "description":video[i].description,
             "image":video[i].image,
             "created_at":video[i].created_at,
             "name":video[i].name,

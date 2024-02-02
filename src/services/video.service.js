@@ -122,6 +122,7 @@ export const joinVideo=async(body,data)=>{
     const joinVideoData = await addVideo({
         'user_id':data.userID,
         'title': body.title,
+        "description":body.description,
         'link':body.link,
         "youtube_created_at":body.youtube_created_at,
         'image':body.image,
@@ -169,6 +170,7 @@ export const updateVideoService=async(body,data)=>{
     const updateVideoData = await updateVideo({
         'id': data.videoID,
         'title': body.title,
+        'description':body.description,
         'category_id':body.category_id,
         'readed_at':time,
         'updated_at':time
