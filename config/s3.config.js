@@ -5,15 +5,15 @@ import dotenv from "dotenv";
 import path from 'path';
 import jwt from 'jsonwebtoken';
 
-// AWS.config.update({
-//     accessKeyId: process.env.S3_KEYID,  // keyID 입력 
-//     secretAccessKey: process.env.S3_PRIVATE_KEY, // 시크릿 키 입력
-//     region: process.env.REGION, // 버킷 생성 리전 입력
-// })
+AWS.config.update({
+    accessKeyId: process.env.S3_KEYID,  // keyID 입력 
+    secretAccessKey: process.env.S3_PRIVATE_KEY, // 시크릿 키 입력
+    region: process.env.REGION, // 버킷 생성 리전 입력
+})
 
-// const s3= new AWS.S3()
+const s3= new AWS.S3()
 
-// const allowedExtensions = ['.png','jpg','.jpeg','.bmp']
+const allowedExtensions = ['.png','jpg','.jpeg','.bmp']
 
 
 
