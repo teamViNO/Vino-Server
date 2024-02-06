@@ -10,8 +10,18 @@ export const getCategoryResponseDTO = (category) => {
     };
 }
 
-// 상위 또는 하위 카테고리 추가
-export const addCategoryResponseDTO = (category,categoryID) => {
+// 상위 카테고리 추가
+export const add1CategoryResponseDTO = (category,categoryID,etc) => {
+    return {
+        "topCategoryId": category.top_category,
+        "categoryId": categoryID,
+        "name": category.name,
+        "etcId": etc
+    };
+}
+
+// 하위 카테고리 추가
+export const add2CategoryResponseDTO = (category,categoryID) => {
     return {
         "topCategoryId": category.top_category,
         "categoryId": categoryID,

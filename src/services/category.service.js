@@ -2,7 +2,7 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { getCategoryResponseDTO,addCategoryResponseDTO,fixCategoryResponseDTO } from "../dtos/category.dto.js";
+import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO } from "../dtos/category.dto.js";
 import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
 import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,move4CategoryDAO } from "../models/category.dao.js"
 
@@ -24,14 +24,14 @@ export const addCategory1Service = async (req) => {
     const categoryID = await addCategoryDAO(categoryData);
 
     const defaultSubCategoryData = {
-        name: "기본",
+        name: "기타",
         user_id: req.userID,
         top_category: categoryID, // 상위 카테고리의 ID를 사용
         created_at: new Date
     };
 
-    await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
-    return addCategoryResponseDTO(categoryData,categoryID);
+    const etc = await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
+    return add1CategoryResponseDTO(categoryData,categoryID,etc);
 }
 
 // 하위 카테고리 추가 
@@ -43,7 +43,7 @@ export const addCategory2Service = async (req) => {
         created_at : new Date
     };
     const categoryID = await addCategoryDAO(categoryData);
-    return addCategoryResponseDTO(categoryData,categoryID);
+    return add2CategoryResponseDTO(categoryData,categoryID);
 }
 
 // 카테고리 수정 
