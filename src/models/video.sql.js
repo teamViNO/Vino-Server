@@ -35,3 +35,5 @@ export const entireTagSql="select DISTINCT tag.id, tag.name from video_tag join 
 
 export const getCategorySql="select id from category where user_id=? and top_category=?;";
 export const getSimpleVideoWithVideoSql="select * from video where category_id=? and version = 'revision';"
+
+export const getRecentVideoSql='select * from video where user_id=? and version = "revision" order by readed_at DESC;';

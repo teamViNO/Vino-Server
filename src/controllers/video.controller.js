@@ -1,7 +1,7 @@
 import { Billingconductor } from "aws-sdk";
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { viewVideo,viewSimpleVideo,joinVideo,deleteVideo,  updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
+import { viewVideo,viewSimpleVideo,viewRecentVideo,joinVideo,deleteVideo,  updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
 import  jwt  from "jsonwebtoken";
 
 export const videoInfo=async (req,res,next)=>{
@@ -35,6 +35,21 @@ export const videoSimpleInfo=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await viewSimpleVideo(data)));
     }catch(error){
         console.error(error);
+    }
+}
+export const getRecentVideo=async(req,res,next)=>{
+    try {const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id;
+    console.log("비디오 간편 정보 조회를 요청하셨습니다.");
+    const data= {
+        "userID":req.userId
+    };
+    console.log("요청정보",req.userId);
+    res.send(response(status.SUCCESS,await viewRecentVideo(data)));
+        
+    } catch (error) {
+        
     }
 }
 export const videoCategoryInfo=async(req,res,next)=>{
