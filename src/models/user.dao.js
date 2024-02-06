@@ -121,7 +121,7 @@ export const getAlarm=async(user)=>{
 export const setConfirm=async(data)=>{
   try {
     const conn = await pool.getConnection();
-    console.log(data);
+    
     const alarm=await pool.query(setConfirmSql,[data.alarm_id,data.userId]);
     conn.release();
     return "success";
