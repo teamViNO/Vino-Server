@@ -3,12 +3,12 @@ import {vidoeSearchKeyWord,vidoeSearchTag} from '../controllers/search.controlle
 
 export const searchRoute = express.Router();
 
-searchRoute.get('/keyword',async(req,res)=>{
+searchRoute.get('/keyword/:keywordName',async(req,res)=>{
     const result = await vidoeSearchKeyWord(req,res);
 
 });
 
-searchRoute.get('/hashtag',async(req,res)=>{
+searchRoute.get('/hashtag/:hashtagName',async(req,res)=>{
 const result = await vidoeSearchTag(req,res);
 
 });
