@@ -20,7 +20,7 @@ userRoute.get('/alarm',async(req,res)=>{
 });
 userRoute.patch('/alarm/selectedConfirm',setEntireConfirm);
 
-userRoute.patch('/alarm/read/:alarmId',setConfirm);
+userRoute.patch('/alarm/:alarmId/read',setConfirm);
 
 userRoute.delete('/alarm/:alarmId/delete',deleteAlarm);
 
