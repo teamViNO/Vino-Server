@@ -2,7 +2,7 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO } from "../dtos/category.dto.js";
+import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO,move2CategoryResponseDTO} from "../dtos/category.dto.js";
 import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
 import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,move4CategoryDAO } from "../models/category.dao.js"
 
@@ -88,15 +88,15 @@ export const move2CategoryService = async (req) => {
     console.log("서비스 요청 정보", categoryData);
 
     const defaultSubCategoryData = {
-        name: "기본",
+        name: "기타",
         user_id: req.userID,
         top_category: req.params.categoryID, // 상위 카테고리의 ID를 사용
         created_at: new Date
     };
-    const newId = await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
+    const etc = await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
 
-    await move2CategoryDAO(categoryData,newId);
-    return fixCategoryResponseDTO(categoryData);
+    await move2CategoryDAO(categoryData,etc);
+    return move2CategoryResponseDTO(categoryData,etc);
 }
 
 // 카테고리 이동3 (상위가 다른 상위의 새로운 하위가 될 때)

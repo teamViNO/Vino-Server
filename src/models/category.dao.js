@@ -111,7 +111,7 @@ export const move1CategoryDAO = async (req) => {
 };
 
 // 카테고리 이동2 (하위가 새로운 상위가 될 때) => 현재 카테고리를 상위로 갖는 하위 카테고리를 만들어 비디오가 이를 참조하도록 변경
-export const move2CategoryDAO = async (data,newId) => {
+export const move2CategoryDAO = async (data,etc) => {
     try {
         const conn = await pool.getConnection();
         await pool.query(
@@ -121,7 +121,7 @@ export const move2CategoryDAO = async (data,newId) => {
 
         await pool.query( 
             "UPDATE video SET category_id = ? WHERE category_id = ? AND user_id = ?;",
-            [newId, data.category_id, data.user_id]
+            [etc, data.category_id, data.user_id]
         );
 
         conn.release();

@@ -37,3 +37,13 @@ export const fixCategoryResponseDTO = (category) => {
         "name": category.name,
     };
 }
+
+// 이동2
+export const move2CategoryResponseDTO = (category,etc) => {
+    return {
+        "topCategoryId": category.top_category,
+        "categoryId": category.category_id,
+        "name": category.name,
+        "etcId": etc
+    };
+}
