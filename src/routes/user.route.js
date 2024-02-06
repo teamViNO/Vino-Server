@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, setNicknameController, checkEmail ,createVideoAlarm,createNoticeAlarm,getAlarm,setConfirm,deleteAlarm, returnEmail, sendTempPassword, deleteSelectAlarm} from '../controllers/user.controller.js';
+import { register, login, setNicknameController, checkEmail ,createVideoAlarm,createNoticeAlarm,getAlarm,setConfirm,deleteAlarm, returnEmail, sendTempPassword, deleteSelectAlarm, setEntireConfirm} from '../controllers/user.controller.js';
 
 
 export const userRoute = express.Router();
@@ -18,8 +18,9 @@ userRoute.post('/noticeAlarm',createNoticeAlarm);
 userRoute.get('/alarm',async(req,res)=>{
     const result=await getAlarm(req,res);
 });
+userRoute.patch('/alarm/selectedConfirm',setEntireConfirm);
 
-userRoute.patch('/alarm/:alarmId',setConfirm);
+userRoute.patch('/alarm/read/:alarmId',setConfirm);
 
 userRoute.delete('/alarm/:alarmId/delete',deleteAlarm);
 

@@ -146,6 +146,19 @@ export const updateConfirm=async(data)=>{
   const updateConfirmData=await setConfirm(data);
   return updateConfirmResponseDTO(updateConfirmData);
 }
+export const updateEntireConfirm=async(data)=>{
+  const updateConfirmData=[];
+  console.log(data.alarms.length);
+  for(let i=0; i<data.alarms.length;i++){
+    const reciveData={
+      'userId':data.userId,
+      'alarm_id':data.alarms[i]
+    }
+    
+    updateConfirmData.push(await setConfirm(reciveData));
+  }
+  return updateConfirmResponseDTO(updateConfirmData);
+}
 
 export const removeAlarm=async(data)=>{
   const removeAlarmData=await deleteAlarm(data);
