@@ -2,7 +2,7 @@ import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql} from "../models/video.sql.js"
-import {getSimpleVideoWithVideoSql} from "../models/video.sql.js";
+import {getSimpleVideoWithVideoSql,getRecentVideoSql} from "../models/video.sql.js";
 
 
 export const setReadTime=async(data,time)=>{
@@ -28,6 +28,17 @@ export const getSimpleVideo=async (req)=>{
     try{
         const conn =await pool.getConnection();
         const [video]=await pool.query(getEntireVideoSql,[req.userID])
+        conn.release();
+        return video;
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+export const getRecentVideo=async(req)=>{
+    try{
+        const conn =await pool.getConnection();
+        const [video]=await pool.query(getRecentVideoSql,[req.userID])
         conn.release();
         return video;
     }catch(err){
