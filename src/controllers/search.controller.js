@@ -11,7 +11,7 @@ export const vidoeSearchKeyWord= async (req,res)=>{
     console.log("키워드 검색을 요청하셨습니다");
     const data={
         "userId":req.userId,
-        "keyword":req.params.keywordName
+        "keyword":req.query.keywordName ?? ''
     };
     console.log(data);
     res.send(response(status.SUCCESS,await viewSearchKeyword(data)));
@@ -25,7 +25,7 @@ export const vidoeSearchTag = async (req, res)=>{
     console.log("태그 검색을 요청하셨습니다");
     const data={
         "userId":req.userId,
-        "hashtag":req.params.hashtagName
+        "hashtag":req.query.hashtagName ?? ''
     };
     res.send(response(status.SUCCESS,await viewSearchTag(data)));
 
