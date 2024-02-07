@@ -37,3 +37,5 @@ export const getCategorySql="select id from category where user_id=? and top_cat
 export const getSimpleVideoWithVideoSql="select * from video where category_id=? and version = 'revision';"
 
 export const getRecentVideoSql='select * from video where user_id=? and version = "revision" order by readed_at DESC;';
+
+export const insertDummyVideoSql='insert into dummy_video(user_id,video_id) values(?,?); '
