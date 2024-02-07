@@ -32,6 +32,9 @@ export const getSimpleVideoResponseDTO=(video,tag)=>{
     console.log("최종데이터",videoData);
     return {"videos":videoData};
 }
+export const insertDummyVideoReadResponseDTO=(data)=>{
+    return{"id":data};
+}
 export const getCategoryVideoResponseDTO=(video,tag)=>{
     const videoData=[]
     let num=0;

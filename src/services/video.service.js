@@ -2,8 +2,8 @@ import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
 import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO, getEntireTagResponseDTO} from "../dtos/video.dto.js"
-import {getSimpleVideoWithVideo,getRecentVideo} from "../models/video.dao.js";
-import {getCategoryVideoResponseDTO} from "../dtos/video.dto.js";
+import {getSimpleVideoWithVideo,getRecentVideo,addDummyVideoRead} from "../models/video.dao.js";
+import {getCategoryVideoResponseDTO,insertDummyVideoReadResponseDTO} from "../dtos/video.dto.js";
 
 export const viewVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
@@ -211,5 +211,14 @@ export const updateVideoService=async(body,data)=>{
         }
         console.log("전달되는 정보",updateVideoData);
         return updateVideoResponseDTO(updateVideoData);
+    }
+}
+
+export const insertDummyVideoRead = async(data)=>{
+    try {
+        const insertData=await addDummyVideoRead(data);
+        return insertDummyVideoReadResponseDTO(insertData)
+    } catch (error) {
+        
     }
 }
