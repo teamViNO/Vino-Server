@@ -60,7 +60,7 @@ export const viewCategoryVideo=async(data)=>{
         const tagData=[];
         const getVideoData=[];
         const categoryResult=await findCategory(categoryData,data.category_id,data.user_id);
-        
+        console.log("데이터 정보",categoryResult);
         for(let i=0; i<categoryResult.length;i++){
             
             const result=[];
