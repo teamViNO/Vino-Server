@@ -22,6 +22,7 @@ export const getCategoryData= async (req, res) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
+        res.send(response(status.BAD_REQUEST));
     }
 }
 
