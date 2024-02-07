@@ -240,9 +240,10 @@ export const getCategory=async(category,user)=>{
 export const getSimpleVideoWithVideo=async(data)=>{
     try {
         const conn=await pool.getConnection();
+        console.log("받아온 데이터:",data);
         const [getVideoData]=await pool.query(getSimpleVideoWithVideoSql,[data]);
-        
-        conn.release;
+        console.log(getVideoData);
+        conn.release();
         return getVideoData;
     } catch (error) {
         console.error(error);
