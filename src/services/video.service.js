@@ -2,8 +2,8 @@ import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
 import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO, getEntireTagResponseDTO} from "../dtos/video.dto.js"
-import {getSimpleVideoWithVideo,getRecentVideo} from "../models/video.dao.js";
-import {getCategoryVideoResponseDTO} from "../dtos/video.dto.js";
+import {getSimpleVideoWithVideo,getRecentVideo,addDummyVideoRead} from "../models/video.dao.js";
+import {getCategoryVideoResponseDTO,insertDummyVideoReadResponseDTO} from "../dtos/video.dto.js";
 
 export const viewVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
@@ -24,20 +24,25 @@ export const viewTag=async(data)=>{
 }
 
 export const viewSimpleVideo=async(data)=>{
-    console.log("서비스에서 전달되는 요청정보",data);
-    console.log("123");
-    const TagData=[];
-    const getVideoData=await getSimpleVideo(data);
-    console.log(getVideoData[0].id);
-    for(let i =0; i<getVideoData.length;i++){
-        TagData.push(await getTag({
-            "videoID":getVideoData[i].id,
-            "version":"revision"
-        }));
-    }
-    console.log("비디오 정보: ",getVideoData);
-    return getSimpleVideoResponseDTO(getVideoData,TagData);
+    try {
+        console.log("서비스에서 전달되는 요청정보",data);
+        console.log("123");
+        const TagData=[];
+        const getVideoData=await getSimpleVideo(data);
+        
+        for(let i =0; i<getVideoData.length;i++){
+            TagData.push(await getTag({
+                "videoID":getVideoData[i].id,
+                "version":"revision"
+            }));
+        }
+        console.log("비디오 정보: ",getVideoData);
+        return getSimpleVideoResponseDTO(getVideoData,TagData);
 
+    } catch (error) {
+        return [];
+    }
+    
 }
 export const viewRecentVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
@@ -60,7 +65,7 @@ export const viewCategoryVideo=async(data)=>{
         const tagData=[];
         const getVideoData=[];
         const categoryResult=await findCategory(categoryData,data.category_id,data.user_id);
-        
+        console.log("데이터 정보",categoryResult);
         for(let i=0; i<categoryResult.length;i++){
             
             const result=[];
@@ -211,5 +216,14 @@ export const updateVideoService=async(body,data)=>{
         }
         console.log("전달되는 정보",updateVideoData);
         return updateVideoResponseDTO(updateVideoData);
+    }
+}
+
+export const insertDummyVideoRead = async(data)=>{
+    try {
+        const insertData=await addDummyVideoRead(data);
+        return insertDummyVideoReadResponseDTO(insertData)
+    } catch (error) {
+        
     }
 }

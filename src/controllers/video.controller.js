@@ -1,8 +1,10 @@
-import { Billingconductor } from "aws-sdk";
+import pkg from 'aws-sdk';
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { viewVideo,viewSimpleVideo,viewRecentVideo,joinVideo,deleteVideo,  updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
+import { viewVideo,viewSimpleVideo,viewRecentVideo,joinVideo,deleteVideo, insertDummyVideoRead, updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
 import  jwt  from "jsonwebtoken";
+
+const { Billingconductor } = pkg;
 
 export const videoInfo=async (req,res,next)=>{
     try{
@@ -20,6 +22,7 @@ export const videoInfo=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await viewVideo(data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoSimpleInfo=async (req,res,next)=>{
@@ -35,6 +38,7 @@ export const videoSimpleInfo=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await viewSimpleVideo(data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const getRecentVideo=async(req,res,next)=>{
@@ -49,7 +53,7 @@ export const getRecentVideo=async(req,res,next)=>{
     res.send(response(status.SUCCESS,await viewRecentVideo(data)));
         
     } catch (error) {
-        
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoCategoryInfo=async(req,res,next)=>{
@@ -65,6 +69,7 @@ export const videoCategoryInfo=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await viewCategoryVideo(data)));
     } catch (error) {
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoInsert=async (req,res,next)=>{
@@ -80,6 +85,7 @@ export const videoInsert=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await joinVideo(req.body,data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoDelete=async(req,res,next)=>{
@@ -95,6 +101,7 @@ export const videoDelete=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await deleteVideo(data)))
     }catch(error){
         console.error(error)
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const vidoeSelectDelete=async(req,res,next)=>{
@@ -110,6 +117,7 @@ export const vidoeSelectDelete=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await deleteSelectVideo(data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 
@@ -128,6 +136,7 @@ export const videoUpdate=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await updateVideoService(req.body,data)))
     } catch (error) {
         console.error(error)
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const getEntireTag=async(req,res,next)=>{
@@ -141,6 +150,22 @@ export const getEntireTag=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await viewTag(data)));
     } catch (error) {
         console.error(error)
+        res.send(response(status.BAD_REQUEST,error));
     }
    
+}
+export const dummyVideoRead=async(req,res,next)=>{
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        const data={
+            "userId":req.userId,
+            "videoId":req.params.videoId
+        }
+        res.send(response(status.SUCCESS,await insertDummyVideoRead(data)));
+    } catch (error) {
+        console.error(error);   
+        res.send(response(status.BAD_REQUEST,error));
+    }
 }

@@ -1,4 +1,5 @@
-import {SolapiMessageService} from "solapi";
+import pkg from 'solapi';
+const {SolapiMessageService} = pkg;
 
 export const sendVerificationCode=(req, res)=>{
   try {
