@@ -20,6 +20,7 @@ export const videoInfo=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await viewVideo(data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoSimpleInfo=async (req,res,next)=>{
@@ -35,6 +36,7 @@ export const videoSimpleInfo=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await viewSimpleVideo(data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const getRecentVideo=async(req,res,next)=>{
@@ -49,7 +51,7 @@ export const getRecentVideo=async(req,res,next)=>{
     res.send(response(status.SUCCESS,await viewRecentVideo(data)));
         
     } catch (error) {
-        
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoCategoryInfo=async(req,res,next)=>{
@@ -65,6 +67,7 @@ export const videoCategoryInfo=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await viewCategoryVideo(data)));
     } catch (error) {
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoInsert=async (req,res,next)=>{
@@ -80,6 +83,7 @@ export const videoInsert=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await joinVideo(req.body,data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const videoDelete=async(req,res,next)=>{
@@ -95,6 +99,7 @@ export const videoDelete=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await deleteVideo(data)))
     }catch(error){
         console.error(error)
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const vidoeSelectDelete=async(req,res,next)=>{
@@ -110,6 +115,7 @@ export const vidoeSelectDelete=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await deleteSelectVideo(data)));
     }catch(error){
         console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 
@@ -128,6 +134,7 @@ export const videoUpdate=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await updateVideoService(req.body,data)))
     } catch (error) {
         console.error(error)
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
 export const getEntireTag=async(req,res,next)=>{
@@ -141,6 +148,7 @@ export const getEntireTag=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await viewTag(data)));
     } catch (error) {
         console.error(error)
+        res.send(response(status.BAD_REQUEST,error));
     }
    
 }
@@ -156,5 +164,6 @@ export const dummyVideoRead=async(req,res,next)=>{
         res.send(response(status.SUCCESS,await insertDummyVideoRead(data)));
     } catch (error) {
         console.error(error);   
+        res.send(response(status.BAD_REQUEST,error));
     }
 }
