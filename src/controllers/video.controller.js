@@ -22,7 +22,7 @@ export const videoInfo=async (req,res,next)=>{
         res.send(response(status.SUCCESS,await viewVideo(data)));
     }catch(error){
         console.error(error);
-        res.send(response(status.BAD_REQUEST,error));
+        res.send(response(status.VIDEO_NOT_FOUND));
     }
 }
 export const videoSimpleInfo=async (req,res,next)=>{

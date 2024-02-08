@@ -1,3 +1,6 @@
+import { BaseError } from "../../config/error";
+import { status } from "../../config/response.status";
+
 export const getVideoResponseDTO=(video,subHeading,summary,tag)=>{
     try {
         const subHeadingData=[]
@@ -14,7 +17,7 @@ export const getVideoResponseDTO=(video,subHeading,summary,tag)=>{
         }
         return {"video_id":video[0].id,"title":video[0].title,"description":video[0].description,"image":video[0].image,"link":video[0].link,"youtube_created_at":video[0].youtube_created_at,"created_at":video[0].created_at,"updated_at":video[0].updated_at,"open_at":video[0].open_at,"subHeading":subHeadingData,"summary":summaryData,"tag":tagData};
     } catch (error) {
-        return []
+        throw BaseError(status.VIDEO_NOT_FOUND);
     }
     
     
