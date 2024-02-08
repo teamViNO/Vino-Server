@@ -17,7 +17,11 @@ import { smsRoute } from './src/routes/sms.route.js';
 import session from 'express-session';
 import { dummyRoute } from './src/routes/dummy.route.js';
 import { searchRoute } from './src/routes/search.route.js';
+<<<<<<< HEAD
 import { categoryRoute } from './src/routes/category.route.js';
+=======
+import { translateToMP3 } from './src/routes/translateToMP3.route.js';
+>>>>>>> 725ec37 (feature/video)
 
 
 
@@ -45,8 +49,13 @@ app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute);
 app.use('/dummies',dummyRoute);
+<<<<<<< HEAD
 app.use('/search',searchRoute);app.use('/category',categoryRoute);
 
+=======
+app.use('/search',searchRoute);
+app.use('/video', translateToMP3); // script 라우트 적용
+>>>>>>> 725ec37 (feature/video)
 app.get('/', (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
