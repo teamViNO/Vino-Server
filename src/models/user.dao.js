@@ -185,10 +185,10 @@ export const findUserByNamePhoneAndEmail = async (name, phone_number, email) => 
 export const getUserInfo = async (userId) => {
   try {
     const [row] = await pool.query(
-      'SELECT name, birth_date, gender, phone_number, email, nick_name FROM user WHERE id = ?',[userId]
+      'SELECT name, birth_date, gender, phone_number, email, platform, nick_name FROM user WHERE id = ?',[userId]
     );
     return {status: 200,
-            success: true, 
+            success: true,
             message: '정보를 성공적으로 조회 했습니다.' , 
             result: row[0]
           };
@@ -209,3 +209,21 @@ export const updateInfo = async(nickname, gender, userId) => {
   const values = [nickname, gender, userId];
   await pool.query(query, values);
 }
+
+export const findUser = async function(id) {
+  const row = (await pool.query(`select * from user where id=? and platform="kakao"`, [id]))[0];
+  return row;
+};
+
+export const createUserKakao = async function(user) {
+  const insertSql = `insert into user (id, name, birth_date, gender, phone_number, email, platform, theme, nick_name) values (?, ?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update name = ?, birth_date = ?, gender = ?, phone_number = ?, email = ?, platform = ?, theme = ?, nick_name = ?`;
+  const insertParams = [user.id, user.name, user.birth_date, user.gender, user.phone_number, user.email, user.platform, user.theme, user.nick_name,
+                  user.name, user.birth_date, user.gender, user.phone_number, user.email, user.platform, user.theme, user.nick_name];
+  await pool.query(insertSql, insertParams);
+
+  const selectSql = `select * from user where id = ?`;
+  const selectParams = [user.id];
+  const [rows] = await pool.query(selectSql, selectParams);
+
+  return rows[0];
+};
