@@ -18,7 +18,7 @@ export const getKakaoUserInfo = async function(code) {
         }
     });
 
-    // Access token을 이용해 정보 가져오기
+    // Access token을 이용해 정보가져오기
     const res2 = await axios.post('https://kapi.kakao.com/v2/user/me', {}, {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -72,6 +72,4 @@ export const getKakaoUserInfo = async function(code) {
     
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET); 
     return { status: 200, success: true, message: '로그인 성공', result: { token } };
-    
-
 };
