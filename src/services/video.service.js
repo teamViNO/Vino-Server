@@ -40,7 +40,8 @@ export const viewSimpleVideo=async(data)=>{
         return getSimpleVideoResponseDTO(getVideoData,TagData);
 
     } catch (error) {
-        return [];
+        console.error(error);
+        throw new BaseError(status.VIDEO_NOT_FOUND);
     }
     
 }
