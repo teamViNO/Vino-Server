@@ -1,8 +1,10 @@
-import { Billingconductor } from "aws-sdk";
+import pkg from 'aws-sdk';
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
 import { viewVideo,viewSimpleVideo,viewRecentVideo,joinVideo,deleteVideo, insertDummyVideoRead, updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
 import  jwt  from "jsonwebtoken";
+
+const { Billingconductor } = pkg;
 
 export const videoInfo=async (req,res,next)=>{
     try{
