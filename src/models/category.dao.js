@@ -179,6 +179,7 @@ export const move4CategoryDAO = async (data) => {
 
          // 4. topCategoryID에 해당하는 카테고리 삭제
          await conn.query("DELETE FROM category WHERE user_id = ? AND id = ?", [data.user_id, data.top_category]);
+         conn.release();
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);

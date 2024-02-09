@@ -12,24 +12,38 @@ export const chatGPTCall = async (scriptText) => {
   try {
     // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
-    `Step1. It must have three keywords and must be in either word or phrase form. The maximum word length must be 10 characters long and must be about a topic. Keywords must be words that are directly mentioned in the original script or words that contain content. and answer to korean,Only one content comes in one title. and Return using json method. ex) Keywords: ["keyword1", "keyword2", "keyword3"]
+    `Step 1. Look at the example Json given with the original script and give it to me in j. "subheading" is to break up the paragraphs of the given script according to the subtopics. The name of subheading is the title of the subtopic, and subheading.content should keep the original script divided according to the subtopic. subheading.name and subheading.content should be different. Add the contents in subheading together and we need to divide them so that the original script comes out. This subheading should be able to be at least 1 to 30 and contain all of the divided scripts. "tag" is the keyword for the overall scripts. Please indicate at least 2 to 5. The result should be in Korean. You need to have the above conditions and give them to the Json example below
+    {
     
-    Step2. Divide the original script into paragraphs 
-    Condition 1 of Step 2. Please respond using Json method ex) script1: ~, script2: ~
-    condition of Step2. When all the scripts given in response are combined, they should be the same as the original script.
-    Condition 2 of Step 2. Divide paragraphs based on contents.
-    Condition 3 of Step 2. Divide paragraphs whenever contents are distinguished.
-    Condition 4 of Step 2. All script must be at least 500 character lengths and must contain all the content of the script and must not be modified or summarized.
-    Condition 6 of Step 2. The number of scripts can be from 1 to 30, depending on the amount of original script
+    "subheading": [
+    {
+    "name": "Subtitle 1",
+    "start_time": "script1 start time,"
+    "end_time": "script 1 end time",
+    "content": "script 1"
+    },{
+    "name": "Subtitle 2",
+    "start_time": "script2 start time,"
+    "end_time": "script 2 end time",
+    "content": "script 2"
+    }
     
-
-    Step3. Make a title for each paragraph you divide
-    Condition 1 of Step 3. Please respond using Json method ex) title1: ~, title2: ~
-    Condition 2 of Step 3. Extract the 1 sentence of the core topic from the separated paragraph.
-    
+    ],
+    "tag": [
+    {
+    "name": "Tag 1"
+    },
+    {
+    "name": "Tag 2"
+    },
+    {
+    "name": "Tag 3"
+    }
+    ]
+    }
 `;
     
-    const prompt = `Run this script from step 1 to step 3, Make sure to fulfill the condition given to the system promport. original script: ${scriptText}\n ` ;
+    const prompt = `Run this script from step 1 , Make sure to fulfill the condition given to the system promport. original script: ${scriptText}\n ` ;
     
 
     const response = await axios.post(

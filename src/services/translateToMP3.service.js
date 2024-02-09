@@ -3,7 +3,12 @@ import ytdl from 'ytdl-core';
 import fs from 'fs';
 import path from 'path';
 
-const outputPath = "/Users/boleum/vino-project/Vino-Server/tempMP3"; // 저장할 파일 경로
+
+// 바탕화면의 상위 폴더 경로
+const desktopPath = path.join(__dirname, '..', '..');
+
+// tempMP3 폴더 경로
+const outputPath = path.join(desktopPath, 'tempMP3');
 const FFmpegPath = "/usr/local/bin/ffmpeg"; // ffmpeg 실행 파일 경로
 
 export const convertVideoToAudio = async (videoId) => {
