@@ -1,7 +1,7 @@
 import pkg from 'aws-sdk';
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { viewVideo,viewSimpleVideo,viewRecentVideo,joinVideo,deleteVideo, insertDummyVideoRead, updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
+import { viewVideo,viewSimpleVideo,viewRecentVideo,insertSummmary,removeSummary,joinVideo,deleteVideo, insertDummyVideoRead, updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
 import  jwt  from "jsonwebtoken";
 
 const { Billingconductor } = pkg;
@@ -164,6 +164,37 @@ export const dummyVideoRead=async(req,res,next)=>{
             "videoId":req.params.videoId
         }
         res.send(response(status.SUCCESS,await insertDummyVideoRead(data)));
+    } catch (error) {
+        console.error(error);   
+        res.send(response(status.BAD_REQUEST,error));
+    }
+}
+export const summaryDelete=async(req,res,next)=>{
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        const data={
+            "userId":req.userId,
+            "summaryId":req.params.summaryId
+        }
+        res.send(response(status.SUCCESS,await removeSummary(data)));
+    } catch (error) {
+        console.error(error);   
+        res.send(response(status.BAD_REQUEST,error));
+    }
+}
+export const summaryInsert=async(req,res,next)=>{
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        const data={
+            "userId":req.userId,
+            "videoId":req.params.videoId,
+            "content":req.body.content
+        }
+        res.send(response(status.SUCCESS,await insertSummmary(data)));
     } catch (error) {
         console.error(error);   
         res.send(response(status.BAD_REQUEST,error));

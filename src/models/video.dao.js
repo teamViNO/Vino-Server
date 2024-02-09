@@ -2,7 +2,7 @@ import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql} from "../models/video.sql.js"
-import {getSimpleVideoWithVideoSql,getRecentVideoSql,insertDummyVideoSql} from "../models/video.sql.js";
+import {getSimpleVideoWithVideoSql,getRecentVideoSql,insertDummyVideoSql,removeSummarySql} from "../models/video.sql.js";
 
 
 export const setReadTime=async(data,time)=>{
@@ -119,7 +119,29 @@ export const setSubheading=async (subHeading)=>{
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
-
+export const deleteSummary=async(data)=>{
+    try {
+        console.log(data);
+        const conn = await pool.getConnection();
+        const summaryRemoveData= await pool.query(removeSummarySql,[data.summaryId]);
+        conn.release();
+        return "success";
+    } catch (error) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+export const addSummmary=async (summary)=>{
+    try {
+        const conn=await pool.getConnection();
+        const summaryData = await pool.query(connectSummary,[summary.content,summary.videoId,'revision']);
+        conn.release();
+        return summaryData[0].insertId
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
 export const setSummary=async (summary)=>{
     try{
         const conn = await pool.getConnection();

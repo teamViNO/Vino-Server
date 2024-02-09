@@ -1,9 +1,9 @@
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import {getVideo,getSubHeading,getSummary,getTag,addVideo,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
+import {getVideo,getSubHeading,getSummary,getTag,addVideo,addSummmary,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
 import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO, getEntireTagResponseDTO} from "../dtos/video.dto.js"
-import {getSimpleVideoWithVideo,getRecentVideo,addDummyVideoRead} from "../models/video.dao.js";
-import {getCategoryVideoResponseDTO,insertDummyVideoReadResponseDTO} from "../dtos/video.dto.js";
+import {getSimpleVideoWithVideo,getRecentVideo,addDummyVideoRead,deleteSummary} from "../models/video.dao.js";
+import {getCategoryVideoResponseDTO,insertDummyVideoReadResponseDTO,addSummmaryResponseDTO} from "../dtos/video.dto.js";
 
 export const viewVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청정보",data);
@@ -22,7 +22,23 @@ export const viewTag=async(data)=>{
     const getTagData=await getEntireTag(data);
     return getEntireTagResponseDTO(getTagData);
 }
-
+export const insertSummmary=async(data)=>{
+    const getSummaryData=[]
+    for(let i =0;i<data.content.length;i++){
+        const summaryData={
+            "userId":data.userId,
+            "videoId":data.videoId,
+            "content":data.content[i]
+        }
+        getSummaryData.push(await addSummmary(summaryData));
+    }
+    
+    return addSummmaryResponseDTO(getSummaryData);
+}
+export const removeSummary=async(data)=>{
+    const deleteSummaryData=await deleteSummary(data);
+    return {"status":"success"};
+}
 export const viewSimpleVideo=async(data)=>{
     try {
         console.log("서비스에서 전달되는 요청정보",data);
