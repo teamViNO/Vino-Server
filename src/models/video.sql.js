@@ -21,7 +21,7 @@ export const deleteVideoTagSql="delete from video_tag where video_id=?;"
 export const deleteTagSql="delete from tag where video_id=?;"
 export const deleteSummarySql="delete from summary where video_id=?;"
 export const deleteSubheadingSql="delete from subheading where video_id=?;"
-export const deleteVideoSql="delete from video where id=?;"
+export const deleteVideoSql="delete from video where id=? and version_id='revision';"
 
 
 //video update 관련 sql
@@ -39,3 +39,5 @@ export const getSimpleVideoWithVideoSql="select * from video where category_id=?
 export const getRecentVideoSql='select * from video where user_id=? and version = "revision" order by readed_at DESC;';
 
 export const insertDummyVideoSql='insert into dummy_video(user_id,video_id) values(?,?); '
+
+export const removeSummarySql='delete from summary where id=?';

@@ -44,6 +44,9 @@ export const getSimpleVideoResponseDTO=(video,tag)=>{
 export const insertDummyVideoReadResponseDTO=(data)=>{
     return{"id":data};
 }
+export const addSummmaryResponseDTO=(data)=>{
+    return{"id":data};
+}
 export const getCategoryVideoResponseDTO=(video,tag)=>{
     const videoData=[]
     let num=0;
