@@ -156,6 +156,7 @@ export const updateSummary=async (summary)=>{
 };
 export const updateSubheading=async (subheading)=>{
     try{
+        console.log("정보",subheading);
         const conn = await pool.getConnection();
         const subheadingData= await pool.query(updateSubheadingSql,[subheading.name,subheading.content,subheading.id,subheading.video_id,]);
         conn.release();

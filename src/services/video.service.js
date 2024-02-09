@@ -200,20 +200,24 @@ export const updateVideoService=async(body,data)=>{
     if(updateVideoData==-1){
         throw new BaseError(status.VIDEO_ALREADY_EXIST);
     }else{
-        for(let i =0; i<subHeading.length;i++){
-            await updateSubheading({
-                'id':subHeading[i].id,
-                'name':subHeading[i].name,
-                'content':subHeading[i].content,
-                'video_id': data.videoID
-            });
+        if(subHeading){
+            for(let i =0; i<subHeading.length;i++){
+                await updateSubheading({
+                    'id':subHeading[i].id,
+                    'name':subHeading[i].name,
+                    'content':subHeading[i].content,
+                    'video_id': data.videoID
+                });
+            }
         }
-        for(let i =0; i<summary.length;i++){
-            await updateSummary({
-                'id':summary[i].id,
-                'content': summary[i].content,
-                'video_id': data.videoID
-            });
+        if(summary){
+            for(let i =0; i<summary.length;i++){
+                await updateSummary({
+                    'id':summary[i].id,
+                    'content': summary[i].content,
+                    'video_id': data.videoID
+                });
+            }
         }
         console.log("전달되는 정보",updateVideoData);
         return updateVideoResponseDTO(updateVideoData);
