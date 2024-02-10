@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { findUserByEmail, createUser, comparePassword, updateInfo, deleteSelectAlarm, addWelcomeAlarm, createDefaultCategory } from '../models/user.dao.js';
 import { findUserById, updatePassword, findUserByNamePhoneAndEmail,updateUserNickname} from '../models/user.dao.js';
-import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm} from '../models/user.dao.js';
+import {addVideoAlarm,addNoticeAlarm,getAlarm,setConfirm,deleteAlarm, findNickname} from '../models/user.dao.js';
 import bcrypt from 'bcryptjs';
 import {joinAlarmResponseDto,getAlarmResponseDTO,updateConfirmResponseDTO,deleteAlarmResponseDTO, deleteAllAlarmResponseDTO} from '../dtos/user.dto.js'
 import nodemailer from 'nodemailer'
@@ -95,12 +95,20 @@ export const updatePasswordService = async (userId, { old_password, new_password
 
 export const setNicknameService = async (userId, nickname) => {
 
-    await updateUserNickname(userId, nickname);
-    return { status: 200, success: true, message: '닉네임을 성공적으로 설정했습니다.' };
+  const nick = await findNickname(nickname);
+  if (nick) {
+    return {status: 400, success: false, code:'DUPLICATE_NICKNAME', message: '이미 존재하는 닉네임입니다.'}
+  }
+  await updateUserNickname(userId, nickname);
+  return { status: 200, success: true, message: '닉네임을 성공적으로 설정했습니다.' };
 };
 
 // 닉네임 , 성별 변경
 export const setInfoService = async(nickname, gender, userId) => {
+  const nick = await findNickname(nickname);
+  if (nick) {
+    return {status: 400, success: false, code:'DUPLICATE_NICKNAME', message: '이미 존재하는 닉네임입니다.'}
+  }
   await updateInfo(nickname, gender, userId);
   return { status: 200, success: true, message: '닉네임과 성별을 성공적으로 변경하였습니다.' };
 };
