@@ -227,3 +227,8 @@ export const createUserKakao = async function(user) {
 
   return rows[0];
 };
+
+export const findNickname = async function(nickname) {
+  const [row] = await pool.query(`select * from user where nick_name=?`, [nickname]);
+  return row[0];
+};
