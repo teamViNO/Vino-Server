@@ -36,7 +36,7 @@ app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 app.use(cors({
     origin: 'https://www.vi-no.site',
     optionsSuccessStatus: 200,
-    Credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
+    credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
 }));
                      // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
