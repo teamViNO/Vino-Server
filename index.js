@@ -33,11 +33,21 @@ const app = express();
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 
-app.use(cors({
-    origin: 'https://www.vi-no.site',
-    optionsSuccessStatus: 200,
-    credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
-}));
+const whitelist = ["http://localhost:8080", "http://localhost:8081"];
+
+const corsOptions = {
+  origin: function (origin, callback) { 
+    if (whitelist.indexOf(origin) !== -1) { // 만일 whitelist 배열에 origin인자가 있을 경우
+      callback(null, true); // cors 허용
+    } else {
+      callback(new Error("Not Allowed Origin!")); // cors 비허용
+    }
+  },
+  optionsSuccessStatus: 200,
+  credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
+};
+
+app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
                      // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
