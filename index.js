@@ -33,7 +33,7 @@ const app = express();
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 
-const whitelist = ["http://localhost:8080", "http://localhost:8081"];
+const whitelist = ["https://www.vi-no.site", "https://vi-no.site"];
 
 const corsOptions = {
   origin: function (origin, callback) { 
