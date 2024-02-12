@@ -57,7 +57,8 @@ app.use('/images',s3Router);
 app.use('/user', userRoute);
 app.use('/user/myPage', myPageRoute);
 app.use('/dummies',dummyRoute);
-app.use('/search',searchRoute);app.use('/category',categoryRoute);
+app.use('/search',searchRoute);
+app.use('/category',categoryRoute);
 
 app.use(kakaoRoute);
 
