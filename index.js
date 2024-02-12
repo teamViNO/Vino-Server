@@ -34,7 +34,7 @@ const app = express();
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 
 const corsOptions = {
-  origin: ["https://www.vi-no.site", "http://vi-no.site"],
+  origin: ["https://www.vi-no.site", "http://vi-no.site", "http://localhost:5173", "https://vi-no.site"],
   optionsSuccessStatus: 200,
   credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
 };
