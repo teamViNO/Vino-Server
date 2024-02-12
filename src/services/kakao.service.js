@@ -14,7 +14,7 @@ export const getKakaoUserInfo = async function(code) {
             grant_type: 'authorization_code',
             client_id: process.env.KAKAO_CLIENT_ID,
             code,
-            redirect_uri: process.env.KAKAO_RED_URI
+            redirect_uri: 'http://vi-no.site/social-account'
         }
     });
 
@@ -50,6 +50,7 @@ export const getKakaoUserInfo = async function(code) {
         "content": '이제부터 어떻게 vino를 사용하면 좋을지 소개해드릴게요 :)',
         "type": "notice"
     }
+    
       // // 환영 인사 알림 추가
     await addWelcomeAlarm(alarmdata);
     

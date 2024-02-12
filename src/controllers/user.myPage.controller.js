@@ -48,7 +48,7 @@ export const changeInfo = async(req, res) => {
     req.userId = decoded.id;
 
     const result = await setInfoService(req.body.nick_name, req.body.gender, req.userId);
-    res.status(result.status).json(result);
+    return res.status(result.status).json(result);
   }catch(error){
     console.log(error);
     return res.status(500).json({
