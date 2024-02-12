@@ -39,6 +39,12 @@ export const getKakaoUserInfo = async function(code, host) {
         nick_name: ''
     };
 
+    const existingUser = await findUser(user.id); // 사용자가 이미 존재하는지 확인하는 함수
+    if (existingUser) { // 사용자가 이미 존재한다면,
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET); 
+        return { status: 200, success: true, message: '로그인 성공', result: { token } };
+    }
+
     const newUser = await createUserKakao(user);
     const time = new Date;
     const alarmdata={
