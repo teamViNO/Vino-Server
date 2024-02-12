@@ -3,7 +3,7 @@ import { getKakaoUserInfo } from "../services/kakao.service";
 export const kakaoLogin = async function(req, res) {
   try {
     const code = req.query.code;
-    const host = req.headers.host;
+    let host = req.headers.host;
     if (host == 'vi-no.site') {
       host = 'http://vi-no.site/social-account'
     }
