@@ -14,7 +14,7 @@ export const getKakaoUserInfo = async function(code, host) {
             grant_type: 'authorization_code',
             client_id: process.env.KAKAO_CLIENT_ID,
             code,
-            redirect_uri: host
+            redirect_uri: host+'/social-account'
         }
     });
 
