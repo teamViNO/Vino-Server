@@ -21,7 +21,7 @@ export const deleteVideoTagSql="delete from video_tag where video_id=?;"
 export const deleteTagSql="delete from tag where video_id=?;"
 export const deleteSummarySql="delete from summary where video_id=?;"
 export const deleteSubheadingSql="delete from subheading where video_id=?;"
-export const deleteVideoSql="delete from video where id=? and version_id='revision';"
+export const deleteVideoSql="delete from video where id=?;"
 
 
 //video update 관련 sql
