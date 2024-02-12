@@ -4,6 +4,7 @@ export const kakaoLogin = async function(req, res) {
   try {
     const code = req.query.code;
     let host = req.headers.host;
+    console.log(host);
     if (host == 'vi-no.site') {
       host = 'http://vi-no.site/social-account'
     }
