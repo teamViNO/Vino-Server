@@ -3,7 +3,14 @@ import { getKakaoUserInfo } from "../services/kakao.service";
 export const kakaoLogin = async function(req, res) {
   try {
     const code = req.query.code;
-    const data = await getKakaoUserInfo(code);
+    const host = req.headers.host;
+    if (host == 'vi-no.site') {
+      host = 'http://vi-no.site/social-account'
+    }
+    else {
+      host = 'https://www.vi-no.site/social-account'
+    }
+    const data = await getKakaoUserInfo(code, host);
     return res.status(200).json(data);
   } catch(e) {
       console.log(e);

@@ -4,7 +4,7 @@ import  jwt  from 'jsonwebtoken';
 import { addWelcomeAlarm } from '../models/user.dao';
 import { createDefaultCategory } from '../models/user.dao';
 
-export const getKakaoUserInfo = async function(code) {
+export const getKakaoUserInfo = async function(code, host) {
     // Access token 가져오기
     const res1 = await axios.post('https://kauth.kakao.com/oauth/token', {}, {
         headers: {
@@ -14,7 +14,7 @@ export const getKakaoUserInfo = async function(code) {
             grant_type: 'authorization_code',
             client_id: process.env.KAKAO_CLIENT_ID,
             code,
-            redirect_uri: 'https://www.vi-no.site/social-account'
+            redirect_uri: host
         }
     });
 
