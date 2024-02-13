@@ -22,7 +22,7 @@ export const getCategoryData= async (req, res) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
-        res.send(response(status.BAD_REQUEST));
+        res.send(status.BAD_REQUEST);
     }
 }
 
@@ -38,6 +38,7 @@ export const addCategory1Data= async (req,res,next)=>{
         res.send(response(status.SUCCESS, result));
     } catch(error){
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 }
 
@@ -53,6 +54,7 @@ export const addCategory2Data= async (req,res,next)=>{
         res.send(response(status.SUCCESS, result));
     } catch(error){
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 }
 
@@ -68,6 +70,7 @@ export const renameCategoryData = async (req, res) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 };
 
@@ -83,6 +86,7 @@ export const deleteCategoryData = async (req, res) => {
         res.send(response(status.SUCCESS,"카테고리가 삭제되었습니다."));
     } catch (error) {
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 };
 
@@ -98,6 +102,7 @@ export const move4CategoryData = async (req, res, next) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 }
 
@@ -113,6 +118,7 @@ export const move1CategoryData = async (req, res, next) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 }
 
@@ -128,6 +134,7 @@ export const move2CategoryData = async (req, res, next) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 }
 
@@ -143,6 +150,7 @@ export const move3CategoryData = async (req, res, next) => {
         res.send(response(status.SUCCESS, result));
     } catch (error) {
         console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
     }
 }
 
