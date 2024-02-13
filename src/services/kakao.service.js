@@ -14,7 +14,7 @@ export const getKakaoUserInfo = async function(code) {
             grant_type: 'authorization_code',
             client_id: process.env.KAKAO_CLIENT_ID,
             code,
-            redirect_uri: 'https://www.vi-no.site/social-account'
+            redirect_uri: 'http://vi-no.site/social-account'
         }
     });
 
