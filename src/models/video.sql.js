@@ -41,3 +41,9 @@ export const getRecentVideoSql='select * from video where user_id=? and version 
 export const insertDummyVideoSql='insert into dummy_video(user_id,video_id) values(?,?); '
 
 export const removeSummarySql='delete from summary where id=?';
+
+export const getCategoryNameSql ='select * from category where user_id=? and id=?;';
+
+export const getUnReadDummyVideoSql='SELECT *FROM video WHERE user_id = 41 and version="original" AND id NOT IN ( SELECT video_id FROM dummy_video WHERE user_id = ?);'
+
+export const updateCategorySql='update video set category_id=? where id=? and user_id=?;';

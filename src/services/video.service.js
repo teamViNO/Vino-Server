@@ -2,7 +2,7 @@ import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import {getVideo,getSubHeading,getSummary,getTag,addVideo,addSummmary,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
 import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO, getEntireTagResponseDTO} from "../dtos/video.dto.js"
-import {getSimpleVideoWithVideo,getRecentVideo,addDummyVideoRead,deleteSummary} from "../models/video.dao.js";
+import {getSimpleVideoWithVideo,getRecentVideo,updateCategory,addDummyVideoRead,UnReadVideoInfo,deleteSummary,getCategoryName} from "../models/video.dao.js";
 import {getCategoryVideoResponseDTO,insertDummyVideoReadResponseDTO,addSummmaryResponseDTO} from "../dtos/video.dto.js";
 
 export const viewVideo=async(data)=>{
@@ -13,8 +13,14 @@ export const viewVideo=async(data)=>{
     const getSummaryData = await getSummary(data);
     const getTagData = await getTag(data);
     const setTimeData=await setReadTime(data,time);
+    let categoryData={};
+    if(getVideoData[0].category_id){
+        categoryData=await getCategoryName(data.userID,getVideoData[0].category_id);
+    }else{
+        categoryData=[{"name":null}];
+    }
     console.log("비디오 정보: ",getVideoData);
-    return getVideoResponseDTO(getVideoData,getSubHeadingData,getSummaryData,getTagData);
+    return getVideoResponseDTO(getVideoData,getSubHeadingData,getSummaryData,getTagData,categoryData);
 
 
 }
@@ -155,14 +161,17 @@ export const joinVideo=async(body,data)=>{
     const subHeading=body.subheading;
     const summary = body.summary;
     const tag = body.tag;
-    
+    let youtubeId=body.link.split('v=')[1];
+    if (youtubeId.includes('&')) {
+        youtubeId = youtubeId.split('&')[0];
+    }
     const joinVideoData = await addVideo({
         'user_id':data.userID,
         'title': body.title,
         "description":body.description,
         'link':body.link,
         "youtube_created_at":body.youtube_created_at,
-        'image':body.image,
+        'image':"https://img.youtube.com/vi/"+youtubeId+"/maxresdefault.jpg",
         'category_id':body.category_id,
         'created_at':time,
         'readed_at':time,
@@ -197,7 +206,32 @@ export const joinVideo=async(body,data)=>{
         return joinVideoResponseDTO(joinVideoData);
     }
 }
+export const viewUnReadDummyVideo=async(data)=>{
+    try {
+        console.log("서비스에서 전달되는 요청정보",data);
+        console.log("123");
+        const TagData=[];
+        const getVideoData=await UnReadVideoInfo(data);
+        
+        for(let i =0; i<getVideoData.length;i++){
+            TagData.push(await getTag({
+                "videoID":getVideoData[i].id,
+                "version":"revision"
+            }));
+        }
+        console.log("비디오 정보: ",getVideoData);
+        return getSimpleVideoResponseDTO(getVideoData,TagData);
 
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.VIDEO_NOT_FOUND);
+    }
+}
+export const videoCategoryUpdate=async(data)=>{
+    const time = new Date;
+    const updatevideoData=await updateCategory(data);
+    return {"status":"success"};
+}
 export const updateVideoService=async(body,data)=>{
     const time =new Date
     const subHeading=body.subheading;

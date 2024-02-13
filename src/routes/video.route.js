@@ -1,9 +1,12 @@
 import express from "express";
 import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate,vidoeSelectDelete, getEntireTag} from "../controllers/video.controller.js";
-import {videoCategoryInfo,getRecentVideo,dummyVideoRead,summaryInsert,summaryDelete} from "../controllers/video.controller.js"
+import {videoCategoryInfo,updateVideoCategory,getRecentVideo,dummyVideoRead,getUnReadDummyVideo,getAllDummyVideo,summaryInsert,summaryDelete} from "../controllers/video.controller.js"
 
 export const videoRoute = express.Router();
 
+videoRoute.get('/dummyVideos/unRead',async(req,res)=>{
+    const result =await getUnReadDummyVideo(req,res);
+})
 videoRoute.get('/:videoId/:version',async(req,res)=>{
     
         const result = await videoInfo(req,res);
@@ -16,14 +19,23 @@ videoRoute.get('/',async(req,res)=>{
 }
 
 );
+videoRoute.patch('/:videoId/:categoryId/update',async(req,res)=>{
+    const result=await updateVideoCategory(req,res);
+});
 videoRoute.get('/tag',async(req,res)=>{
     const result =await getEntireTag(req,res);
 })
 videoRoute.get('/recent',async(req,res)=>{
     const result =await getRecentVideo(req,res);
 })
-videoRoute.get('/:categoryId',async(req,res)=>{
+videoRoute.get('/:categoryId/get',async(req,res)=>{
     const result = await videoCategoryInfo(req,res);
+})
+videoRoute.get('/dummyVideos',async(req,res)=>{
+    const result =await getAllDummyVideo(req,res);
+})
+videoRoute.get('/dummyVideos/unRead',async(req,res)=>{
+    const result =await getUnReadDummyVideo(req,res);
 })
 videoRoute.post('/new-video',async(req,res)=>{
     const result = await videoInsert(req,res);
