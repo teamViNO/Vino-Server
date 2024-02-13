@@ -8,11 +8,11 @@ export const viewSearchKeyword=async(data)=>{
     
     const getVideoData=[];
     
-    for (let i=0;i<data.keyword.length;i++){
-        getVideoData.push(await getVideoKeyword({
-            "userId":data.userId,
-            "keyword":data.keyword[i]}));
-    }
+    
+    getVideoData.push(await getVideoKeyword({
+        "userId":data.userId,
+        "keyword":data.keyword}));
+    
     console.log("서비스에서 전달되는 요청 정보",getVideoData);
     
     
