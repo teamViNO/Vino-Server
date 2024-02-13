@@ -4,7 +4,7 @@ import  jwt  from 'jsonwebtoken';
 import { addWelcomeAlarm } from '../models/user.dao';
 import { createDefaultCategory } from '../models/user.dao';
 
-export const getKakaoUserInfo = async function(code, host) {
+export const getKakaoUserInfo = async function(code) {
     // Access token 가져오기
     const res1 = await axios.post('https://kauth.kakao.com/oauth/token', {}, {
         headers: {
