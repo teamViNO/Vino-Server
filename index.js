@@ -37,7 +37,6 @@ const corsOptions = {
   origin: ["https://www.vi-no.site", "http://vi-no.site", "http://localhost:5173", "https://vi-no.site"],
   optionsSuccessStatus: 200,
   credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
-  allowedHeaders: ['Content-Type', 'Client-Host']
 };
 
 app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
