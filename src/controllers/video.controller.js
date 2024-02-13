@@ -1,7 +1,8 @@
 import pkg from 'aws-sdk';
+import { BaseError } from "../../config/error.js";
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { viewVideo,viewSimpleVideo,viewRecentVideo,insertSummmary,removeSummary,joinVideo,deleteVideo, insertDummyVideoRead, updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
+import { viewVideo,viewSimpleVideo,videoCategoryUpdate,viewRecentVideo,viewUnReadDummyVideo,insertSummmary,removeSummary,joinVideo,deleteVideo, insertDummyVideoRead, updateVideoService,deleteSelectVideo, viewTag,viewCategoryVideo} from "../services/video.service.js";
 import  jwt  from "jsonwebtoken";
 
 const { Billingconductor } = pkg;
@@ -41,6 +42,52 @@ export const videoSimpleInfo=async (req,res,next)=>{
         res.send(response(status.BAD_REQUEST,error));
     }
 }
+export const getUnReadDummyVideo=async(req,res,next)=>{
+    try {
+
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        const data={
+            "userId":req.userId
+        };
+        
+        res.send(response(status.SUCCESS,await viewUnReadDummyVideo(data)));
+    } catch (error) {
+        console.error(error);
+        throw BaseError(status.VIDEO_NOT_FOUND);
+    }
+}
+export const updateVideoCategory=async(req,res,next)=>{
+    try {
+        console.log("비디오 카테고리 수정을 요청하셨습니다.");
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        const data={
+            "userId":req.userId,
+            "categoryId":req.params.categoryId,
+            "videoId":req.params.videoId
+        };
+        res.send(response(status.SUCCESS,await videoCategoryUpdate(data)));
+    } catch (error) {
+        console.error(error);
+        throw BaseError(status.VIDEO_NOT_FOUND);
+    }
+}
+export const getAllDummyVideo=async(req,res,next)=>{
+    try {
+        const data={
+            "userID":"41"
+        }
+        console.log("요청정보",req.userId);
+        res.send(response(status.SUCCESS,await viewSimpleVideo(data)));
+    } catch (error) {
+        console.error(error);
+        res.send(response(status.BAD_REQUEST,error));
+    }
+    
+}
 export const getRecentVideo=async(req,res,next)=>{
     try {const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -53,7 +100,8 @@ export const getRecentVideo=async(req,res,next)=>{
     res.send(response(status.SUCCESS,await viewRecentVideo(data)));
         
     } catch (error) {
-        res.send(response(status.BAD_REQUEST,error));
+        console.error(error);
+        throw new BaseError(status.VIDEO_NOT_FOUND);
     }
 }
 export const videoCategoryInfo=async(req,res,next)=>{

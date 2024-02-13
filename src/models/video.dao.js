@@ -2,7 +2,7 @@ import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql} from "../models/video.sql.js"
-import {getSimpleVideoWithVideoSql,getRecentVideoSql,insertDummyVideoSql,removeSummarySql} from "../models/video.sql.js";
+import {getSimpleVideoWithVideoSql,updateCategorySql,getUnReadDummyVideoSql,getCategoryNameSql,getRecentVideoSql,insertDummyVideoSql,removeSummarySql} from "../models/video.sql.js";
 
 
 export const setReadTime=async(data,time)=>{
@@ -10,7 +10,17 @@ export const setReadTime=async(data,time)=>{
     const [video] =await pool.query(setTimeSql,[time,data.videoID]);
     conn.release();
 }
-
+export const updateCategory=async(data)=>{
+    try {
+        const conn =await pool.getConnection();
+        const updateData=await pool.query(updateCategorySql,[data.categoryId,data.videoId,data.userId]);
+        conn.release();
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+    
+}   
 export const getVideo=async (req) =>{
     try {
         console.log("dao에서 받아온 정보",req);
@@ -39,6 +49,17 @@ export const getSimpleVideo=async (req)=>{
     try{
         const conn =await pool.getConnection();
         const [video]=await pool.query(getEntireVideoSql,[req.userID])
+        conn.release();
+        return video;
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+export const UnReadVideoInfo=async(req)=>{
+    try{
+        const conn= await pool.getConnection();
+        const [video]=await pool.query(getUnReadDummyVideoSql,[req.user_id]);
         conn.release();
         return video;
     }catch(err){
@@ -254,6 +275,19 @@ export const getCategory=async(category,user)=>{
         
         conn.release();
         return getCategoryData;
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+export const getCategoryName=async(user,category)=>{
+    try {
+        const getCategoryData=[];
+        const conn=await pool.getConnection();
+        getCategoryData.push(await pool.query(getCategoryNameSql,[user,category]));
+        console.log("받아온카테고리 데이터",getCategoryData[0][0]);
+        conn.release();
+        return getCategoryData[0][0];
     } catch (error) {
         console.error(error);
         throw new BaseError(status.PARAMETER_IS_WRONG);
