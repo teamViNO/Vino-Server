@@ -1,10 +1,21 @@
 // src/services/progress.service.js
-const progressData = {};
+let clients = {};
 
-export const updateProgress = (videoId, status, percentage) => {
-    progressData[videoId] = { status, percentage };
+// 클라이언트 추가 및 연결 종료 처리
+const addClient = (clientId, res) => {
+    clients[clientId] = res;
+
+    res.on('close', () => {
+        delete clients[clientId];
+    });
 };
 
-export const getProgress = (videoId) => {
-    return progressData[videoId] || { status: 'Not started', percentage: 0 };
+// 진행 상태 업데이트
+const sendProgress = (clientId, status, percentage) => {
+    const client = clients[clientId];
+    if(client) {
+        client.write(`data: ${JSON.stringify({ status, percentage })}\n\n`);
+    }
 };
+
+export { addClient, sendProgress };
