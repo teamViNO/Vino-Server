@@ -197,21 +197,16 @@ export const getCategoryTagDAO = async (req) => {
             [req.category_id, req.user_id]
         );
 
-        // 2. 비디오 아이디에 해당하는 태그 아이디 가져오기
-        const [videoTagIds] = await pool.query(
-            "SELECT DISTINCT tag_id FROM video_tag WHERE video_id IN (?);",
+        // 2. 비디오 아이디에 해당하는 태그 아이디와 태그 네임 가져오기
+        const [tags] = await pool.query(
+            "SELECT DISTINCT vt.tag_id, t.name FROM video_tag vt JOIN tag t ON vt.tag_id = t.id WHERE vt.video_id IN (?);",
             [videoIds.map(video => video.id)]
         );
 
-        // 3. 태그 아이디에 해당하는 태그 네임 가져오기
-        const [tagNames] = await pool.query(
-            "SELECT DISTINCT name FROM tag WHERE id IN (?);",
-            [videoTagIds.map(videoTag => videoTag.tag_id)]
-        );
-
-        console.log(tagNames);
+        console.log(tags);
         conn.release();
-        return tagNames;
+        return tags;
+
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);

@@ -53,6 +53,10 @@ export const categoryTagResponseDTO = (categoryData, tags) => {
     return {
         user_id: categoryData.user_id,
         category_id: categoryData.category_id,
-        tags: tags,
+        tags: tags.map(tag => ({
+            tag_id: tag.tag_id,
+            name: tag.name,
+        })),
     };
+
 };
