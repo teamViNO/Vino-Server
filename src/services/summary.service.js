@@ -17,8 +17,8 @@ export const getSummary = async (text) => {
         },
         option: {
           language: 'ko',
-          summaryCount: 3, // 요약할 문장 수
-          tone: 0
+          summaryCount: 5, // 요약할 문장 수
+          tone: 2
           // 필요한 경우 다른 옵션들도 추가
         }
       },

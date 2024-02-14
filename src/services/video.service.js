@@ -2,7 +2,7 @@ import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
 import {getVideo,getSubHeading,getSummary,getTag,addVideo,addSummmary,setSummary,setSubheading,setTag,getSimpleVideo,dropVideo,updateVideo,updateSubheading,updateSummary,setReadTime,dropSelectedVideo, getEntireTag,getCategory} from "../models/video.dao.js"
 import {getVideoResponseDTO,getSimpleVideoResponseDTO,joinVideoResponseDTO,deleteVideoResponseDTO, updateVideoResponseDTO, getEntireTagResponseDTO} from "../dtos/video.dto.js"
-import {getSimpleVideoWithVideo,getRecentVideo,updateCategory,addDummyVideoRead,UnReadVideoInfo,deleteSummary,getCategoryName} from "../models/video.dao.js";
+import {getSimpleVideoWithVideo,getRecentVideo,updateCategory,addDummyVideoRead,UnReadVideoInfo,addCopyVideo,deleteSummary,getCategoryName} from "../models/video.dao.js";
 import {getCategoryVideoResponseDTO,insertDummyVideoReadResponseDTO,addSummmaryResponseDTO} from "../dtos/video.dto.js";
 
 export const viewVideo=async(data)=>{
@@ -138,6 +138,11 @@ async function findCategory(categoryData, category, user) {
         // 이 부분에서 루프가 끝난 후 값을 반환하도록 수정
         return categoryData;
     }
+}
+
+export const insertCopyVideo=async(data)=>{
+    const videoData=await addCopyVideo(data);
+    return {"id":videoData};
 }
 export const deleteVideo=async(data)=>{
     console.log("서비스에서 전달되는 요청 정보",data);

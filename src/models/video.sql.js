@@ -47,3 +47,12 @@ export const getCategoryNameSql ='select * from category where user_id=? and id=
 export const getUnReadDummyVideoSql='SELECT *FROM video WHERE user_id = 41 and version="original" AND id NOT IN ( SELECT video_id FROM dummy_video WHERE user_id = ?);'
 
 export const updateCategorySql='update video set category_id=? where id=? and user_id=?;';
+
+export const addCopyVideoSql='insert into video (version,title,link,image,created_at,readed_at,updated_at,category_id,user_id,youtube_created_at,description) select "original",title,link,image,?,?,?,?,?,youtube_created_at,description from video where id=? and version="original";'
+
+export const addCopyRevisonVideoSql='insert into video (id,version,title,link,image,created_at,readed_at,updated_at,category_id,user_id,youtube_created_at,description) select ?,"revision",title,link,image,?,?,?,?,?,youtube_created_at,description from video where id=? and version="revision";'
+export const copySubheadingSql='insert into subheading (name,start_time,end_time,content,video_id,version_id)select name,start_time,end_time,content,?,? from subheading where video_id = ?;'
+
+export const copySummarySql='insert into summary (content,video_id,version_id) select content,?,? from summary where video_id=?;';
+
+export const copyTagSql='insert into video_tag (video_id,tag_id,version_id) select ?,tag_id,? from video_tag where video_id=?;';
