@@ -242,7 +242,7 @@ export const updateVideoService=async(body,data)=>{
     const subHeading=body.subheading;
     const summary = body.summary;
     console.log(body);
-    
+    if(body.title&&body.description&&body.category_id){
     const updateVideoData = await updateVideo({
         'id': data.videoID,
         'title': body.title,
@@ -252,31 +252,29 @@ export const updateVideoService=async(body,data)=>{
         'updated_at':time
     })
     console.log('데이터:',updateVideoData);
-    if(updateVideoData==-1){
-        throw new BaseError(status.VIDEO_ALREADY_EXIST);
-    }else{
-        if(subHeading){
-            for(let i =0; i<subHeading.length;i++){
-                await updateSubheading({
-                    'id':subHeading[i].id,
-                    'name':subHeading[i].name,
-                    'content':subHeading[i].content,
-                    'video_id': data.videoID
-                });
-            }
-        }
-        if(summary){
-            for(let i =0; i<summary.length;i++){
-                await updateSummary({
-                    'id':summary[i].id,
-                    'content': summary[i].content,
-                    'video_id': data.videoID
-                });
-            }
-        }
-        console.log("전달되는 정보",updateVideoData);
-        return updateVideoResponseDTO(updateVideoData);
     }
+    if(subHeading){
+        for(let i =0; i<subHeading.length;i++){
+            await updateSubheading({
+                'id':subHeading[i].id,
+                'name':subHeading[i].name,
+                'content':subHeading[i].content,
+                'video_id': data.videoID
+            });
+        }
+    }
+    if(summary){
+        for(let i =0; i<summary.length;i++){
+            await updateSummary({
+                'id':summary[i].id,
+                'content': summary[i].content,
+                'video_id': data.videoID
+            });
+        }
+    }
+    
+    return updateVideoResponseDTO("success");
+    
 }
 
 export const insertDummyVideoRead = async(data)=>{
