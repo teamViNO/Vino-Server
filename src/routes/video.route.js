@@ -1,6 +1,6 @@
 import express from "express";
 import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate,vidoeSelectDelete, getEntireTag} from "../controllers/video.controller.js";
-import {videoCategoryInfo,updateVideoCategory,videoCopy,getRecentVideo,dummyVideoRead,getUnReadDummyVideo,getAllDummyVideo,summaryInsert,summaryDelete} from "../controllers/video.controller.js"
+import {videoCategoryInfo,updateVideoCategory,getDummyVideo,videoCopy,getRecentVideo,dummyVideoRead,getUnReadDummyVideo,getAllDummyVideo,summaryInsert,summaryDelete} from "../controllers/video.controller.js"
 
 export const videoRoute = express.Router();
 
@@ -19,6 +19,9 @@ videoRoute.patch('/:videoId/:categoryId/update',async(req,res)=>{
 });
 videoRoute.get('/tag',async(req,res)=>{
     const result =await getEntireTag(req,res);
+})
+videoRoute.get('/dummyVideos/:dummyVideoId/get',async(req,res)=>{
+    const result = await getDummyVideo(req,res);
 })
 videoRoute.get('/recent',async(req,res)=>{
     const result =await getRecentVideo(req,res);
