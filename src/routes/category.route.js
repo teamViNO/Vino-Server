@@ -41,10 +41,10 @@ categoryRoute.put('/down/:categoryID/:topCategoryID', async (req,res) =>{
     const result = await move3CategoryData(req,res);
 })
 
-// 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
-categoryRoute.put('/combine/:topCategoryID/:categoryID', async (req,res) =>{
-    const result = await move4CategoryData(req,res);
-})
+// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+// categoryRoute.put('/combine/:topCategoryID/:categoryID', async (req,res) =>{
+//     const result = await move4CategoryData(req,res);
+// })
 
 // 카테고리 이동1 (하위의 상위가 변경될 때)
 categoryRoute.put('/:categoryID/:topCategoryID', async (req,res) =>{

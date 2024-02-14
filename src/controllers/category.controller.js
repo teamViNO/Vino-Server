@@ -90,21 +90,21 @@ export const deleteCategoryData = async (req, res) => {
     }
 };
 
-// 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
-export const move4CategoryData = async (req, res, next) => {
-    try {
-        console.log("카테고리 이동4 요청");
-        const token = req.headers.authorization.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.userID = decoded.id;
+// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+// export const move4CategoryData = async (req, res, next) => {
+//     try {
+//         console.log("카테고리 이동4 요청");
+//         const token = req.headers.authorization.split(' ')[1];
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//         req.userID = decoded.id;
 
-        const result = await move4CategoryService(req);
-        res.send(response(status.SUCCESS, result));
-    } catch (error) {
-        console.error(error);
-        res.send(status.PARAMETER_IS_WRONG);
-    }
-}
+//         const result = await move4CategoryService(req);
+//         res.send(response(status.SUCCESS, result));
+//     } catch (error) {
+//         console.error(error);
+//         res.send(status.PARAMETER_IS_WRONG);
+//     }
+// }
 
 // 카테고리 이동1 (하위의 상위 카테고리가 변경될 때)
 export const move1CategoryData = async (req, res, next) => {

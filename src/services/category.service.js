@@ -111,17 +111,17 @@ export const move3CategoryService = async (req) => {
     return fixCategoryResponseDTO(categoryData);
 }
 
-// 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
-export const move4CategoryService = async (req) => {
-    const categoryData =  {
-        user_id : req.userID,
-        top_category : req.params.topCategoryID, // 이동할 상위가
-        category_id : req.params.categoryID // 얘랑 합쳐짐
-    };
-    console.log("서비스 요청 정보", categoryData);
-    await move4CategoryDAO(categoryData);
-    return fixCategoryResponseDTO(categoryData);
-}
+// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+// export const move4CategoryService = async (req) => {
+//     const categoryData =  {
+//         user_id : req.userID,
+//         top_category : req.params.topCategoryID, // 이동할 상위가
+//         category_id : req.params.categoryID // 얘랑 합쳐짐
+//     };
+//     console.log("서비스 요청 정보", categoryData);
+//     await move4CategoryDAO(categoryData);
+//     return fixCategoryResponseDTO(categoryData);
+// }
 
 // 카테고리 태그 가져오기
 export const getCategoryTagService = async (req) =>{

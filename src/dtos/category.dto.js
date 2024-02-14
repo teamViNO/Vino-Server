@@ -31,6 +31,7 @@ export const add2CategoryResponseDTO = (category,categoryID) => {
 
 // 카테고리 수정 또는 카테고리 이동
 export const fixCategoryResponseDTO = (category) => {
+    console.log(category.top_category,category.category_id,category.name)
     return {
         "topCategoryId": category.top_category,
         "categoryId": category.category_id,
