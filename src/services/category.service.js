@@ -2,9 +2,9 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO,move2CategoryResponseDTO} from "../dtos/category.dto.js";
+import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO,move2CategoryResponseDTO,categoryTagResponseDTO} from "../dtos/category.dto.js";
 import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
-import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,move4CategoryDAO } from "../models/category.dao.js"
+import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,move4CategoryDAO,getCategoryTagDAO } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -121,4 +121,16 @@ export const move4CategoryService = async (req) => {
     console.log("서비스 요청 정보", categoryData);
     await move4CategoryDAO(categoryData);
     return fixCategoryResponseDTO(categoryData);
+}
+
+// 카테고리 태그 가져오기
+export const getCategoryTagService = async (req) =>{
+    const categoryData = {
+        user_id : req.userID,
+        category_id : req.params.categoryID
+    }
+    console.log("서비스 요청 정보", categoryData);
+
+    const tags = await getCategoryTagDAO(categoryData);
+    return categoryTagResponseDTO(categoryData, tags); //dto 거쳐서 반환하기
 }
