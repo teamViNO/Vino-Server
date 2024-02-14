@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import jwt from 'jsonwebtoken'
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
-import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService } from "../services/category.service.js";
+import { getCategoryService,addCategory1Service,addCategory2Service,renameCategoryService,deleteCategoryService, getCategoryTagService } from "../services/category.service.js";
 import { move1CategoryService,move2CategoryService,move3CategoryService,move4CategoryService } from "../services/category.service.js";
 
 // 카테고리 전체 조회
@@ -154,3 +154,18 @@ export const move3CategoryData = async (req, res, next) => {
     }
 }
 
+// 카테고리 태그 가져오기
+export const getCategoryTag = async (req, res, next) => {
+    try {
+        console.log("카테고리 태그 가져오기");
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userID = decoded.id;
+
+        const result = await getCategoryTagService(req);
+        res.send(response(status.SUCCESS, result));
+    } catch (error) {
+        console.error(error);
+        res.send(status.PARAMETER_IS_WRONG);
+    }
+}

@@ -185,3 +185,36 @@ export const move4CategoryDAO = async (data) => {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
+
+// 카테고리 태그 가져오기
+export const getCategoryTagDAO = async (req) => {
+    try {
+        const conn = await pool.getConnection();
+        
+        // 1. 카테고리에 해당하는 비디오 아이디 가져오기
+        const [videoIds] = await pool.query(
+            "SELECT DISTINCT id FROM video WHERE category_id = ? AND user_id = ?;",
+            [req.category_id, req.user_id]
+        );
+
+        // 2. 비디오 아이디에 해당하는 태그 아이디 가져오기
+        const [videoTagIds] = await pool.query(
+            "SELECT DISTINCT tag_id FROM video_tag WHERE video_id IN (?);",
+            [videoIds.map(video => video.id)]
+        );
+
+        // 3. 태그 아이디에 해당하는 태그 네임 가져오기
+        const [tagNames] = await pool.query(
+            "SELECT DISTINCT name FROM tag WHERE id IN (?);",
+            [videoTagIds.map(videoTag => videoTag.tag_id)]
+        );
+
+        console.log(tagNames);
+        conn.release();
+        return tagNames;
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+

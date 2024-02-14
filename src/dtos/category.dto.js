@@ -47,3 +47,12 @@ export const move2CategoryResponseDTO = (category,etc) => {
         "etcId": etc
     };
 }
+
+// 카테고리 태그 가져오기
+export const categoryTagResponseDTO = (categoryData, tags) => {
+    return {
+        user_id: categoryData.user_id,
+        category_id: categoryData.category_id,
+        tags: tags,
+    };
+};

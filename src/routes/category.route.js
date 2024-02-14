@@ -2,7 +2,7 @@
 
 import express from "express";
 import {getCategoryData,addCategory1Data,addCategory2Data,renameCategoryData,deleteCategoryData} from "../controllers/category.controller.js";
-import {move1CategoryData,move2CategoryData,move3CategoryData,move4CategoryData} from "../controllers/category.controller.js";
+import {move1CategoryData,move2CategoryData,move3CategoryData,move4CategoryData,getCategoryTag} from "../controllers/category.controller.js";
 
 export const categoryRoute = express.Router();
 
@@ -49,4 +49,9 @@ categoryRoute.put('/combine/:topCategoryID/:categoryID', async (req,res) =>{
 // 카테고리 이동1 (하위의 상위가 변경될 때)
 categoryRoute.put('/:categoryID/:topCategoryID', async (req,res) =>{
     const result = await move1CategoryData(req,res);
+})
+
+// 카테고리 태그 가져오기
+categoryRoute.get('/:categoryID', async (req,res) => {
+    const result = await getCategoryTag(req,res);
 })
