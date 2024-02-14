@@ -48,11 +48,11 @@ export const processVideo = async (req, res) => {
                     "text":jsonData.segments[i].text
                 })
             }
-            const jsonString=JSON.stringify(timeStampData);
             console.log("시간데이터 있는 데이터",timeStampData);
             console.log(scriptText);
 
             const summaryResult = await getSummary(scriptText);
+            console.log("요약데이터",summaryResult);
             sendProgress(clientId, '요약 불러오기 완료', 75);
             const summaryData=JSON.parse(summaryResult);
             console.log(summaryResult);
@@ -87,6 +87,7 @@ export const processVideo = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: 'Error in processing video', error: error.toString() });
+        console.log(error);
     }
 };
 
@@ -100,7 +101,6 @@ async function timeStampMapping(gptRes, timeStampData) {
         console.log("subheading 길이",gptResponse.subheading.length);
         console.log("타임길이",timeStampData.length);
         for(let i = 0; i < gptResponse.subheading.length; i++) {
-            console.log("시작")
             let startTime = -1;
             let endTime = -1;
             console.log("타임데이터 순서",sequence);
