@@ -1,6 +1,6 @@
 import express from "express";
 import {videoInfo,videoInsert,videoSimpleInfo,videoDelete, videoUpdate,vidoeSelectDelete, getEntireTag} from "../controllers/video.controller.js";
-import {videoCategoryInfo,updateVideoCategory,getRecentVideo,dummyVideoRead,getUnReadDummyVideo,getAllDummyVideo,summaryInsert,summaryDelete} from "../controllers/video.controller.js"
+import {videoCategoryInfo,updateVideoCategory,videoCopy,getRecentVideo,dummyVideoRead,getUnReadDummyVideo,getAllDummyVideo,summaryInsert,summaryDelete} from "../controllers/video.controller.js"
 
 export const videoRoute = express.Router();
 
@@ -40,7 +40,9 @@ videoRoute.get('/dummyVideos/unRead',async(req,res)=>{
 videoRoute.post('/new-video',async(req,res)=>{
     const result = await videoInsert(req,res);
 })
-
+videoRoute.post('/dummyVideos/:dummyVideoId/:categoryId/newVideo',async(req,res)=>{
+    const result = await videoCopy(req,res);
+})
 videoRoute.delete('/:videoId/del',async(req,res)=>{
     console.log("갑니당");
     const result = await videoDelete(req,res);

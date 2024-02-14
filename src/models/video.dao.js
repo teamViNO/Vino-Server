@@ -1,9 +1,9 @@
 import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql} from "../models/video.sql.js"
+import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql, addCopyRevisonVideoSql} from "../models/video.sql.js"
 import {getSimpleVideoWithVideoSql,updateCategorySql,getUnReadDummyVideoSql,getCategoryNameSql,getRecentVideoSql,insertDummyVideoSql,removeSummarySql} from "../models/video.sql.js";
-
+import {addCopyVideoSql,copySubheadingSql,copySummarySql,copyTagSql} from "../models/video.sql.js"
 
 export const setReadTime=async(data,time)=>{
     const conn =await pool.getConnection();
@@ -40,6 +40,27 @@ export const addDummyVideoRead = async(data)=>{
         const result = await pool.query(insertDummyVideoSql,[data.userId,data.videoId]);
         conn.release();
         return result[0].insertId;
+    } catch (error) {
+        console.error(error);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+export const addCopyVideo= async(data)=>{
+    try {
+        const time=new Date();
+        const conn= await pool.getConnection();
+        const video = await pool.query(addCopyVideoSql,[time,time,time,data.categoryId,data.userId,data.videoId]);
+        console.log(video[0].insertId);
+        const videoRevision=await pool.query(addCopyRevisonVideoSql,[video[0].insertId,time,time,time,data.categoryId,data.userId,data.videoId])
+        const subHeadingOriginal=await pool.query(copySubheadingSql,[video[0].insertId,'original',data.videoId]);
+        const subHeadingRevision=await pool.query(copySubheadingSql,[video[0].insertId,'revision',data.videoId]);
+        const summaryOriginal = await pool.query(copySummarySql,[video[0].insertId,'original',data.videoId]);
+        const summaryRevision = await pool.query(copySummarySql,[video[0].insertId,'revision',data.videoId]);
+        const tagOriginal=await pool.query(copyTagSql,[video[0].insertId,'original',data.videoId]);
+        const tagRevision=await pool.query(copyTagSql,[video[0].insertId,'revision',data.videoId]);
+        const result = await pool.query(insertDummyVideoSql,[data.userId,data.videoId]);
+        conn.release();
+        return video[0].insertId;
     } catch (error) {
         console.error(error);
         throw new BaseError(status.PARAMETER_IS_WRONG);
