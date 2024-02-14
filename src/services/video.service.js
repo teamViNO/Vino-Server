@@ -242,12 +242,11 @@ export const updateVideoService=async(body,data)=>{
     const subHeading=body.subheading;
     const summary = body.summary;
     console.log(body);
-    if(body.title&&body.description&&body.category_id){
+    if(body.title&&body.description){
     const updateVideoData = await updateVideo({
         'id': data.videoID,
         'title': body.title,
         'description':body.description,
-        'category_id':body.category_id,
         'readed_at':time,
         'updated_at':time
     })

@@ -233,7 +233,7 @@ export const updateVideo=async (video)=>{
     try{
         console.log("비디오",video);
         const conn = await pool.getConnection();
-        const videoData= await pool.query(updateVideoSql,[video.title,video.description,video.readed_at,video.updated_at,video.category_id,video.id]);
+        const videoData= await pool.query(updateVideoSql,[video.title,video.description,video.readed_at,video.updated_at,video.id]);
         conn.release();
         return video.id;
     }catch(err){

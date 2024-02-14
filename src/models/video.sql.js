@@ -26,7 +26,7 @@ export const deleteVideoSql="delete from video where id=?;"
 
 //video update 관련 sql
 
-export const updateVideoSql="update video set title= ?, description=?,readed_at=?,updated_at=?,category_id=? where id=? and version='revision';"
+export const updateVideoSql="update video set title= ?, description=?,readed_at=?,updated_at=? where id=? and version='revision';"
 export const updateSubheadingSql="update subheading set name=?,content=? where id=? and video_id=? and version_id='revision';";
 export const updateSummarySql="update summary set content =? where id=? and video_id=? and version_id='revision';";
 
