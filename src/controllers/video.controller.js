@@ -75,6 +75,23 @@ export const videoCopy=async(req,res,next)=>{
         throw BaseError(status.VIDEO_NOT_FOUND);
     }
 }
+export const getDummyVideo=async(req,res,next)=>{
+    try{
+        
+
+        console.log("비디오 정보 조회를 요청하셨습니다.",req.params);
+        const data= {
+            "userID":"41",
+            "videoID":req.params.dummyVideoId,
+            "version":"original"
+        };
+        console.log("요청정보",data);
+        res.send(response(status.SUCCESS,await viewVideo(data)));
+    } catch(error){
+        console.error(error);
+        throw BaseError(status.VIDEO_NOT_FOUND);
+    }
+}
 export const updateVideoCategory=async(req,res,next)=>{
     try {
         console.log("비디오 카테고리 수정을 요청하셨습니다.");
