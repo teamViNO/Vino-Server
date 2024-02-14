@@ -104,6 +104,7 @@ export const move1CategoryDAO = async (req) => {
         );
         
         conn.release();
+        
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);

@@ -7,12 +7,7 @@ export const videoRoute = express.Router();
 videoRoute.get('/dummyVideos/unRead',async(req,res)=>{
     const result =await getUnReadDummyVideo(req,res);
 })
-videoRoute.get('/:videoId/:version',async(req,res)=>{
-    
-        const result = await videoInfo(req,res);
-    }
-    
-);
+
 videoRoute.get('/',async(req,res)=>{
     
     const result = await videoSimpleInfo(req,res);
@@ -65,3 +60,10 @@ videoRoute.delete('/selectDelete',async(req,res)=>{
 videoRoute.post('/dummyVideos/:videoId/setRead',async(req,res)=>{
     const result = await dummyVideoRead(req,res);
 })
+
+videoRoute.get('/:videoId/:version',async(req,res)=>{
+    
+    const result = await videoInfo(req,res);
+}
+
+);
