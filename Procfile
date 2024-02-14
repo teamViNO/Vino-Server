@@ -1,1 +1,1 @@
-web: npm config set unsafe-perm true&&npm install && npm run start
+web: npm install & npm run start
