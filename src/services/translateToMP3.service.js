@@ -15,6 +15,9 @@ export const convertVideoToAudio = async (videoId) => {
     return new Promise((resolve, reject) => {
         const stream = ytdl(`http://www.youtube.com/watch?v=${videoId}`, { filter: 'audioonly' });
         const filePath = path.join(outputPath, `${videoId}.mp3`);
+        if (!fs.existsSync(outputPath)) {
+            fs.mkdirSync(outputPath, { recursive: true });
+        }
         ffmpeg.setFfmpegPath(FFmpegPath);
         ffmpeg(stream)
             .audioBitrate(128) 
