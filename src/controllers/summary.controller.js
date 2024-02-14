@@ -8,13 +8,16 @@ import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { checkFileExistsInStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
-
+import getYoutubeTitle from 'get-youtube-title';
 
 export const processVideo = async (req, res) => {
     try {
         //사용자에게 입력받을 video ID 변수
         const videoId = req.params.videoId;
-        
+        let videoTitle="";
+        getYoutubeTitle(videoId,async function(err,title){
+            videoTitle=title;
+        })
         const clientId = req.query.clientId;
 
         // Object Storage에서 해당 MP3 파일이 존재하는지 확인
@@ -37,23 +40,42 @@ export const processVideo = async (req, res) => {
             sendProgress(clientId, '스크립트 불러오기 완료', 50);
 
             const scriptText = jsonData.text;
-
+            const timeStampData=[];
+            for(let i=0;i<jsonData.segments.length;i++){
+                timeStampData.push({
+                    "start_time":jsonData.segments[i].start/1000,
+                    "end_time":jsonData.segments[i].end/1000,
+                    "text":jsonData.segments[i].text
+                })
+            }
+            const jsonString=JSON.stringify(timeStampData);
+            console.log("시간데이터 있는 데이터",timeStampData);
             console.log(scriptText);
 
             const summaryResult = await getSummary(scriptText);
             sendProgress(clientId, '요약 불러오기 완료', 75);
-
+            const summaryData=JSON.parse(summaryResult);
             console.log(summaryResult);
-
+            
             const gptResponse = await chatGPTCall(scriptText);
             sendProgress(clientId, '서비스 완료', 100);
-
+            const gptData=JSON.parse(gptResponse);
             console.log(gptResponse);
+            const data=await timeStampMapping(gptResponse,timeStampData);
+            console.log("돌아온 데이터",data);
 
+            const finalData={
+                "title":videoTitle,
+                "link":"https://www.youtube.com/watch?v="+videoId,
+                "description":summaryData.video_name[0].name,
+                "subheading":data,
+                "summary":summaryData.Summary,
+                "tag":gptData.tag
+            }
+            
             res.status(200).json({
                 message: 'File processed successfully using existing data',
-                gptResponse,
-                summaryResult
+                finalData
             });
 
         } else {
@@ -68,6 +90,61 @@ export const processVideo = async (req, res) => {
     }
 };
 
+async function timeStampMapping(gptRes, timeStampData) {
+    const gptResponse=JSON.parse(gptRes);
+    const subheadingData = [];
+    
+    try {
+        let sequence=0;
+        console.log("데이터", timeStampData);
+        console.log("subheading 길이",gptResponse.subheading.length);
+        console.log("타임길이",timeStampData.length);
+        for(let i = 0; i < gptResponse.subheading.length; i++) {
+            console.log("시작")
+            let startTime = -1;
+            let endTime = -1;
+            console.log("타임데이터 순서",sequence);
+            for(let j = sequence; j < timeStampData.length; j++) {
+                // console.log("소제목데이터",gptResponse.subheading[i]);
+                // console.log("타임스탬프 데이터",timeStampData[j]);
+                // console.log("찾기 결과",gptResponse.subheading[i].content.indexOf(timeStampData[j].text));
+                if(i===0&&j===0){
+                    startTime=timeStampData[0].start_time
+                }else if(gptResponse.subheading[i].content.includes(timeStampData[j].text) && startTime === -1) {
+                    startTime = timeStampData[j].start_time;
+                } else if (!gptResponse.subheading[i].content.includes(timeStampData[j].text) && startTime !== -1) {
+                    endTime = timeStampData[j - 1].end_time;
+                    subheadingData.push({
+                        name: gptResponse.subheading[i].name,
+                        start_time: startTime,
+                        end_time: endTime,
+                        content: gptResponse.subheading[i].content
+                    });
+                    sequence=j;
+                    break;
+                }else if(gptResponse.subheading[i].content.includes(timeStampData[j].text)&&j===timeStampData.length-1){
+                    //마지막 문구
+                    endTime = timeStampData[j].end_time;
+                    subheadingData.push({
+                        name: gptResponse.subheading[i].name,
+                        start_time: startTime,
+                        end_time: endTime,
+                        content: gptResponse.subheading[i].content
+                    });
+                    sequence=j;
+                    break;
+                    
+                }else{
+                    console.log("이어짐");
+                }
+            }
+        }
+        console.log("매핑한 데이터", subheadingData);
+        return subheadingData;
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 export const speechresult = async (req, res) => {
     try {

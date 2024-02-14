@@ -79,7 +79,7 @@ export const chatGPTCall = async (scriptText) => {
       throw error;
     }
     */
-
+    console.log("챗지피티 데이터",generatedText);
     return generatedText;
   } catch (error) {
     console.error('Error calling ChatGPT API:', error);
@@ -93,26 +93,26 @@ export const getSummary = async (scriptText) => {
   try {
     // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
-    `Proceed with the summary of the original script. Extract the core content from the entire text, the summary should contain a conclusion about the content, and there should be a total of 5 summaries of the core content. Responses should come in Korean, and the format of the summary should be a noun form that ends.
+    `Proceed with a summary of the original text. Extract the core content from the full text, the summary should contain conclusions about the content, and there should be a total of 5 summaries of the core content. video_name.name is the title of the script. There should be 1 total. The responses should come in Korean, and the format of the summary should be the ending noun form.
 
     Exception: If the script content does not exceed 5 lines, extract one summary of the core content.
 
     {
       "Summary": [
         {
-         "summary1": "content"
+         "summary": "content"
         },
         {
-         "summary2": "content",
+         "summary": "content",
         },
         {
-         "summary3": "content",
+         "summary": "content",
         },
         {
-         "summary4": "content",
+         "summary": "content",
         },
         {
-         "summary5": "content"
+         "summary": "content"
         }
         ...
       ]
