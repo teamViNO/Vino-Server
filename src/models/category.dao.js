@@ -38,7 +38,7 @@ export const addCategoryDAO=async (req) =>{
 export const renameCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
-        await pool.query(
+        const updateCategory = await pool.query(
             "update category set name = ? where id = ? and user_id = ?;",
             [req.name, req.category_id, req.user_id]
         );
@@ -68,11 +68,11 @@ export const deleteCategoryDAO = async (req) => {
                     await dropVideo({ videoID: videoIdObj.id });
                 }
                 // 하위 카테고리 삭제
-                await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, subCategory.id]);
+                const dropCategory = await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, subCategory.id]);
             }
 
             // 상위 카테고리 삭제하기
-            await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
+            const dropTopCategory = await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
 
         } else { // 하위 카테고리일 때
             // 비디오 삭제
@@ -82,7 +82,7 @@ export const deleteCategoryDAO = async (req) => {
             }
 
             // 해당 카테고리 삭제
-            await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
+            const dropCategory = await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
         }
 
         conn.release();
@@ -98,7 +98,7 @@ export const deleteCategoryDAO = async (req) => {
 export const move1CategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
-        await pool.query(
+        const updateCategory = await pool.query(
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
             [req.top_category, req.category_id, req.user_id]
         );
@@ -118,12 +118,12 @@ export const move1CategoryDAO = async (req) => {
 export const move2CategoryDAO = async (data,etc) => {
     try {
         const conn = await pool.getConnection();
-        await pool.query(
+        const updateCategory = await pool.query(
             "UPDATE category SET top_category = NULL WHERE id = ? AND user_id = ?;",
             [data.category_id, data.user_id]
         );
 
-        await pool.query( 
+        const etcCategory = await pool.query( 
             "UPDATE video SET category_id = ? WHERE category_id = ? AND user_id = ?;",
             [etc, data.category_id, data.user_id]
         );
@@ -148,14 +148,14 @@ export const move3CategoryDAO = async (data) => {
         
         // 2. 1번에서 가져온 id들을 category_id로 갖는 비디오들의 category_id를 :categoryID로 변경
         for (const subCategory of subCategories) {
-            await conn.query("UPDATE video SET category_id = ? WHERE category_id = ?", [data.category_id, subCategory.id]);
+            const updateCategory = await conn.query("UPDATE video SET category_id = ? WHERE category_id = ?", [data.category_id, subCategory.id]);
         }
 
         // 3. 1번에서 가져온 하위 카테고리들을 삭제
-        await conn.query("DELETE FROM category WHERE user_id = ? AND top_category = ?", [data.user_id, data.category_id]);
+        const dropCategory = await conn.query("DELETE FROM category WHERE user_id = ? AND top_category = ?", [data.user_id, data.category_id]);
 
         // 4. :categoryID에 해당하는 카테고리의 top_category를 :topCategoryID로 변경
-        await pool.query(
+        const updateTopCategory = await pool.query(
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
             [data.top_category, data.category_id, data.user_id]
         );
