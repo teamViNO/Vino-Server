@@ -54,17 +54,14 @@ export const processVideo = async (req, res) => {
             const summaryResult = await getSummary(scriptText);
             console.log("요약데이터",summaryResult);
             sendProgress(clientId, '요약 불러오기 완료', 75);
-
-            const startSummaryIndex = summaryResult.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
-            const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);
-            const summaryData=JSON.parse(trimmedSummaryResponse);
-            console.log(trimmedSummaryResponse);
-            
-
+            // const startSummaryIndex = summaryResult.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
+            // console.log("찾은 인덱스",startSummaryIndex);
+            // const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);
+            const summaryData=JSON.parse(summaryResult);
+            console.log("summary json 데이터",summaryData);
             
             const gptResponse = await chatGPTCall(scriptText);
             sendProgress(clientId, '서비스 완료', 100);
-            
             const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
             const trimmedResponse = gptResponse.substring(startIndex);
             const gptData=JSON.parse(trimmedResponse);
@@ -143,7 +140,7 @@ async function timeStampMapping(gptRes, timeStampData) {
                     break;
                     
                 }else{
-                    console.log("이어짐");
+                    
                 }
             }
         }

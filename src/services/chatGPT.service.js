@@ -93,7 +93,7 @@ export const getSummary = async (scriptText) => {
   try {
     // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
-    `Proceed with a summary of the original text. Extract the core content from the full text, the summary should contain conclusions about the content, and there should be a total of 5 summaries of the core content. video_name.name is the title of the script. There should be 1 total. The responses should come in Korean, and the format of the summary should be the ending noun form.
+    `Proceed with a summary of the original text. Extract the core content from the full text, the summary should contain conclusions about the content, and there should be a total of 5 summaries of the core content. video_name.name is the title of the script. There should be 1 total. The responses should come in Korean, and the format of the summary should be in the form of a closing noun. Also, make sure to give it in the form of json below
 
     Exception: If the script content does not exceed 5 lines, extract one summary of the core content.
 
