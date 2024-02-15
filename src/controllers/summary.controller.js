@@ -54,8 +54,10 @@ export const processVideo = async (req, res) => {
             const summaryResult = await getSummary(scriptText);
             console.log("요약데이터",summaryResult);
             sendProgress(clientId, '요약 불러오기 완료', 75);
-            const summaryData=JSON.parse(summaryResult);
-            console.log(summaryResult);
+            const startSummaryIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
+            const trimmedSummaryResponse = gptResponse.substring(startSummaryIndex);
+            const summaryData=JSON.parse(trimmedSummaryResponse);
+            console.log(trimmedSummaryResponse);
             
             const gptResponse = await chatGPTCall(scriptText);
             sendProgress(clientId, '서비스 완료', 100);
