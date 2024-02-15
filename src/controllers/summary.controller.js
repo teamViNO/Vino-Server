@@ -59,11 +59,13 @@ export const processVideo = async (req, res) => {
             
             const gptResponse = await chatGPTCall(scriptText);
             sendProgress(clientId, '서비스 완료', 100);
-            const gptData=JSON.parse(gptResponse);
+            const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
+            const trimmedResponse = gptResponse.substring(startIndex);
+            const gptData=JSON.parse(trimmedResponse);
             console.log(gptResponse);
             const data=await timeStampMapping(gptResponse,timeStampData);
             console.log("돌아온 데이터",data);
-
+            console.log(summaryData.video_name);
             const finalData={
                 "title":videoTitle,
                 "link":"https://www.youtube.com/watch?v="+videoId,

@@ -14,7 +14,7 @@ videoRoute.get('/',async(req,res)=>{
 }
 
 );
-videoRoute.patch('/:videoId/:categoryId/update',async(req,res)=>{
+videoRoute.patch('/:categoryId/update',async(req,res)=>{
     const result=await updateVideoCategory(req,res);
 });
 videoRoute.get('/tag',async(req,res)=>{

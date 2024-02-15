@@ -101,7 +101,7 @@ export const updateVideoCategory=async(req,res,next)=>{
         const data={
             "userId":req.userId,
             "categoryId":req.params.categoryId,
-            "videoId":req.params.videoId
+            "videoId":req.body.video_id
         };
         res.send(response(status.SUCCESS,await videoCategoryUpdate(data)));
     } catch (error) {
