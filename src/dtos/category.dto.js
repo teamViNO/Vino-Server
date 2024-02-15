@@ -1,12 +1,21 @@
 //category.dto.js
 
-// 카테고리 조회
+// 모든 카테고리 조회
 export const getCategoryResponseDTO = (category) => {
     return {
         "categoryId": category.id,
         "name": category.name,
         "topCategoryId": category.top_category,
         "createdAt": category.created_at
+    };
+}
+
+// 카테고리 하나 조회
+export const getCategoryIdResponseDTO = (category) => {
+    return {
+        "categoryId": category[0].id,
+        "name": category[0].name,
+        "topCategoryId": category[0].top_category,
     };
 }
 
@@ -29,9 +38,8 @@ export const add2CategoryResponseDTO = (category,categoryID) => {
     };
 }
 
-// 카테고리 수정 또는 카테고리 이동
+// 카테고리 수정
 export const fixCategoryResponseDTO = (category) => {
-    console.log(category.top_category,category.category_id,category.name)
     return {
         "topCategoryId": category.top_category,
         "categoryId": category.category_id,
@@ -42,9 +50,9 @@ export const fixCategoryResponseDTO = (category) => {
 // 이동2
 export const move2CategoryResponseDTO = (category,etc) => {
     return {
-        "topCategoryId": category.top_category,
-        "categoryId": category.category_id,
-        "name": category.name,
+        "topCategoryId": category[0].top_category,
+        "categoryId": category[0].id,
+        "name": category[0].name,
         "etcId": etc
     };
 }

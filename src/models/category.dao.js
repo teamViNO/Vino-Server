@@ -5,7 +5,7 @@ import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
 import { dropVideo } from "./video.dao.js"
 
-// 카테고리 조회
+// 모든 카테고리 조회
 export const getCategoryDAO=async (userID) => {
     try {
         const conn = await pool.getConnection();
@@ -23,8 +23,8 @@ export const addCategoryDAO=async (req) =>{
     try{
         const conn =await pool.getConnection();
         const result = await pool.query(
-        "insert into category(name, user_id, top_category, created_at) values(?,?,?,?);",
-        [req.name, req.user_id, req.top_category, req.created_at]);
+            "insert into category(name, user_id, top_category, created_at) values(?,?,?,?);",
+            [req.name, req.user_id, req.top_category, req.created_at]);
         const categoryId = result[0] && result[0].insertId;
         conn.release();
         return categoryId;
@@ -49,7 +49,7 @@ export const renameCategoryDAO = async (req) => {
     }
 };
 
-// 카테고리 삭제 => 카테고리에 포함된 모든 컨텐츠 삭제
+// 카테고리 삭제 
 export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
@@ -94,47 +94,30 @@ export const deleteCategoryDAO = async (req) => {
 
 
 
-// 카테고리 이동1 (하위의 상위 카테고리가 변경될 때) => 비디오에서는 변경 없음
+// 카테고리 이동1 (하위의 상위 카테고리가 변경될 때)
 export const move1CategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
-
-        const [category] = await pool.query(
-            "SELECT * FROM category WHERE id = ? AND user_id = ?;",
-            [req.category_id, req.user_id]
-        );
-        if (!category.length) {
-            throw new BaseError(status.NOT_FOUND, "Category not found.");
-        }
-        
-
         await pool.query(
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
             [req.top_category, req.category_id, req.user_id]
         );
-        
-        console.log("DAO에서:", req.top_category, req.category_id, req.user_id)
+
+        const result = await pool.query(
+            "SELECT * FROM category WHERE id = ?", [req.category_id]
+        )
         conn.release();
-        
+        return result[0];
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
 
-// 카테고리 이동2 (하위가 새로운 상위가 될 때) => 현재 카테고리를 상위로 갖는 하위 카테고리를 만들어 비디오가 이를 참조하도록 변경
+// 카테고리 이동2 (하위가 새로운 상위가 될 때) 
 export const move2CategoryDAO = async (data,etc) => {
     try {
         const conn = await pool.getConnection();
-        
-        const [category] = await pool.query(
-            "SELECT * FROM category WHERE id = ? AND user_id = ?;",
-            [req.category_id, req.user_id]
-        );
-        if (!category.length) {
-            throw new BaseError(status.NOT_FOUND, "Category not found.");
-        }
-
         await pool.query(
             "UPDATE category SET top_category = NULL WHERE id = ? AND user_id = ?;",
             [data.category_id, data.user_id]
@@ -145,7 +128,11 @@ export const move2CategoryDAO = async (data,etc) => {
             [etc, data.category_id, data.user_id]
         );
 
+        const result = await pool.query(
+            "SELECT * FROM category WHERE id = ?", [data.category_id]
+        )
         conn.release();
+        return result[0];
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -156,15 +143,6 @@ export const move2CategoryDAO = async (data,etc) => {
 export const move3CategoryDAO = async (data) => {
     try {
         const conn = await pool.getConnection();
-
-        const [category] = await pool.query(
-            "SELECT * FROM category WHERE id = ? AND user_id = ?;",
-            [req.category_id, req.user_id]
-        );
-        if (!category.length) {
-            throw new BaseError(status.NOT_FOUND, "Category not found.");
-        }
-        
         // 1. :categoryID를 top_Category로 갖는 하위 카테고리들의 id를 모두 가져오기
         const [subCategories] = await conn.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [data.user_id, data.category_id]);
         
@@ -182,8 +160,35 @@ export const move3CategoryDAO = async (data) => {
             [data.top_category, data.category_id, data.user_id]
         );
 
-        return 
+        const result = await pool.query(
+            "SELECT * FROM category WHERE id = ?", [data.category_id]
+        )
         conn.release();
+        return result[0];
+    } catch (err) {
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+};
+
+// 카테고리 태그 가져오기
+export const getCategoryTagDAO = async (req) => {
+    try {
+        const conn = await pool.getConnection();
+        
+        // 1. 카테고리에 해당하는 비디오 아이디 가져오기
+        const [videoIds] = await pool.query(
+            "SELECT DISTINCT id FROM video WHERE category_id = ? AND user_id = ?;",
+            [req.category_id, req.user_id]
+        );
+
+        // 2. 비디오 아이디에 해당하는 태그 아이디와 태그 네임 가져오기
+        const [tags] = await pool.query(
+            "SELECT DISTINCT vt.tag_id, t.name FROM video_tag vt JOIN tag t ON vt.tag_id = t.id WHERE vt.video_id IN (?);",
+            [videoIds.map(video => video.id)]
+        );
+        conn.release();
+        return tags;
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -215,31 +220,3 @@ export const move3CategoryDAO = async (data) => {
 //         throw new BaseError(status.PARAMETER_IS_WRONG);
 //     }
 // };
-
-// 카테고리 태그 가져오기
-export const getCategoryTagDAO = async (req) => {
-    try {
-        const conn = await pool.getConnection();
-        
-        // 1. 카테고리에 해당하는 비디오 아이디 가져오기
-        const [videoIds] = await pool.query(
-            "SELECT DISTINCT id FROM video WHERE category_id = ? AND user_id = ?;",
-            [req.category_id, req.user_id]
-        );
-
-        // 2. 비디오 아이디에 해당하는 태그 아이디와 태그 네임 가져오기
-        const [tags] = await pool.query(
-            "SELECT DISTINCT vt.tag_id, t.name FROM video_tag vt JOIN tag t ON vt.tag_id = t.id WHERE vt.video_id IN (?);",
-            [videoIds.map(video => video.id)]
-        );
-
-        console.log(tags);
-        conn.release();
-        return tags;
-
-    } catch (err) {
-        console.error(err);
-        throw new BaseError(status.PARAMETER_IS_WRONG);
-    }
-};
-
