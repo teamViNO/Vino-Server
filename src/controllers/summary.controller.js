@@ -66,7 +66,7 @@ export const processVideo = async (req, res) => {
             const trimmedResponse = gptResponse.substring(startIndex);
             const gptData=JSON.parse(trimmedResponse);
             console.log(gptResponse);
-            const data=await timeStampMapping(gptResponse,timeStampData);
+            const data=await timeStampMapping(gptData,timeStampData);
             console.log("돌아온 데이터",data);
             console.log(summaryData.video_name);
             const finalData={
@@ -96,8 +96,8 @@ export const processVideo = async (req, res) => {
     }
 };
 
-async function timeStampMapping(gptRes, timeStampData) {
-    const gptResponse=JSON.parse(gptRes);
+async function timeStampMapping(gptResponse, timeStampData) {
+    
     const subheadingData = [];
     
     try {
