@@ -13,8 +13,15 @@ import getYoutubeTitle from 'get-youtube-title';
 export const processVideo = async (req, res) => {
     try {
         //사용자에게 입력받을 video ID 변수
+        const token = req.cookies['auth-token'];
         const videoId = req.params.videoId;
+        
+        if(!token) {
+            return res.status(401).send("비정상 접근입니다.");
+        }
+        
         let videoTitle="";
+
         getYoutubeTitle(videoId,async function(err,title){
             videoTitle=title;
         })
@@ -166,7 +173,7 @@ export const speechresult = async (req, res) => {
                 "text":jsonData.segments[i].text
             })
         }
-        
+
         console.log("시간데이터 있는 데이터",timeStampData);
         console.log(scriptText);
 

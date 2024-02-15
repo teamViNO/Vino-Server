@@ -22,7 +22,12 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const response = await loginService(req.body);
+    if(response.success){
+      //로그인 성공시 임시 토큰 쿠키 삭제
+      res.clearCookie('tempToken');
+    }
     return res.status(response.status).json(response);
+    
   } catch (error) {
     console.log(error);
     return res.status(500).json({
