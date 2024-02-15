@@ -100,19 +100,19 @@ export const getSummary = async (scriptText) => {
     {
       "Summary": [
         {
-         "summary": "content"
+         "content": "content"
         },
         {
-         "summary": "content",
+         "content": "content",
         },
         {
-         "summary": "content",
+         "content": "content",
         },
         {
-         "summary": "content",
+         "content": "content",
         },
         {
-         "summary": "content"
+         "content": "content"
         }
         ...
       ]

@@ -234,7 +234,15 @@ export const viewUnReadDummyVideo=async(data)=>{
 }
 export const videoCategoryUpdate=async(data)=>{
     const time = new Date;
-    const updatevideoData=await updateCategory(data);
+    for(let i=0;i<data.videoId.length;i++){
+        const resultData={
+            "userId":data.userId,
+            "categoryId":data.categoryId,
+            "videoId":data.videoId[i]
+        }
+        const updatevideoData=await updateCategory(resultData);
+    }
+    
     return {"status":"success"};
 }
 export const updateVideoService=async(body,data)=>{
