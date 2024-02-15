@@ -216,7 +216,9 @@ export const findUser = async function(id) {
 };
 
 export const createUserKakao = async function(user) {
-  const insertSql = `insert into user (id, name, birth_date, gender, phone_number, email, platform, theme, nick_name) values (?, ?, ?, ?, ?, ?, ?, ?, ?) on duplicate key update name = ?, birth_date = ?, gender = ?, phone_number = ?, email = ?, platform = ?, theme = ?, nick_name = ?`;
+  const insertSql = `INSERT INTO user (id, name, birth_date, gender, phone_number, email, platform, theme, nick_name)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+  `;
   const insertParams = [user.id, user.name, user.birth_date, user.gender, user.phone_number, user.email, user.platform, user.theme, user.nick_name,
                   user.name, user.birth_date, user.gender, user.phone_number, user.email, user.platform, user.theme, user.nick_name];
   await pool.query(insertSql, insertParams);
