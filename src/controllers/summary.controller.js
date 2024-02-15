@@ -158,23 +158,50 @@ export const speechresult = async (req, res) => {
         const scriptText = resultData.text;
         sendProgress(clientId, '스크립트 불러오기 완료', 50);
 
-        //소제목 추출
+        const timeStampData=[];
+        for(let i=0;i<jsonData.segments.length;i++){
+            timeStampData.push({
+                "start_time":jsonData.segments[i].start/1000,
+                "end_time":jsonData.segments[i].end/1000,
+                "text":jsonData.segments[i].text
+            })
+        }
+        
+        console.log("시간데이터 있는 데이터",timeStampData);
+        console.log(scriptText);
+
         const summaryResult = await getSummary(scriptText);
-        //const summaryResultJson = JSON.parse(summaryResult);
-        
+        console.log("요약데이터",summaryResult);
         sendProgress(clientId, '요약 불러오기 완료', 75);
-
-        //문단 나누기
-        const gptResponse = await chatGPTCall(scriptText);
-        //const gptResponseJson = JSON.parse(gptResponse);
-        sendProgress(clientId, '서비스 완료', 100);
+        // const startSummaryIndex = summaryResult.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
+        // console.log("찾은 인덱스",startSummaryIndex);
+        // const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);
+        const summaryData=JSON.parse(summaryResult);
+        console.log("summary json 데이터",summaryData);
         
-
+        const gptResponse = await chatGPTCall(scriptText);
+        sendProgress(clientId, '서비스 완료', 100);
+        const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
+        const trimmedResponse = gptResponse.substring(startIndex);
+        const gptData=JSON.parse(trimmedResponse);
+        console.log(gptResponse);
+        const data=await timeStampMapping(gptData,timeStampData);
+        console.log("돌아온 데이터",data);
+        console.log(summaryData.video_name);
+        const finalData={
+            "title":videoTitle,
+            "link":"https://www.youtube.com/watch?v="+videoId,
+            "description":summaryData.video_name[0].name,
+            "subheading":data,
+            "summary":summaryData.Summary,
+            "tag":gptData.tag
+        }
+        
         res.status(200).json({
             message: 'File processed successfully using existing data',
-            gptResponse,
-            summaryResult
+            finalData
         });
+
 
     }
     catch (error) {
