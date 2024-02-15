@@ -52,12 +52,12 @@ export const addCopyVideo= async(data)=>{
         const video = await pool.query(addCopyVideoSql,[time,time,time,data.categoryId,data.userId,data.videoId]);
         console.log(video[0].insertId);
         const videoRevision=await pool.query(addCopyRevisonVideoSql,[video[0].insertId,time,time,time,data.categoryId,data.userId,data.videoId])
-        const subHeadingOriginal=await pool.query(copySubheadingSql,[video[0].insertId,'original',data.videoId]);
-        const subHeadingRevision=await pool.query(copySubheadingSql,[video[0].insertId,'revision',data.videoId]);
-        const summaryOriginal = await pool.query(copySummarySql,[video[0].insertId,'original',data.videoId]);
-        const summaryRevision = await pool.query(copySummarySql,[video[0].insertId,'revision',data.videoId]);
-        const tagOriginal=await pool.query(copyTagSql,[video[0].insertId,'original',data.videoId]);
-        const tagRevision=await pool.query(copyTagSql,[video[0].insertId,'revision',data.videoId]);
+        const subHeadingOriginal=await pool.query(copySubheadingSql,[video[0].insertId,'original',data.videoId,'original']);
+        const subHeadingRevision=await pool.query(copySubheadingSql,[video[0].insertId,'revision',data.videoId,'revision']);
+        const summaryOriginal = await pool.query(copySummarySql,[video[0].insertId,'original',data.videoId,'original']);
+        const summaryRevision = await pool.query(copySummarySql,[video[0].insertId,'revision',data.videoId,'revision']);
+        const tagOriginal=await pool.query(copyTagSql,[video[0].insertId,'original',data.videoId,'original']);
+        const tagRevision=await pool.query(copyTagSql,[video[0].insertId,'revision',data.videoId,'revision']);
         const result = await pool.query(insertDummyVideoSql,[data.userId,data.videoId]);
         conn.release();
         return video[0].insertId;
