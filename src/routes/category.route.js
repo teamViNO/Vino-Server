@@ -2,7 +2,7 @@
 
 import express from "express";
 import {getCategoryData,addCategory1Data,addCategory2Data,renameCategoryData,deleteCategoryData} from "../controllers/category.controller.js";
-import {move1CategoryData,move2CategoryData,move3CategoryData,move4CategoryData,getCategoryTag} from "../controllers/category.controller.js";
+import {move1CategoryData,move2CategoryData,move3CategoryData,getCategoryTag} from "../controllers/category.controller.js";
 
 export const categoryRoute = express.Router();
 
@@ -36,22 +36,22 @@ categoryRoute.put('/up/:categoryID', async (req,res) =>{
     const result = await move2CategoryData(req,res);
 })
 
+// 카테고리 이동1 (하위의 상위가 변경될 때)
+categoryRoute.put('/move/:categoryID/:topCategoryID', async (req,res) =>{
+    const result = await move1CategoryData(req,res);
+})
+
 // 카테고리 이동3 (상위가 다른 상위의 새로운 하위가 될 때)
 categoryRoute.put('/down/:categoryID/:topCategoryID', async (req,res) =>{
     const result = await move3CategoryData(req,res);
-})
-
-// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
-// categoryRoute.put('/combine/:topCategoryID/:categoryID', async (req,res) =>{
-//     const result = await move4CategoryData(req,res);
-// })
-
-// 카테고리 이동1 (하위의 상위가 변경될 때)
-categoryRoute.put('/:categoryID/:topCategoryID', async (req,res) =>{
-    const result = await move1CategoryData(req,res);
 })
 
 // 카테고리 태그 가져오기
 categoryRoute.get('/:categoryID', async (req,res) => {
     const result = await getCategoryTag(req,res);
 })
+
+// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+// categoryRoute.put('/combine/:topCategoryID/:categoryID', async (req,res) =>{
+//     const result = await move4CategoryData(req,res);
+// })

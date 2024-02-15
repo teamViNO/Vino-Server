@@ -2,9 +2,9 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO,move2CategoryResponseDTO,categoryTagResponseDTO} from "../dtos/category.dto.js";
+import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO,move2CategoryResponseDTO,categoryTagResponseDTO,getCategoryIdResponseDTO} from "../dtos/category.dto.js";
 import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
-import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,move4CategoryDAO,getCategoryTagDAO } from "../models/category.dao.js"
+import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,getCategoryTagDAO } from "../models/category.dao.js"
 
 // 카테고리 조회
 export const getCategoryService = async (data) => {
@@ -63,7 +63,7 @@ export const deleteCategoryService = async (req) => {
         user_id : req.userID,
         category_id : req.params.categoryID,
     };
-    console.log("서비스에서 ", categoryData);
+    console.log("서비스 요청 정보", categoryData);
     await deleteCategoryDAO(categoryData);
 }
 
@@ -75,8 +75,8 @@ export const move1CategoryService = async (req) => {
         top_category : req.params.topCategoryID
     };
     console.log("서비스 요청 정보", categoryData);
-    await move1CategoryDAO(categoryData);
-    return fixCategoryResponseDTO(categoryData);
+    const result = await move1CategoryDAO(categoryData);
+    return getCategoryIdResponseDTO(result);
 }
 
 // 카테고리 이동2 (하위가 새로운 상위가 될 때)
@@ -93,10 +93,10 @@ export const move2CategoryService = async (req) => {
         top_category: req.params.categoryID, // 상위 카테고리의 ID를 사용
         created_at: new Date
     };
-    const etc = await addCategoryDAO(defaultSubCategoryData); // 기본 하위 폴더 생성
+    const etc = await addCategoryDAO(defaultSubCategoryData); // 기타 하위 폴더 생성
 
-    await move2CategoryDAO(categoryData,etc);
-    return move2CategoryResponseDTO(categoryData,etc);
+    const result = await move2CategoryDAO(categoryData,etc);
+    return move2CategoryResponseDTO(result,etc);
 }
 
 // 카테고리 이동3 (상위가 다른 상위의 새로운 하위가 될 때)
@@ -107,21 +107,9 @@ export const move3CategoryService = async (req) => {
         top_category : req.params.topCategoryID
     };
     console.log("서비스 요청 정보", categoryData);
-    await move3CategoryDAO(categoryData);
-    return fixCategoryResponseDTO(categoryData);
+    const result = await move3CategoryDAO(categoryData);
+    return getCategoryIdResponseDTO(result);
 }
-
-// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
-// export const move4CategoryService = async (req) => {
-//     const categoryData =  {
-//         user_id : req.userID,
-//         top_category : req.params.topCategoryID, // 이동할 상위가
-//         category_id : req.params.categoryID // 얘랑 합쳐짐
-//     };
-//     console.log("서비스 요청 정보", categoryData);
-//     await move4CategoryDAO(categoryData);
-//     return fixCategoryResponseDTO(categoryData);
-// }
 
 // 카테고리 태그 가져오기
 export const getCategoryTagService = async (req) =>{
@@ -132,5 +120,17 @@ export const getCategoryTagService = async (req) =>{
     console.log("서비스 요청 정보", categoryData);
 
     const tags = await getCategoryTagDAO(categoryData);
-    return categoryTagResponseDTO(categoryData, tags); //dto 거쳐서 반환하기
+    return categoryTagResponseDTO(categoryData, tags);
 }
+
+// // 카테고리 이동4 (상위가 다른 상위의 하위와 합쳐질 때)
+// export const move4CategoryService = async (req) => {
+//     const categoryData =  {
+//         user_id : req.userID,
+//         top_category : req.params.topCategoryID,
+//         category_id : req.params.categoryID 
+//     };
+//     console.log("서비스 요청 정보", categoryData);
+//     await move4CategoryDAO(categoryData);
+//     return fixCategoryResponseDTO(categoryData);
+// }
