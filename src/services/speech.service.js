@@ -28,7 +28,7 @@ export const recognizeFromObjectStorage = async (objectStorageDataKey, language 
                 'Content-Type': 'application/json'
             }
         });
-
+        console.log("스크립트화된 데이터",response.data);
         return response.data;
     } catch (error) {
         console.error('Error in recognizing from object storage:', error);
