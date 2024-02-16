@@ -13,13 +13,16 @@ import getYoutubeTitle from 'get-youtube-title';
 export const processVideo = async (req, res) => {
     try {
         //사용자에게 입력받을 video ID 변수
-        const token = req.cookies['auth-token'];
-        const videoId = req.params.videoId;
+        // const token = req.cookies['auth-token'];
+        const videoUrl=req.query.v ?? '';
+        console.log(encodeURI(videoUrl));
+        const videoId = await extractYouTubeVideoId(encodeURI(videoUrl));
         
-        if(!token) {
-            return res.status(401).send("비정상 접근입니다.");
-        }
-        
+        // if(!token) {
+        //     return res.status(401).send("비정상 접근입니다.");
+        // }
+        const id =videoId;
+        console.log("id",id);
         let videoTitle="";
 
         getYoutubeTitle(videoId,async function(err,title){
@@ -102,7 +105,17 @@ export const processVideo = async (req, res) => {
         console.log(error);
     }
 };
-
+async function extractYouTubeVideoId(url) {
+    
+    const params = url.split('?')[1].split('&');
+    for (let param of params) {
+      const [key, value] = param.split('=');
+      if (key === 'v') {
+        return value;
+      }
+    }
+    return null;
+  }
 async function timeStampMapping(gptResponse, timeStampData) {
     
     const subheadingData = [];
