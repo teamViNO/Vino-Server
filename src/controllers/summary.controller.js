@@ -2,7 +2,7 @@
 import { convertVideoToAudio } from '../services/translateToMP3.service.js';
 import { uploadFileToStorage } from '../services/storage.service.js';
 import { recognizeFromObjectStorage } from '../services/speech.service.js';
-import { getSummary } from '../services/chatGPT.service.js';
+import { getSummary, getTitle } from '../services/chatGPT.service.js';
 import { sendProgress } from '../services/progress.service.js';
 import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { checkFileExistsInStorage } from '../services/storage.service.js';
@@ -77,6 +77,12 @@ export const processVideo = async (req, res) => {
             const gptData=JSON.parse(trimmedResponse);
 
             console.log(gptResponse);
+
+            //유튜브 제목 요약
+            const titleData=await getTitle(videoTitle);
+            console.log("제목 요약한것",titleData);
+            const titleJsonData=JSON.parse(titleData.replace("/",""));
+
             //맵핑
             const data=await timeStampMapping(gptData,timeStampData);
             console.log("돌아온 데이터",data);
@@ -84,7 +90,7 @@ export const processVideo = async (req, res) => {
             const tagData=await splitTag(gptData.tag);
             const YoutubeUploadTime=new Date();
             const finalData={
-                "title":videoTitle,
+                "title":titleJsonData.Title,
                 "youtube_created_at":YoutubeUploadTime,
                 "link":"https://www.youtube.com/watch?v="+videoId,
                 "description":summaryData.video_name[0].name,
