@@ -72,7 +72,7 @@ app.use('/video', translateToMP3); // script 라우트 적용
 app.use(cookieParser()); // 쿠키 파서 미들웨어
 
 app.get('/', generateTempToken, (req, res) => {
-    res.send(response(status.SUCCESS, "루트 페이지!"));
+    
 })
 
 
