@@ -20,7 +20,7 @@ import { searchRoute } from './src/routes/search.route.js';
 import { categoryRoute } from './src/routes/category.route.js';
 
 import { kakaoRoute } from './src/routes/kakao.route.js';
-
+import { feedbackRoute } from './src/routes/feedback.route.js';
 import { translateToMP3 } from './src/routes/translateToMP3.route.js';
 
 
@@ -55,7 +55,7 @@ app.use('/search',searchRoute);
 app.use('/category',categoryRoute);
 
 app.use(kakaoRoute);
-
+app.use(feedbackRoute);
 
 app.use('/search',searchRoute);
 app.use('/video', translateToMP3); // script 라우트 적용
