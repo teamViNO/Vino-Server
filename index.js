@@ -22,7 +22,7 @@ import { searchRoute } from './src/routes/search.route.js';
 import { categoryRoute } from './src/routes/category.route.js';
 
 import { kakaoRoute } from './src/routes/kakao.route.js';
-
+import { feedbackRoute } from './src/routes/feedback.route.js';
 import { translateToMP3 } from './src/routes/translateToMP3.route.js';
 
 
@@ -36,14 +36,9 @@ const app = express();
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 
-const corsOptions = {
-    origin: ["https://www.vi-no.site", "http://vi-no.site", "http://localhost:5173", "https://vi-no.site"],
-    optionsSuccessStatus: 200,
-    credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
-};
 
-app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
-// cors 방식 허용
+app.use(cors()); // 옵션을 추가한 CORS 미들웨어 추가
+                     // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
@@ -64,7 +59,7 @@ app.use('/search', searchRoute);
 app.use('/category', categoryRoute);
 
 app.use(kakaoRoute);
-
+app.use(feedbackRoute);
 
 app.use('/search', searchRoute);
 app.use('/video', translateToMP3); // script 라우트 적용
