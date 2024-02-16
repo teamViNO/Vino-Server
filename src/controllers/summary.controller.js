@@ -13,14 +13,17 @@ import getYoutubeTitle from 'get-youtube-title';
 export const processVideo = async (req, res) => {
     try {
         //사용자에게 입력받을 video ID 변수
-        // const token = req.cookies['auth-token'];
+
+        const token = req.cookies['tempToken'];
+
         const videoUrl=req.query.v ?? '';
         console.log(encodeURI(videoUrl));
         const videoId = await extractYouTubeVideoId(encodeURI(videoUrl));
         
-        // if(!token) {
-        //     return res.status(401).send("비정상 접근입니다.");
-        // }
+        if(!token) {
+            return res.status(401).send("비정상 접근입니다.");
+        }
+        
         const id =videoId;
         console.log("id",id);
         let videoTitle="";
