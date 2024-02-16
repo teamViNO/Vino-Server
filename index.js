@@ -4,6 +4,8 @@ import { specs } from './config/swagger.config.js';
 import SwaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 
 import { response } from './config/response.js';
 import { BaseError } from './config/error.js';
@@ -22,6 +24,7 @@ import { categoryRoute } from './src/routes/category.route.js';
 import { kakaoRoute } from './src/routes/kakao.route.js';
 
 import { translateToMP3 } from './src/routes/translateToMP3.route.js';
+
 
 
 
@@ -60,7 +63,9 @@ app.use(kakaoRoute);
 app.use('/search',searchRoute);
 app.use('/video', translateToMP3); // script 라우트 적용
 
-app.get('/', (req, res, next) => {
+app.use(cookieParser()); // 쿠키 파서 미들웨어
+
+app.get('/', generateTempToken, (req, res, next) => {
     res.send(response(status.SUCCESS, "루트 페이지!"));
 })
 
@@ -84,4 +89,17 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
     console.log(`Example app listening on port ${app.get('port')}`);
 });
+
+
+
+// 임시 토큰 생성 및 쿠키 저장 미들웨어
+function generateTempToken(req, res, next) {
+    // 임시 토큰 생성 (여기서는 간단히 예시를 위한 토큰을 생성합니다)
+    const tempToken = jwt.sign({ user: 'tempUser' }, 'yourSecretKey', { expiresIn: '2h' });
+  
+    // 쿠키에 토큰 저장
+    res.cookie('tempToken', tempToken, { httpOnly: true });
+  
+    next(); // 다음 미들웨어 또는 라우트 핸들러로 제어를 넘깁니다.
+  }
 
