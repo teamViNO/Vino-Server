@@ -23,7 +23,7 @@ export const processVideo = async (req, res) => {
         if(!token) {
             return res.status(401).send("비정상 접근입니다.");
         }
-        
+
         const id =videoId;
         console.log("id",id);
         let videoTitle="";
@@ -31,7 +31,8 @@ export const processVideo = async (req, res) => {
         getYoutubeTitle(videoId,async function(err,title){
             videoTitle=title;
         })
-        const clientId = req.query.clientId;
+
+        const clientId = token;
 
         // Object Storage에서 해당 MP3 파일이 존재하는지 확인
         const mp3Exists = await checkFileExistsInStorage(process.env.OBJECT_STORAGE_BUCKET_NAME, `${videoId}.mp3`);
