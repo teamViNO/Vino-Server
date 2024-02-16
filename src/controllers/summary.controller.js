@@ -69,23 +69,28 @@ export const processVideo = async (req, res) => {
             // const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);
             const summaryData=JSON.parse(summaryResult);
             console.log("summary json 데이터",summaryData);
-            
+            //gpt 데이터
             const gptResponse = await chatGPTCall(scriptText);
             sendProgress(clientId, '서비스 완료', 100);
             const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
             const trimmedResponse = gptResponse.substring(startIndex);
             const gptData=JSON.parse(trimmedResponse);
+
             console.log(gptResponse);
+            //맵핑
             const data=await timeStampMapping(gptData,timeStampData);
             console.log("돌아온 데이터",data);
             console.log(summaryData.video_name);
+            const tagData=await splitTag(gptData.tag);
+            const YoutubeUploadTime=new Date();
             const finalData={
                 "title":videoTitle,
+                "youtube_created_at":YoutubeUploadTime,
                 "link":"https://www.youtube.com/watch?v="+videoId,
                 "description":summaryData.video_name[0].name,
                 "subheading":data,
                 "summary":summaryData.Summary,
-                "tag":gptData.tag
+                "tag":tagData
             }
             
             res.status(200).json({
@@ -105,6 +110,15 @@ export const processVideo = async (req, res) => {
         console.log(error);
     }
 };
+async function splitTag(tag){
+    const data=[];
+    for(let i=0;i<tag.length;i++){
+        if(tag[i].name.replace(" ","").length<=8){
+            data.push({"name":tag[i].name.replace(" ","")});
+        }
+    }
+    return data;
+}
 async function extractYouTubeVideoId(url) {
     
     const params = url.split('?')[1].split('&');
