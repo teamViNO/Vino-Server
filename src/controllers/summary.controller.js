@@ -17,13 +17,13 @@ export const summary = async (req, res) => {
         
         
         
-        const response =
+        const responseData =
         await axios.get(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.YOUTUBE_API_KEY}
         &part=snippet`);
-        console.log( response.data.items[0]?.snippet);
+        console.log( responseData.data.items[0]?.snippet);
     
-        const videoTitle=response.data.items[0]?.snippet.title;
-        const youtubeDate=response.data.items[0]?.snippet.publishedAt;
+        const videoTitle=responseData.data.items[0]?.snippet.title;
+        const youtubeDate=responseData.data.items[0]?.snippet.publishedAt;
           
 
         // Object Storage에서 스크립트 파일 이름 가져오기
