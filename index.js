@@ -4,8 +4,7 @@ import { specs } from './config/swagger.config.js';
 import SwaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
+
 
 import { response } from './config/response.js';
 import { BaseError } from './config/error.js';
@@ -22,7 +21,7 @@ import { searchRoute } from './src/routes/search.route.js';
 import { categoryRoute } from './src/routes/category.route.js';
 
 import { kakaoRoute } from './src/routes/kakao.route.js';
-
+import { feedbackRoute } from './src/routes/feedback.route.js';
 import { translateToMP3 } from './src/routes/translateToMP3.route.js';
 
 
@@ -36,14 +35,9 @@ const app = express();
 // server setting - veiw, static, body-parser etc..
 app.set('port', process.env.PORT || 3000)   // 서버 포트 지정
 
-const corsOptions = {
-    origin: ["https://www.vi-no.site", "http://vi-no.site", "http://localhost:5173", "https://vi-no.site"],
-    optionsSuccessStatus: 200,
-    credentials: true,// 응답 헤더에 Access-Control-Allow-Credentials 추가
-};
 
-app.use(cors(corsOptions)); // 옵션을 추가한 CORS 미들웨어 추가
-// cors 방식 허용
+app.use(cors()); // 옵션을 추가한 CORS 미들웨어 추가
+                     // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
@@ -64,15 +58,13 @@ app.use('/search', searchRoute);
 app.use('/category', categoryRoute);
 
 app.use(kakaoRoute);
-
+app.use(feedbackRoute);
 
 app.use('/search', searchRoute);
 app.use('/video', translateToMP3); // script 라우트 적용
 
-app.use(cookieParser()); // 쿠키 파서 미들웨어
-
-app.get('/', generateTempToken, (req, res) => {
-    res.send(response(status.SUCCESS, "루트 페이지!"));
+app.get('/', (req, res) => {
+    res.status(200).json({ status: 200, success: true, message: '루트 페이지!' });
 })
 
 
@@ -95,19 +87,4 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
     console.log(`Example app listening on port ${app.get('port')}`);
 });
-
-
-
-// 임시 토큰 생성 및 쿠키 저장 미들웨어
-function generateTempToken(req, res, next) {
-    // 임시 토큰 생성 (여기서는 간단히 예시를 위한 토큰을 생성합니다)
-    const tempToken = jwt.sign({ user: 'tempUser' }, process.env.JWT_SECRET);
-
-    // 쿠키에 토큰 저장
-    res.cookie('tempToken', tempToken, { httpOnly: true });
-
-    // 토큰 정보를 JSON 형태로 응답
-    res.status(200).json({ status: 200, success: true, message: '임시토큰이 발행되었습니다.', result: { tempToken }});
-
-}
 
