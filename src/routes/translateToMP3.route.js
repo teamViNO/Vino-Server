@@ -15,4 +15,4 @@ translateToMP3.post('/', convertMP3);
 translateToMP3.post('/speech', callClovaSpeech);
 
 // 요약 진행
-translateToMP3.get('/summary', summary);
+translateToMP3.post('/summary', summary);
