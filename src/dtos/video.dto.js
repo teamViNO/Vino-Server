@@ -1,14 +1,16 @@
 import { BaseError } from "../../config/error";
 import { status } from "../../config/response.status";
 
-export const getVideoResponseDTO=(video,subHeading,summary,tag,category)=>{
+export const getVideoResponseDTO=async (video,subHeading,summary,tag,category)=>{
     try {
         console.log("받아온 카테고리 데이터",category);
         const subHeadingData=[]
         const summaryData=[]
         const tagData=[]
+        
         for(let i= 0; i<subHeading.length;i++){
-            subHeadingData.push({"id": subHeading[i].id,"name":subHeading[i].name,"start_time":subHeading[i].start_time,"end_time":subHeading[i].end_time,"content":subHeading[i].content});
+            
+            subHeadingData.push({"id": subHeading[i].id,"name":subHeading[i].name,"start_time": subHeading[i].start_time,"end_time":subHeading[i].end_time,"content":subHeading[i].content});
         }
         for(let i= 0; i<summary.length;i++){
             summaryData.push({"id": summary[i].id,"content":summary[i].content});
@@ -23,6 +25,18 @@ export const getVideoResponseDTO=(video,subHeading,summary,tag,category)=>{
     }
     
     
+}
+async function convertTimeStringToTimeObject(timeString) {
+    // 시간 문자열을 ":"를 기준으로 분리하여 시, 분, 초를 배열로 가져옵니다.
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+    // Date 객체를 사용하여 시간을 생성합니다.
+    const time = new Date();
+    time.setHours(hours);
+    time.setMinutes(minutes);
+    time.setSeconds(seconds);
+
+    return time;
 }
 export const updateVideoResponseDTO=(video) =>{
    return {"status": video}
