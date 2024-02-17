@@ -4,10 +4,8 @@ import { specs } from './config/swagger.config.js';
 import SwaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
 
-import { v4 as uuidv4 } from 'uuid';
+
 import { response } from './config/response.js';
 import { BaseError } from './config/error.js';
 import { status } from './config/response.status.js';
@@ -71,10 +69,8 @@ app.use(feedbackRoute);
 app.use('/search', searchRoute);
 app.use('/video', translateToMP3); // script 라우트 적용
 
-app.use(cookieParser()); // 쿠키 파서 미들웨어
-
-app.get('/', generateTempToken, (req, res) => {
-    
+app.get('/', (req, res) => {
+    res.status(200).json({ status: 200, success: true, message: '루트 페이지!' });
 })
 
 
@@ -97,17 +93,4 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
     console.log(`Example app listening on port ${app.get('port')}`);
 });
-
-
-
-// 임시 토큰 생성 및 쿠키 저장 미들웨어
-function generateTempToken(req, res, next) {
-    // 임시 토큰 생성 (여기서는 간단히 예시를 위한 토큰을 생성합니다)
-    const uniqueId = uuidv4(); // 'uuid' 모듈의 v4 함수를 사용하여 UUID 생성
-    const tempToken = jwt.sign({ userId: uniqueId }, process.env.JWT_SECRET);
-
-    // 토큰 정보를 JSON 형태로 응답
-    res.status(200).json({ status: 200, success: true, message: '임시토큰이 발행되었습니다.', result: { tempToken }});
-
-}
 
