@@ -14,15 +14,15 @@ export const processVideo = async (req, res) => {
     try {
         //사용자에게 입력받을 video ID 변수
 
-        const token = req.cookies['tempToken'];
+        // const token = req.cookies['tempToken'];
 
         const videoUrl=req.query.v ?? '';
         console.log(encodeURI(videoUrl));
         const videoId = await extractYouTubeVideoId(encodeURI(videoUrl));
         
-        if(!token) {
-            return res.status(401).send("비정상 접근입니다.");
-        }
+        // if(!token) {
+        //     return res.status(401).send("비정상 접근입니다.");
+        // }
 
         const id =videoId;
         console.log("id",id);
@@ -32,7 +32,7 @@ export const processVideo = async (req, res) => {
             videoTitle=title;
         })
 
-        const clientId = token;
+        // const clientId = token;
 
         // Object Storage에서 해당 MP3 파일이 존재하는지 확인
         const mp3Exists = await checkFileExistsInStorage(process.env.OBJECT_STORAGE_BUCKET_NAME, `${videoId}.mp3`);
@@ -41,7 +41,7 @@ export const processVideo = async (req, res) => {
         if (!mp3Exists) {
             const audioFilePath = await convertVideoToAudio(videoId); // MP3 파일 변환
             await uploadFileToStorage(audioFilePath); // 파일 업로드 후 로컬파일 삭제
-            sendProgress(clientId, '음성파일 변환 완료.', 25);
+            // sendProgress(clientId, '음성파일 변환 완료.', 25);
             
         }
 
@@ -51,7 +51,7 @@ export const processVideo = async (req, res) => {
         if (scriptFileName) {
             // 스크립트 파일이 이미 존재하면 해당 데이터 사용
             const jsonData = await readFileFromObjectStorage(process.env.OBJECT_STORAGE_BUCKET_SUMMARY_NAME, scriptFileName);
-            sendProgress(clientId, '스크립트 불러오기 완료', 50);
+            // sendProgress(clientId, '스크립트 불러오기 완료', 50);
 
             const scriptText = jsonData.text;
             const timeStampData=[];
@@ -67,7 +67,7 @@ export const processVideo = async (req, res) => {
 
             const summaryResult = await getSummary(scriptText);
             console.log("요약데이터",summaryResult);
-            sendProgress(clientId, '요약 불러오기 완료', 75);
+            // sendProgress(clientId, '요약 불러오기 완료', 75);
             // const startSummaryIndex = summaryResult.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
             // console.log("찾은 인덱스",startSummaryIndex);
             // const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);
@@ -75,7 +75,7 @@ export const processVideo = async (req, res) => {
             console.log("summary json 데이터",summaryData);
             //gpt 데이터
             const gptResponse = await chatGPTCall(scriptText);
-            sendProgress(clientId, '서비스 완료', 100);
+            // sendProgress(clientId, '서비스 완료', 100);
             const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
             const trimmedResponse = gptResponse.substring(startIndex);
             const gptData=JSON.parse(trimmedResponse);
