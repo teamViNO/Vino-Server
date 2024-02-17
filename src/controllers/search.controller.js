@@ -1,5 +1,6 @@
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
+import { BaseError } from "../../config/error.js";
 import {viewSearchKeyword,viewSearchTag}from "../services/search.service.js";
 import  jwt  from "jsonwebtoken";
 
