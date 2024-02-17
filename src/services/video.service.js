@@ -63,7 +63,8 @@ export const viewSimpleVideo=async(data)=>{
 
     } catch (error) {
         console.error(error);
-        return {"videos":[]}
+        throw new BaseError(status.VIDEO_NOT_FOUND);
+    //     return {"videos":[]}
     }
     
 }
@@ -83,7 +84,7 @@ export const viewRecentVideo=async(data)=>{
         console.log("비디오 정보: ",getVideoData);
         return getSimpleVideoResponseDTO(getVideoData,TagData);
     } catch (error) {
-        return {"video":[]}
+        throw new BaseError(status.VIDEO_NOT_FOUND);
     }
     
 }
