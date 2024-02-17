@@ -21,7 +21,7 @@ export const convertMP3 = async (req, res) => {
         if (!mp3Exists) {
             const audioFilePath = await convertVideoToAudio(videoId); // MP3 파일 변환
             await uploadFileToStorage(audioFilePath); // 파일 업로드 후 로컬파일 삭제
-            return res.status(200).json({ status: 200, success: true, message: 'MP3변환 완료',progress: '25' ,nextEndPoint: '/video/callspeech', videoId: videoId });
+            return res.status(200).json({ status: 200, success: true, message: 'MP3 변환 완료',progress: '25' ,nextEndPoint: '/video/speech', videoId: videoId });
         }
         else{
 
