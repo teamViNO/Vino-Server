@@ -18,6 +18,19 @@ export const getCategoryDAO=async (userID) => {
     }
 };
 
+// 카테고리 하나 조회
+export const getC = async (id)=>{
+    try {
+        const conn = await pool.getConnection();
+        const result = await pool.query("SELECT * FROM category WHERE id = ?", [id])
+        conn.release();
+        return result[0];
+    }catch(err){
+        console.error(err);
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
 // 상위 또는 하위 카테고리 추가
 export const addCategoryDAO=async (req) =>{
     try{
@@ -43,12 +56,9 @@ export const renameCategoryDAO = async (req) => {
             [req.name, req.category_id, req.user_id]
         );
 
-        const result = await pool.query(
-            "SELECT * FROM category WHERE id = ?", [req.category_id]
-        )
-
+        const result = getC(req.category_id)
         conn.release();
-        return result[0];
+        return result;
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -108,12 +118,9 @@ export const move1CategoryDAO = async (req) => {
             "UPDATE category SET top_category = ? WHERE id = ? AND user_id = ?;",
             [req.top_category, req.category_id, req.user_id]
         );
-
-        const result = await pool.query(
-            "SELECT * FROM category WHERE id = ?", [req.category_id]
-        )
+        const result = getC(req.category_id)
         conn.release();
-        return result[0];
+        return result;
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -134,11 +141,9 @@ export const move2CategoryDAO = async (data,etc) => {
             [etc, data.category_id, data.user_id]
         );
 
-        const result = await pool.query(
-            "SELECT * FROM category WHERE id = ?", [data.category_id]
-        )
+        const result = getC(req.category_id)
         conn.release();
-        return result[0];
+        return result;
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -166,11 +171,9 @@ export const move3CategoryDAO = async (data) => {
             [data.top_category, data.category_id, data.user_id]
         );
 
-        const result = await pool.query(
-            "SELECT * FROM category WHERE id = ?", [data.category_id]
-        )
+        const result = getC(req.category_id)
         conn.release();
-        return result[0];
+        return result;
     } catch (err) {
         console.error(err);
         throw new BaseError(status.PARAMETER_IS_WRONG);
@@ -197,7 +200,6 @@ export const getCategoryTagDAO = async (req) => {
         return tags;
     } catch (err) {
         console.error(err);
-        
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
