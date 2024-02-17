@@ -42,7 +42,7 @@ export const getSearchKeywordResponseDTO = async (video) => {
         return getCombinedResultDTO(videoData,tagData);
     } catch (error) {
         console.error(error);
-        throw new BaseError(status.VIDEO_NOT_FOUND);
+        return {videos:[]}
     }
 }
 
