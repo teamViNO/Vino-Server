@@ -5,7 +5,7 @@ import { getTag } from "../models/video.dao.js";
 
 export const getSearchKeywordResponseDTO = async (video) => {
     try {
-        console.log("넘어온 데이터", video[1][0]);
+        
         const videoData = [];
         const addedIds = [];  // 이미 추가된 id를 기억하는 배열
         const tagData=[];
