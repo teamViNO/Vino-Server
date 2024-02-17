@@ -42,7 +42,7 @@ export const registerService = async ({ name, birth_date, gender, phone_number, 
 
   const categoryData2={
     "user_id": user.id,
-    "name":"기본",
+    "name":"기타",
     "top_category": category.id,
     "created_at": time
   };
