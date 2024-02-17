@@ -32,7 +32,7 @@ export const getKakaoUserInfo = async function(code) {
         name: data.properties.nickname,
         email: data.kakao_account.email,
         platform: 'kakao',
-        birth_date: '',
+        birth_date: null,
         gender: '',
         phone_number: '',
         theme: '0',
