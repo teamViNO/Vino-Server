@@ -79,8 +79,10 @@ export const getSimpleVideo=async (req)=>{
 }
 export const UnReadVideoInfo=async(req)=>{
     try{
+        
         const conn= await pool.getConnection();
-        const [video]=await pool.query(getUnReadDummyVideoSql,[req.user_id]);
+        const [video]=await pool.query(getUnReadDummyVideoSql,[req.userId]);
+        console.log("비디오값",video);
         conn.release();
         return video;
     }catch(err){
