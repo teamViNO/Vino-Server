@@ -8,6 +8,7 @@ import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { checkFileExistsInStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
+
 import getYoutubeTitle from 'get-youtube-title';
 
 export const processVideo = async (req, res) => {
@@ -26,12 +27,14 @@ export const processVideo = async (req, res) => {
 
         const id =videoId;
         console.log("id",id);
-        let videoTitle="";
-
-        getYoutubeTitle(videoId,async function(err,title){
-            videoTitle=title;
-        })
-
+        
+        let videoTitle=""
+        const titleData=await getYoutubeTitle(id, async function (err, title) {
+            console.log("타이틀",title);
+            return title; // 'SLCHLD - EMOTIONS (feat. RIPELY) (prod. by GILLA)'
+          })
+        
+        console.log("비디오 테그",titleData);
         // const clientId = token;
 
         // Object Storage에서 해당 MP3 파일이 존재하는지 확인
