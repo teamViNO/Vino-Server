@@ -13,7 +13,7 @@ export const vidoeSearchKeyWord= async (req,res)=>{
         console.log("키워드 검색을 요청하셨습니다");
         const data={
             "userId":req.userId,
-            "keyword":req.query.keywordName ?? ''
+            "keyword":req.query.keywordName 
         };
         console.log("컨트롤러데이터",data);
         res.send(response(status.SUCCESS,await viewSearchKeyword(data)));
