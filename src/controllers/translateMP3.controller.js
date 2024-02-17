@@ -2,7 +2,9 @@
 import { convertVideoToAudio } from '../services/translateToMP3.service.js';
 import { checkFileExistsInStorage } from '../services/storage.service.js';
 import { uploadFileToStorage } from '../services/storage.service.js';
-
+import { BaseError } from "../../config/error.js";
+import { response } from "../../config/response.js";
+import { status } from "../../config/response.status.js";
 
 export const convertMP3 = async (req, res) => {
     try{
@@ -21,16 +23,25 @@ export const convertMP3 = async (req, res) => {
         if (!mp3Exists) {
             const audioFilePath = await convertVideoToAudio(videoId); // MP3 파일 변환
             await uploadFileToStorage(audioFilePath); // 파일 업로드 후 로컬파일 삭제
-            return res.status(200).json({ status: 200, success: true, message: 'MP3 변환 완료',progress: '25' ,nextEndPoint: '/video/speech', videoId: videoId });
+            
+            res.send(response(status.SUCCESS,{
+                message: 'MP3 변환 완료',progress: '25' ,nextEndPoint: '/video/speech', videoId: videoId 
+            }));
+            
         }
         else{
-
-            return res.status(200).json({ status: 200, success: true, message: 'MP3가 이미 존재합니다!',progress: '25' ,nextEndPoint: '/video/summary', videoId: videoId});
+            res.send(response(status.SUCCESS,{
+                message: 'MP3가 이미 존재합니다!',progress: '25' ,nextEndPoint: '/video/summary', videoId: videoId} 
+            ));
+           
         }
 
 
     }catch (error) {
-        res.status(500).json({ message: 'Error in converting to MP3', error: error.toString() });
+        res.send(response(status.BAD_REQUEST({
+            message: 'Error in converting to MP3', error: error.toString()
+        })))
+       
         console.log(error);
     }
 }

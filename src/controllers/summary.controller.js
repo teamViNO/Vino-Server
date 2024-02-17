@@ -3,6 +3,9 @@ import { getSummary, getTitle } from '../services/chatGPT.service.js';
 import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
+import { BaseError } from "../../config/error.js";
+import { response } from "../../config/response.js";
+import { status } from "../../config/response.status.js";
 import axios from 'axios';
 
 
@@ -80,11 +83,11 @@ export const summary = async (req, res) => {
                 "summary":summaryData.Summary,
                 "tag":tagData
             }
-            
-            res.status(200).json({
+            res.send(response(status.SUCCESS,{
                 message: 'File processed successfully using existing data',
                 finalData
-            });
+            }));
+            
 
         } else {
             // 스크립트 파일이 없으면 오류 호출
