@@ -7,7 +7,7 @@ export const callClovaSpeech = async (req, res) => {
         const videoId = req.body.videoId;
 
         const recognitionResult = await recognizeFromObjectStorage(`${videoId}.mp3`);
-        res.status(200).json({ status: 200, success: true, message: '음성인식 완료', progress: '50' ,nextEndPoint: '/video/summary' });
+        res.status(200).json({ status: 200, success: true, message: '음성인식 완료', progress: '50' ,nextEndPoint: '/video/summary', videoId: videoId});
 
 
     } catch (error) {
