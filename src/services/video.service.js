@@ -51,7 +51,7 @@ export const viewSimpleVideo=async(data)=>{
         console.log("123");
         const TagData=[];
         const getVideoData=await getSimpleVideo(data);
-        
+
         for(let i =0; i<getVideoData.length;i++){
             TagData.push(await getTag({
                 "videoID":getVideoData[i].id,
@@ -64,7 +64,6 @@ export const viewSimpleVideo=async(data)=>{
     } catch (error) {
         console.error(error);
         throw new BaseError(status.VIDEO_NOT_FOUND);
-    //     return {"videos":[]}
     }
     
 }
@@ -74,6 +73,10 @@ export const viewRecentVideo=async(data)=>{
         console.log("123");
         const TagData=[];
         const getVideoData=await getRecentVideo(data);
+        console.log(getVideoData);
+        if (!(getVideoData && Array.isArray(getVideoData) && getVideoData.length >0)) {
+            return {"videos":[]};
+        }
         console.log(getVideoData[0].id);
         for(let i =0; i<getVideoData.length;i++){
             TagData.push(await getTag({
