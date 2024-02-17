@@ -28,20 +28,25 @@ export const updateVideoResponseDTO=(video) =>{
    return {"status": video}
 }
 export const getSimpleVideoResponseDTO=(video,tag)=>{
-    const videoData=[]
-    console.log("비디오 데이터",video);
-    console.log("태그 데이터",tag);
-    for(let i=0;i<tag.length;i++){
-        const tagData=[]
-        for(let j=0;j<tag[i].length;j++){
-            tagData.push({"name":tag[i][j].name});
-        }
-        videoData.push({"video_id":video[i].id,"category":video[i].category_id,"title":video[i].title,"description":video[i].description,"image":video[i].image,"link":video[i].link,"created_at":video[i].updated_at,"youtube_created_at":video[i].youtube_created_at,"open_at":video[i].open_at,"tag":tagData});
+    try {
+        const videoData=[]
+        console.log("비디오 데이터",video);
+        console.log("태그 데이터",tag);
+        for(let i=0;i<tag.length;i++){
+            const tagData=[]
+            for(let j=0;j<tag[i].length;j++){
+                tagData.push({"name":tag[i][j].name});
+            }
+            videoData.push({"video_id":video[i].id,"category":video[i].category_id,"title":video[i].title,"description":video[i].description,"image":video[i].image,"link":video[i].link,"created_at":video[i].updated_at,"youtube_created_at":video[i].youtube_created_at,"open_at":video[i].open_at,"tag":tagData});
+                
             
-        
+        }
+        console.log("최종데이터",videoData);
+        return {"videos":videoData};
+    } catch (error) {
+        return {"videos":[]}
     }
-    console.log("최종데이터",videoData);
-    return {"videos":videoData};
+    
 }
 export const insertDummyVideoReadResponseDTO=(data)=>{
     return{"id":data};

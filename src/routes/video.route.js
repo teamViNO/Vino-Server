@@ -6,6 +6,7 @@ export const videoRoute = express.Router();
 
 videoRoute.get('/dummyVideos/unRead',async(req,res)=>{
     const result =await getUnReadDummyVideo(req,res);
+    
 })
 
 videoRoute.get('/',async(req,res)=>{

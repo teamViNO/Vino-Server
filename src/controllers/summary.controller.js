@@ -3,6 +3,7 @@ import { getSummary, getTitle } from '../services/chatGPT.service.js';
 import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
+
 import getYoutubeTitle from 'get-youtube-title';
 
 export const summary = async (req, res) => {
@@ -37,7 +38,6 @@ export const summary = async (req, res) => {
 
             const summaryResult = await getSummary(scriptText);
             console.log("요약데이터",summaryResult);
-
             // const startSummaryIndex = summaryResult.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
             // console.log("찾은 인덱스",startSummaryIndex);
             // const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);

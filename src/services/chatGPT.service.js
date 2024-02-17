@@ -89,13 +89,15 @@ export const chatGPTCall = async (scriptText) => {
 
 
 export const getTitle=async(title)=>{
+  console.log("유튜브제목",title);
   try {
-    const system_prompt='Step 1. Please summarize the title in one sentence when you receive the title. It should be given in Korean. Please give it in this json format'+
+    const system_prompt='Step 1. Please summarize the title in one sentence when you receive the title. It should be given in Korean. Please give it in this json format '+
     '{'+
     '"Title": The original title summarized in one sentence'+
     '}'
 
-    const prompt=`Run this script from step 1 , Make sure to fulfill the condition given to the system promport, response to korean. original title: ${title}\n `
+    const prompt=` Please summarize the title in one sentence when you receive the title. It should be given in Korean. Please give it in this json format
+    { "title":"original title summary"} original title: ${title}\n `
     
 
     const response = await axios.post(
