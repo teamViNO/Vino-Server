@@ -32,7 +32,7 @@ export const getKakaoUserInfo = async function(code) {
         name: data.properties.nickname,
         email: data.kakao_account.email,
         platform: 'kakao',
-        birth_date: '0000-00-00',
+        birth_date: '',
         gender: '',
         phone_number: '',
         theme: '0',
@@ -70,7 +70,7 @@ export const getKakaoUserInfo = async function(code) {
     
     const categoryData2={
         "user_id": user.id,
-        "name":"기본",
+        "name":"기타",
         "top_category": category.id,
         "created_at": time
     };
