@@ -3,7 +3,7 @@ import { getSummary, getTitle } from '../services/chatGPT.service.js';
 import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
-
+import axios from 'axios';
 
 
 export const summary = async (req, res) => {
@@ -11,11 +11,17 @@ export const summary = async (req, res) => {
 
         //사용자에게 입력받을 video ID 변수
         const videoId=req.body.videoId;
-        let videoTitle="";
-
-        // getYoutubeTitle(videoId, async function(err,title){
-        //     videoTitle=title;
-        // })
+        
+        
+        
+        const response =
+        await axios.get(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${process.env.YOUTUBE_API_KEY}
+        &part=snippet`);
+        console.log( response.data.items[0]?.snippet);
+    
+        const videoTitle=response.data.items[0]?.snippet.title;
+        const youtubeDate=response.data.items[0]?.snippet.publishedAt;
+          
 
         // Object Storage에서 스크립트 파일 이름 가져오기
         const scriptFileName = await getScriptFileName(process.env.OBJECT_STORAGE_BUCKET_SUMMARY_NAME, videoId);
@@ -53,7 +59,7 @@ export const summary = async (req, res) => {
             console.log(gptResponse);
 
             //유튜브 제목 요약
-            const titleData=await getTitle("임시");
+            const titleData=await getTitle(videoTitle);
             console.log("제목 요약한것",titleData);
             const titleJsonData=JSON.parse(titleData.replace("/",""));
 
@@ -62,12 +68,12 @@ export const summary = async (req, res) => {
             console.log("돌아온 데이터",data);
             console.log(summaryData.video_name);
             const tagData=await splitTag(gptData.tag);
-            const YoutubeUploadTime=new Date();
+            
 
             //데이터 가공
             const finalData={
                 "title":titleJsonData.Title,
-                "youtube_created_at":YoutubeUploadTime,
+                "youtube_created_at":youtubeDate,
                 "link":"https://www.youtube.com/watch?v="+videoId,
                 "description":summaryData.video_name[0].name,
                 "subheading":data,

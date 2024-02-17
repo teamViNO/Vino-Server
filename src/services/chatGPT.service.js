@@ -140,13 +140,13 @@ export const getSummary = async (scriptText) => {
          "content": "content"
         },
         {
-         "content": "content",
+         "content": "content"
         },
         {
-         "content": "content",
+         "content": "content"
         },
         {
-         "content": "content",
+         "content": "content"
         },
         {
          "content": "content"
