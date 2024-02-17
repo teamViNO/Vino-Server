@@ -68,6 +68,7 @@ export const viewSimpleVideo=async(data)=>{
     
 }
 export const viewRecentVideo=async(data)=>{
+    
     console.log("서비스에서 전달되는 요청정보",data);
     console.log("123");
     const TagData=[];
