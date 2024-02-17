@@ -38,15 +38,6 @@ export const add2CategoryResponseDTO = (category,categoryID) => {
     };
 }
 
-// 카테고리 수정
-export const fixCategoryResponseDTO = (category) => {
-    return {
-        "topCategoryId": category.top_category,
-        "categoryId": category.category_id,
-        "name": category.name,
-    };
-}
-
 // 이동2
 export const move2CategoryResponseDTO = (category,etc) => {
     return {

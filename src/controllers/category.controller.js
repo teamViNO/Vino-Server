@@ -82,7 +82,7 @@ export const deleteCategoryData = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userID = decoded.id;
         
-        await deleteCategoryService(req);
+        const result = await deleteCategoryService(req);
         res.send(response(status.SUCCESS,"카테고리가 삭제되었습니다."));
     } catch (error) {
         console.error(error);
