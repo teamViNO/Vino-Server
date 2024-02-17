@@ -68,20 +68,24 @@ export const viewSimpleVideo=async(data)=>{
     
 }
 export const viewRecentVideo=async(data)=>{
-    
-    console.log("서비스에서 전달되는 요청정보",data);
-    console.log("123");
-    const TagData=[];
-    const getVideoData=await getRecentVideo(data);
-    console.log(getVideoData[0].id);
-    for(let i =0; i<getVideoData.length;i++){
-        TagData.push(await getTag({
-            "videoID":getVideoData[i].id,
-            "version":"revision"
-        }));
+    try {
+        console.log("서비스에서 전달되는 요청정보",data);
+        console.log("123");
+        const TagData=[];
+        const getVideoData=await getRecentVideo(data);
+        console.log(getVideoData[0].id);
+        for(let i =0; i<getVideoData.length;i++){
+            TagData.push(await getTag({
+                "videoID":getVideoData[i].id,
+                "version":"revision"
+            }));
+        }
+        console.log("비디오 정보: ",getVideoData);
+        return getSimpleVideoResponseDTO(getVideoData,TagData);
+    } catch (error) {
+        return {"video":[]}
     }
-    console.log("비디오 정보: ",getVideoData);
-    return getSimpleVideoResponseDTO(getVideoData,TagData);
+    
 }
 export const viewCategoryVideo=async(data)=>{
     try {
