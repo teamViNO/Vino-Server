@@ -4,7 +4,7 @@ import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
 
-import getYoutubeTitle from 'get-youtube-title';
+
 
 export const summary = async (req, res) => {
     try {
@@ -13,9 +13,9 @@ export const summary = async (req, res) => {
         const videoId=req.body.videoId;
         let videoTitle="";
 
-        getYoutubeTitle(videoId, async function(err,title){
-            videoTitle=title;
-        })
+        // getYoutubeTitle(videoId, async function(err,title){
+        //     videoTitle=title;
+        // })
 
         // Object Storage에서 스크립트 파일 이름 가져오기
         const scriptFileName = await getScriptFileName(process.env.OBJECT_STORAGE_BUCKET_SUMMARY_NAME, videoId);
@@ -53,7 +53,7 @@ export const summary = async (req, res) => {
             console.log(gptResponse);
 
             //유튜브 제목 요약
-            const titleData=await getTitle(videoTitle);
+            const titleData=await getTitle("임시");
             console.log("제목 요약한것",titleData);
             const titleJsonData=JSON.parse(titleData.replace("/",""));
 
