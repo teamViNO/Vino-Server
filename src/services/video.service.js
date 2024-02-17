@@ -63,7 +63,7 @@ export const viewSimpleVideo=async(data)=>{
 
     } catch (error) {
         console.error(error);
-        throw new BaseError(status.VIDEO_NOT_FOUND);
+        return {"videos":[]}
     }
     
 }
@@ -121,7 +121,7 @@ export const viewCategoryVideo=async(data)=>{
         return getCategoryVideoResponseDTO(getVideoData,tagData);
     } catch (error) {
         console.error(error);
-        throw new BaseError(status.CATEGORY_IS_EMPTY);
+        return {"videos":[]}
     }
 }
 async function findCategory(categoryData, category, user) {
