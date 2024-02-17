@@ -8,7 +8,7 @@ import { path as FFmpegPath} from '@ffmpeg-installer/ffmpeg';
 const desktopPath = path.join(__dirname, '..', '..');
 
 // tempMP3 폴더 경로
-const outputPath = path.join(desktopPath, 'tempMp3');
+const outputPath = '/tmp';
 
 
 export const convertVideoToAudio = async (videoId) => {

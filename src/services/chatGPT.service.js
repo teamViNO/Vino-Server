@@ -88,31 +88,66 @@ export const chatGPTCall = async (scriptText) => {
 };
 
 
+export const getTitle=async(title)=>{
+  try {
+    const system_prompt='Step 1. Please summarize the title in one sentence when you receive the title. It should be given in Korean. Please give it in this json format'+
+    '{'+
+    '"Title": The original title summarized in one sentence'+
+    '}'
 
+    const prompt=`Run this script from step 1 , Make sure to fulfill the condition given to the system promport, response to korean. original title: ${title}\n `
+    
+
+    const response = await axios.post(
+      OPENAI_API_URL,
+      {
+        model: "gpt-3.5-turbo-16k",
+        messages: [
+          {"role": "system", "content": system_prompt},
+          {"role": "user", "content": prompt}
+        ]
+      },
+      {
+        headers: {  
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_API_KEY}`
+        }
+      }
+    );
+
+    // API 응답에서 생성된 텍스트 추출
+    const generatedText = response.data.choices[0].message.content.trim();
+    return generatedText;
+  } catch (error) {
+    console.error('Error calling ChatGPT API:', error);
+    throw error;
+  }
+  
+}
 export const getSummary = async (scriptText) => {
   try {
     // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
-    `Proceed with a summary of the original text. Extract the core content from the full text, the summary should contain conclusions about the content, and there should be a total of 5 summaries of the core content. video_name.name is the title of the script. There should be 1 total. The responses should come in Korean, and the format of the summary should be the ending noun form.
+    `Proceed with a summary of the original text. Extract the core content from the full text, the summary should contain conclusions about the content, and there should be a total of 5 summaries of the core content. video_name.name is the title of the script. There should be 1 total. The responses should come in Korean, and the format of the summary should be in the form of a closing noun. Also, make sure to give it in the form of json below
 
     Exception: If the script content does not exceed 5 lines, extract one summary of the core content.
 
     {
       "Summary": [
         {
-         "summary": "content"
+         "content": "content"
         },
         {
-         "summary": "content",
+         "content": "content",
         },
         {
-         "summary": "content",
+         "content": "content",
         },
         {
-         "summary": "content",
+         "content": "content",
         },
         {
-         "summary": "content"
+         "content": "content"
         }
         ...
       ]
