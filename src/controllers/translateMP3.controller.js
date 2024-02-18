@@ -38,9 +38,9 @@ export const convertMP3 = async (req, res) => {
 
 
     }catch (error) {
-        res.send(response(status.BAD_REQUEST({
+        res.send(response(status.BAD_REQUEST,{
             message: 'Error in converting to MP3', error: error.toString()
-        })))
+        }))
        
         console.log(error);
     }
