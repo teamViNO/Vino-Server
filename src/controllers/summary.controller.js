@@ -77,7 +77,7 @@ export const summary = async (req, res) => {
             const finalData={
                 "title":titleJsonData.Title,
                 "youtube_created_at":youtubeDate,
-                "link":"https://www.youtube.com/watch?v="+videoId,
+                "link":"https://www.youtube.com/embed/"+videoId,
                 "description":summaryData.video_name[0].name,
                 "subheading":data,
                 "summary":summaryData.Summary,
