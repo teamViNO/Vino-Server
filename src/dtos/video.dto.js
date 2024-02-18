@@ -7,7 +7,8 @@ export const getVideoResponseDTO=async (video,subHeading,summary,tag,category)=>
         const subHeadingData=[]
         const summaryData=[]
         const tagData=[]
-        
+        let youtubeId=video[0].link.split('embed/')[1];
+       
         for(let i= 0; i<subHeading.length;i++){
             
             subHeadingData.push({"id": subHeading[i].id,"name":subHeading[i].name,"start_time": subHeading[i].start_time,"end_time":subHeading[i].end_time,"content":subHeading[i].content});
@@ -18,7 +19,7 @@ export const getVideoResponseDTO=async (video,subHeading,summary,tag,category)=>
         for(let i= 0; i<tag.length;i++){
             tagData.push({"name":tag[i].name});
         }
-        return {"video_id":video[0].id,"title":video[0].title,"description":video[0].description,"category_id":video[0].category_id,"category_name":category[0].name,"image":video[0].image,"link":video[0].link,"youtube_created_at":video[0].youtube_created_at,"created_at":video[0].created_at,"updated_at":video[0].updated_at,"open_at":video[0].open_at,"subHeading":subHeadingData,"summary":summaryData,"tag":tagData};
+        return {"video_id":video[0].id,"title":video[0].title,"youtube_id":youtubeId,"description":video[0].description,"category_id":video[0].category_id,"category_name":category[0].name,"image":video[0].image,"link":video[0].link,"youtube_created_at":video[0].youtube_created_at,"created_at":video[0].created_at,"updated_at":video[0].updated_at,"open_at":video[0].open_at,"subHeading":subHeadingData,"summary":summaryData,"tag":tagData};
     } catch (error) {
         console.log(error);
         throw BaseError(status.VIDEO_NOT_FOUND);
