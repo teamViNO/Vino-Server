@@ -2,7 +2,7 @@
 
 import { BaseError } from "../../config/error.js";
 import {status} from "../../config/response.status.js"
-import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,fixCategoryResponseDTO,move2CategoryResponseDTO,categoryTagResponseDTO,getCategoryIdResponseDTO} from "../dtos/category.dto.js";
+import { getCategoryResponseDTO,add1CategoryResponseDTO,add2CategoryResponseDTO,move2CategoryResponseDTO,categoryTagResponseDTO,getCategoryIdResponseDTO} from "../dtos/category.dto.js";
 import { addCategoryDAO,getCategoryDAO,renameCategoryDAO,deleteCategoryDAO } from "../models/category.dao.js"
 import { move1CategoryDAO,move2CategoryDAO,move3CategoryDAO,getCategoryTagDAO } from "../models/category.dao.js"
 
@@ -53,8 +53,8 @@ export const renameCategoryService = async (req) => {
         user_id : req.userID,
         category_id : req.params.categoryID,
     };
-    await renameCategoryDAO(categoryData);
-    return fixCategoryResponseDTO(categoryData);
+    const result = await renameCategoryDAO(categoryData);
+    return getCategoryIdResponseDTO(result);
 };
 
 // 카테고리 삭제
@@ -64,7 +64,7 @@ export const deleteCategoryService = async (req) => {
         category_id : req.params.categoryID,
     };
     console.log("서비스 요청 정보", categoryData);
-    await deleteCategoryDAO(categoryData);
+    const deletedCategory = await deleteCategoryDAO(categoryData);
 }
 
 // 카테고리 이동1 (하위의 상위 카테고리가 변경될 때)
