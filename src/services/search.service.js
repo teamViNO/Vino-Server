@@ -21,15 +21,15 @@ export const viewSearchKeyword=async(data)=>{
 }
 
 export const viewSearchTag=async(data)=>{
-    console.log("서비스에서 전달되는 요청 정보",data);
+    //console.log("서비스에서 전달되는 요청 정보",data);
     const getVideoData=[];
-    for(let i=0;i<data.hashtag.length;i++){
-        getVideoData.push(await getVideoTag({
-            "userId":data.userId,
-            "tag":data.hashtag[i]
-        }));
-    }
-    console.log("비디오 정보",getVideoData);
+    
+    getVideoData.push(await getVideoTag({
+        "userId":data.userId,
+        "tag":data.hashtag
+    }));
+    
+    //console.log("비디오 정보",getVideoData);
     return getSearchTagResponseDTO(getVideoData);
 }
 
