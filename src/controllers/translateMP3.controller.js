@@ -14,7 +14,7 @@ export const convertMP3 = async (req, res) => {
 
         console.log("Received video URL:", videoUrl); // 로그로 확인
 
-        const videoId = await extractYouTubeVideoId(encodeURI(videoUrl));
+        const videoId = await extractYouTubeId(encodeURI(videoUrl));
 
         // Object Storage에서 해당 MP3 파일이 존재하는지 확인
         const mp3Exists = await checkFileExistsInStorage(process.env.OBJECT_STORAGE_BUCKET_NAME, `${videoId}.mp3`);
@@ -38,22 +38,26 @@ export const convertMP3 = async (req, res) => {
 
 
     }catch (error) {
-        res.send(response(status.BAD_REQUEST({
+        res.send(response(status.BAD_REQUEST,{
             message: 'Error in converting to MP3', error: error.toString()
-        })))
+        }))
        
         console.log(error);
     }
 }
 
-async function extractYouTubeVideoId(url) {
+async function extractYouTubeId(url) {
+    // YouTube URL에서 동영상 ID를 추출하는 정규 표현식
+    var regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
     
-    const params = url.split('?')[1].split('&');
-    for (let param of params) {
-      const [key, value] = param.split('=');
-      if (key === 'v') {
-        return value;
-      }
+    // 정규 표현식을 이용하여 URL에서 ID 추출
+    var match = url.match(regExp);
+    
+    // 매칭된 ID 반환
+    if (match && match[1]) {
+        return match[1];
+    } else {
+        // 일치하는 패턴이 없을 경우 빈 문자열 반환
+        return '';
     }
-    return null;
-  }
+}
