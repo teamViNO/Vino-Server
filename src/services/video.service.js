@@ -175,7 +175,7 @@ export const joinVideo=async(body,data)=>{
     const subHeading=body.subheading;
     const summary = body.summary;
     const tag = body.tag;
-    let youtubeId=body.link.split('embed')[1];
+    let youtubeId=body.link.split('embed/')[1];
     if (youtubeId.includes('&')) {
         youtubeId = youtubeId.split('&')[0];
     }
