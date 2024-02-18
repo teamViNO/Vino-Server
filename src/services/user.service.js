@@ -131,7 +131,8 @@ export const joinVideoAlarm=async(data,user)=>{
       'type': 'video',
       'content': data.content,
       'status':user.status,
-      'video_id':user.videoId
+      'video_id':user.videoId,
+      'title':data.title
     });
     console.log('데이터',joinVideoAlarmData);
     return joinAlarmResponseDto(joinVideoAlarmData);

@@ -84,7 +84,7 @@ export const addVideoAlarm=async(req)=>{
   try {
     const conn =await pool.getConnection();
     console.log(req);
-    const videoAlarm = await pool.query(insertVideoAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.status,req.user_id,req.video_id]);
+    const videoAlarm = await pool.query(insertVideoAlarmSql,[req.is_confirm,req.created_at,req.updated_at,req.type,req.content,req.status,req.user_id,req.video_id,req.title]);
     conn.release();
     return videoAlarm[0].insertId;
   } catch (error) {
