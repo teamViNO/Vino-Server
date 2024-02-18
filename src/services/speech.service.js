@@ -14,7 +14,6 @@ export const recognizeFromObjectStorage = async (objectStorageDataKey, language 
         dataKey: objectStorageDataKey, // 인식을 원하는 파일의 ObjectStorage 경로에 접근하기 위한 Key
         language,
         completion: 'async',
-        callback: 'http://backend.vi-no.site/video/result', // 결과를 받을 콜백 URL, 필요하다면 제공
         resultToObs: true, // 결과를 Object Storage에 저장할지 여부
         noiseFiltering: true, // 노이즈 필터링 적용 여부
         wordAlignment: true, // 단어 정렬 정보 포함 여부
