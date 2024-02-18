@@ -14,7 +14,8 @@ export const connectSubheading="insert into subheading(name, start_time, end_tim
 export const connectSummary="insert into summary(content, video_id, version_id) VALUES (?,?,?);";
 export const connectTag="INSERT INTO tag(name) VALUES (?);";
 export const connectVideoTag="insert into video_tag(video_id, tag_id, version_id) VALUES (?,?,?);";
-
+export const findTagSql="select EXISTS (select * from tag where name=? limit 1) as success;"
+export const getTagIdSql="select id from tag where name=?;";
 //video delete 관련 sql
 
 export const deleteVideoTagSql="delete from video_tag where video_id=?;"

@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql, addCopyRevisonVideoSql} from "../models/video.sql.js"
+import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql, addCopyRevisonVideoSql, findTagSql, getTagIdSql} from "../models/video.sql.js"
 import {getSimpleVideoWithVideoSql,updateCategorySql,getUnReadDummyVideoSql,getCategoryNameSql,getRecentVideoSql,insertDummyVideoSql,removeSummarySql} from "../models/video.sql.js";
 import {addCopyVideoSql,copySubheadingSql,copySummarySql,copyTagSql} from "../models/video.sql.js"
 
@@ -201,9 +201,17 @@ export const setSummary=async (summary)=>{
 export const setTag=async (tag)=>{
     try{
         const conn = await pool.getConnection();
-        const tagData=await pool.query(connectTag,[tag.name]);
-        const tagVideoOriginal = await pool.query(connectVideoTag,[tag.video_id,tagData[0].insertId,'original']);
-        const tagVideoRevision = await pool.query(connectVideoTag,[tag.video_id,tagData[0].insertId,'revision']);
+        const tagFind=await pool.query(findTagSql,[tag.name]);
+        if(tagFind){
+            const tagId=await pool.query(getTagIdSql,[tag.name]);
+            console.log("태그",tagId[0][0]);
+            const tagVideoOriginal = await pool.query(connectVideoTag,[tag.video_id,tagId[0][0].id,'original']);
+            const tagVideoRevision = await pool.query(connectVideoTag,[tag.video_id,tagId[0][0].id,'revision']);
+        }else{
+            const tagData=await pool.query(connectTag,[tag.name]);
+            const tagVideoOriginal = await pool.query(connectVideoTag,[tag.video_id,tagData[0].insertId,'original']);
+            const tagVideoRevision = await pool.query(connectVideoTag,[tag.video_id,tagData[0].insertId,'revision']);
+        }
         conn.release();
     }catch(err){
         console.error(err);
