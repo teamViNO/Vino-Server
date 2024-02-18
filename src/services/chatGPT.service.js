@@ -1,6 +1,7 @@
 // src/services/chatGPTService.js
 import axios from 'axios';
 import dotenv from 'dotenv';
+import OpenAI from 'openai';
 
 dotenv.config();
 
@@ -45,7 +46,7 @@ export const chatGPTCall = async (scriptText) => {
     
     const prompt = `Run this script from step 1 , Make sure to fulfill the condition given to the system promport. original script: ${scriptText}\n ` ;
     
-
+    console.log("프롬프트",prompt);
     const response = await axios.post(
       OPENAI_API_URL,
       {
@@ -205,3 +206,21 @@ export const getSummary = async (scriptText) => {
     throw error;
   }
 };
+
+export const fineTunningData = async (script)=>{
+  try {
+    
+    const openai = new OpenAI({
+      apiKey: OPENAI_API_KEY
+    })
+    
+    const result= await openai.completions.create({
+      prompt: script,
+      model:"ft:davinci-002:personal::8sC2Qcki",
+      max_tokens :8000
+    })
+    console.log("스크립트",result);
+  } catch (error) {
+    console.log(error);
+  }
+}
