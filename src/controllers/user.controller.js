@@ -87,7 +87,7 @@ export const createVideoAlarm=async(req,res)=>{
   const data={
     'userId':req.userId,
     'status':req.params.status,
-    'videoId':req.params.videoId
+    'videoId':req.params.videoId,
   }
   console.log("요청정보",req.body);
   res.send(response(status.SUCCESS,await joinVideoAlarm(req.body,data)))

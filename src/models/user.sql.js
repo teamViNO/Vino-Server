@@ -1,4 +1,4 @@
-export const insertVideoAlarmSql='insert into alarm(is_confirm, created_at, updated_at, type, content, state, user_id, video_id) values(?,?,?,?,?,?,?,?);';
+export const insertVideoAlarmSql='insert into alarm(is_confirm, created_at, updated_at, type, content, state, user_id, video_id,title) values(?,?,?,?,?,?,?,?,?);';
 
 export const insertNoticeAlarmSql='insert into alarm(is_confirm, created_at, updated_at, type, content,  user_id,title) values(?,?,?,?,?,?,?);';
 
