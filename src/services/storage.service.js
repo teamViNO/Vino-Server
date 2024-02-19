@@ -113,3 +113,19 @@ export const getScriptFileName = async (bucketName, videoId) => {
         throw error;
     }
 };
+
+// S3에서 파일 삭제
+export const deleteFileFromStorage = async (bucketName, fileName) => {
+    const params = {
+        Bucket: bucketName,
+        Key: fileName
+    };
+
+    try {
+        await s3.deleteObject(params).promise();
+        console.log(`File deleted successfully: ${fileName}`);
+    } catch (error) {
+        console.error('Error in deleting file from storage:', error);
+        throw error;
+    }
+};
