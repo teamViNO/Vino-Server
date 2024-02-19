@@ -7,14 +7,14 @@ export const sendVerificationCode= async (req, res)=>{
   let codecheck;
   try {
     const { phone_number } = req.body;
-    const checkPhone = await findPhoneNumber(phone_number);
-    if (checkPhone) {
-      return res.status(400).json({
-        success: false,
-        code: 'DUPLICATE_PHONE_NUMBER',
-        message: '중복된 전화번호입니다.',
-      });
-    }
+    // const checkPhone = await findPhoneNumber(phone_number);
+    // if (checkPhone) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     code: 'DUPLICATE_PHONE_NUMBER',
+    //     message: '중복된 전화번호입니다.',
+    //   });
+    // }
     const messageService = new SolapiMessageService(process.env.SMS_KEY, process.env.SMS_SECRET);
 
     // 인증코드 생성
