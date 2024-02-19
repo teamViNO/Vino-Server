@@ -5,8 +5,13 @@ import { uploadFileToStorage } from '../services/storage.service.js';
 import { BaseError } from "../../config/error.js";
 import { response } from "../../config/response.js";
 import { status } from "../../config/response.status.js";
+import { deleteFileFromStorage } from '../services/storage.service.js';
 
 export const convertMP3 = async (req, res) => {
+
+    let videoId = '';
+    let uploadedFilePath = '';
+    
     try{
 
         //video Id  가져오기
@@ -14,7 +19,7 @@ export const convertMP3 = async (req, res) => {
 
         console.log("Received video URL:", videoUrl); // 로그로 확인
 
-        const videoId = await extractYouTubeId(encodeURI(videoUrl));
+        videoId = await extractYouTubeId(encodeURI(videoUrl));
 
         // Object Storage에서 해당 MP3 파일이 존재하는지 확인
         const mp3Exists = await checkFileExistsInStorage(process.env.OBJECT_STORAGE_BUCKET_NAME, `${videoId}.mp3`);
@@ -22,7 +27,7 @@ export const convertMP3 = async (req, res) => {
         //mp3가 없다면 파일 변환
         if (!mp3Exists) {
             const audioFilePath = await convertVideoToAudio(videoId); // MP3 파일 변환
-            await uploadFileToStorage(audioFilePath); // 파일 업로드 후 로컬파일 삭제
+            uploadedFilePath = await uploadFileToStorage(audioFilePath); // 파일 업로드 후 로컬파일 삭제
             
             res.send(response(status.SUCCESS,{
                 message: 'MP3 변환 완료',progress: '25' ,nextEndPoint: '/video/speech', videoId: videoId 
@@ -38,6 +43,12 @@ export const convertMP3 = async (req, res) => {
 
 
     }catch (error) {
+
+        if (uploadedFilePath) {
+            await deleteFileFromStorage(process.env.OBJECT_STORAGE_BUCKET_NAME, `${videoId}.mp3`);
+            console.log("삭제완료!");
+        }
+
         res.send(response(status.BAD_REQUEST,{
             message: 'Error in converting to MP3', error: error.toString()
         }))
