@@ -62,10 +62,9 @@ export const summary = async (req, res) => {
 
            
 
-            //유튜브 제목 요약
-            const titleData=await getTitle(videoTitle);
-            console.log("제목 요약한것",titleData);
-            const titleJsonData=JSON.parse(titleData.replace("/",""));
+            // //유튜브 제목 요약
+            // const titleData=await getTitle(videoTitle);
+            
 
             //맵핑
             const data=await timeStampMapping(gptData,timeStampData);
@@ -76,7 +75,7 @@ export const summary = async (req, res) => {
 
             //데이터 가공
             const finalData={
-                "title":titleJsonData.Title,
+                "title":videoTitle,
                 "youtube_created_at":youtubeDate,
                 "link":"https://www.youtube.com/embed/"+videoId,
                 "description":summaryData.video_name[0].name,

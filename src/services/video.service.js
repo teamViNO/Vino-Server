@@ -250,6 +250,7 @@ export const viewUnReadDummyVideo=async(data)=>{
         return getSimpleVideoResponseDTO(getVideoData,TagData);
 
     } catch (error) {
+        
         console.error(error);
         throw new BaseError(status.VIDEO_NOT_FOUND);
     }

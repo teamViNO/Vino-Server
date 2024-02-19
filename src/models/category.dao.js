@@ -98,6 +98,7 @@ export const deleteCategoryDAO = async (req) => {
         } else { // 하위 카테고리일 때
             // 비디오 삭제
             const [videoIds] = await pool.query("SELECT id FROM video WHERE user_id = ? AND category_id = ?", [req.user_id, req.category_id]);
+            console.log("비디오id",videoIds);
             for (const videoIdObj of videoIds) {
                 const dropedVideo = await dropVideo({ videoID: videoIdObj.id });
             }
