@@ -69,6 +69,8 @@ export const renameCategoryDAO = async (req) => {
 export const deleteCategoryDAO = async (req) => {
     try {
         const conn = await pool.getConnection();
+        const categoryData=[];
+       
         const [categoryInfo] = await conn.query("SELECT top_category FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
         const isNull = categoryInfo[0].top_category;
         
@@ -76,7 +78,7 @@ export const deleteCategoryDAO = async (req) => {
             
             // 하위 카테고리 id 가져오기 
             const [subCategories] = await pool.query("SELECT id FROM category WHERE user_id = ? AND top_category = ?", [req.user_id, req.category_id]);
-            
+            console.log("하위 카테고리", subCategories);
             for (const subCategory of subCategories) {
                 // 비디오 삭제
                 const [videoIds] = await pool.query("SELECT id FROM video WHERE user_id = ? AND category_id = ?", [req.user_id, subCategory.id]);
@@ -86,7 +88,10 @@ export const deleteCategoryDAO = async (req) => {
                 // 하위 카테고리 삭제
                 const dropCategory = await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, subCategory.id]);
             }
-
+            const [videoIds] = await pool.query("SELECT id FROM video WHERE user_id = ? AND category_id = ?", [req.user_id, req.category_id]);
+            for (const videoIdObj of videoIds) {
+                const dropedVideo = await dropVideo({ videoID: videoIdObj.id });
+            }
             // 상위 카테고리 삭제하기
             const dropTopCategory = await pool.query("DELETE FROM category WHERE user_id = ? AND id = ?", [req.user_id, req.category_id]);
 
@@ -107,6 +112,26 @@ export const deleteCategoryDAO = async (req) => {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }
 };
+async function findCategory(categoryData, category, user) {
+    
+    if (typeof category == "undefined" || category == null) {
+       
+        return categoryData;
+    } else {
+        categoryData.push(category);
+        const result = await getCategory(category, user);
+        for (let i = 0; i < result.length; i++) {
+            await findCategory(categoryData, result[i].id, user);
+        }
+
+        if (typeof result[0] == "undefined") {
+            await findCategory(categoryData, result[0], user);
+        }
+        
+        // 이 부분에서 루프가 끝난 후 값을 반환하도록 수정
+        return categoryData;
+    }
+}
 
 
 
