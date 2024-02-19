@@ -26,6 +26,19 @@ export const viewVideo=async(data)=>{
 }
 export const viewTag=async(data)=>{
     const getTagData=await getEntireTag(data);
+    console.log("태그데이터",getTagData.length);
+    if(getTagData.length<10){
+        const getDummyTagData= await getEntireTag({
+            "userId":41
+        });
+        const num=10-getTagData.length
+        console.log("가져와야하는 데이터 수",num);
+        console.log("가져온 더미데이터 태그",getDummyTagData);
+        for(let i=0;i<num;i++){
+            getTagData.push(getDummyTagData[i]);
+        }
+    }
+    
     return getEntireTagResponseDTO(getTagData);
 }
 export const insertSummmary=async(data)=>{
