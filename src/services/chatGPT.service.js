@@ -14,34 +14,7 @@ export const chatGPTCall = async (scriptText) => {
     // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
     `Step 1. Look at the example Json given with the original script and give it to me in json. "subheading" is to break up the paragraphs of the given script according to the subtopics. The name of subheading is the title of the subtopic, and subheading.content should keep the original script divided according to the subtopic. subheading.name and subheading.content should be different. Add the contents in subheading together and we need to divide them so that the original script comes out. This subheading should be able to be at least 1 to highest 10 and contain all of the divided scripts. "tag" is the keyword for the overall scripts. Please indicate at least 2 to 5. The result should be in Korean. You need to have the above conditions and give them to the Json example below
-    {
-    
-    "subheading": [
-    {
-    "name": "Subtitle 1",
-    "start_time": "script1 start time,"
-    "end_time": "script 1 end time",
-    "content": "script 1"
-    },{
-    "name": "Subtitle 2",
-    "start_time": "script2 start time,"
-    "end_time": "script 2 end time",
-    "content": "script 2"
-    }
-    
-    ],
-    "tag": [
-    {
-    "name": "Tag 1"
-    },
-    {
-    "name": "Tag 2"
-    },
-    {
-    "name": "Tag 3"
-    }
-    ]
-    }
+    {"subheading": [{"name": "Subtitle 1","start_time": "script1 start time,""end_time": "script 1 end time","content": "script 1"},{"name": "Subtitle 2","start_time": "script2 start time","end_time": "script 2 end time","content": "script 2"}],"tag": [{"name": "Tag 1"},{"name": "Tag 2"},{"name": "Tag 3"}]}
 `;
     
     const prompt = `Run this script from step 1 , Make sure to fulfill the condition given to the system promport. original script: ${scriptText}\n ` ;
