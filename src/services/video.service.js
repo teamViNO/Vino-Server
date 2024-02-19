@@ -239,7 +239,9 @@ export const viewUnReadDummyVideo=async(data)=>{
         console.log("123");
         const TagData=[];
         const getVideoData=await UnReadVideoInfo(data);
-        
+        if (!(getVideoData && Array.isArray(getVideoData) && getVideoData.length >0)) {
+            return {"videos":[]};
+        }
         for(let i =0; i<getVideoData.length;i++){
             TagData.push(await getTag({
                 "videoID":getVideoData[i].id,
