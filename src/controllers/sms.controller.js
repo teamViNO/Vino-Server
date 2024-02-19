@@ -1,13 +1,22 @@
 import pkg from 'solapi';
 const {SolapiMessageService} = pkg;
-import {createCode, findCode, deleteCode} from '../models/sms.dao';
+import {createCode, findCode, deleteCode, findPhoneNumber} from '../models/sms.dao';
 import jwt from 'jsonwebtoken'
 
 export const sendVerificationCode= async (req, res)=>{
   let codecheck;
   try {
-    const messageService = new SolapiMessageService(process.env.SMS_KEY, process.env.SMS_SECRET);
     const { phone_number } = req.body;
+    const checkPhone = await findPhoneNumber(phone_number);
+    if (checkPhone) {
+      return res.status(200).json({
+        success: false,
+        code: 'DUPLICATE_PHONE_NUMBER',
+        message: '중복된 전화번호입니다.',
+      });
+    }
+    const messageService = new SolapiMessageService(process.env.SMS_KEY, process.env.SMS_SECRET);
+
     // 인증코드 생성
     const verificationCode = Math.floor(1000000 + Math.random() * 9000000); // 7자리
   

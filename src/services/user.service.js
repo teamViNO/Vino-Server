@@ -201,7 +201,7 @@ export const tempPasswordService = async (name, phone_number, email) => {
   }
 
   // 임시 비밀번호 생성 (영어 대소문자, 숫자 혼합)
-  const tempPassword = Math.random().toString(36).slice(2) + Math.random().toString(36).toUpperCase().slice(2);
+  const tempPassword = Math.random().toString(36).slice(2,8) + Math.random().toString(36).toUpperCase().slice(2, 8);
   // 임시 비밀번호로 사용자 비밀번호 변경
   await updatePassword(user.id, tempPassword);
 

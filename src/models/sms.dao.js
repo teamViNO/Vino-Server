@@ -26,3 +26,9 @@ export const deleteCode = async (id) => {
 
   return rows[0];
 }
+
+export const findPhoneNumber = async (phone_number) => {
+  const [rows] = await pool.query('SELECT * FROM user WHERE phone_number = ?', [phone_number]);
+
+  return rows[0];
+}
