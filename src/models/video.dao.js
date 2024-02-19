@@ -202,7 +202,8 @@ export const setTag=async (tag)=>{
     try{
         const conn = await pool.getConnection();
         const tagFind=await pool.query(findTagSql,[tag.name]);
-        if(tagFind){
+        console.log("태그 찾기 여부",tagFind);
+        if(tagFind===1){
             const tagId=await pool.query(getTagIdSql,[tag.name]);
             console.log("태그",tagId[0][0]);
             const tagVideoOriginal = await pool.query(connectVideoTag,[tag.video_id,tagId[0][0].id,'original']);
