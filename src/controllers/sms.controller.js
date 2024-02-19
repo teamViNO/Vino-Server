@@ -9,7 +9,7 @@ export const sendVerificationCode= async (req, res)=>{
     const { phone_number } = req.body;
     const checkPhone = await findPhoneNumber(phone_number);
     if (checkPhone) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         code: 'DUPLICATE_PHONE_NUMBER',
         message: '중복된 전화번호입니다.',
