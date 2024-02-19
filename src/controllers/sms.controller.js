@@ -39,6 +39,35 @@ export const sendVerificationCode= async (req, res)=>{
     console.log(error);}
 
 };
+// 회원가입이 아닐 때
+export const sendVerificationCode2= async (req, res)=>{
+  let codecheck;
+  try {
+    const { phone_number } = req.body;
+    const messageService = new SolapiMessageService(process.env.SMS_KEY, process.env.SMS_SECRET);
+
+    // 인증코드 생성
+    const verificationCode = Math.floor(1000000 + Math.random() * 9000000); // 7자리
+  
+    const code = await createCode(verificationCode);
+    const token = jwt.sign({ id: code.id }, process.env.JWT_SECRET); 
+    codecheck = verificationCode
+    // 단일 발송 예제
+    messageService.sendOne({
+      to: phone_number,
+      from: process.env.SMS_PHONE,
+      text: '[VI.NO] 인증 코드: ' + verificationCode,
+    }).then(res => console.log(res));
+
+    res.status(200).json({
+      success: true,
+      message: '인증 코드 전송 성공',
+      result: {token}
+    });
+  }catch (error) {
+    console.log(error);}
+
+};
 
 // 인증코드 확인
 export const checkVerificationCode= async (req, res)=>{
