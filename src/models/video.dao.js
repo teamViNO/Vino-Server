@@ -1,7 +1,7 @@
 import { pool } from "../../config/db.connect.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql, addCopyRevisonVideoSql, findTagSql, getTagIdSql} from "../models/video.sql.js"
+import {getVideoSql,getEntireVideoSql,getSubHeadingSql,getSummarySql,getCategorySql,getTagSql,insertVideoOriginSql,insertVideoRevisionSql,connectSubheading,connectSummary,connectTag,connectVideoTag,deleteVideoTagSql,deleteTagSql,deleteSubheadingSql,deleteSummarySql,deleteVideoSql,updateVideoSql,updateSummarySql,updateSubheadingSql,setTimeSql, entireTagSql, addCopyRevisonVideoSql, findTagSql, getTagIdSql, findUrlSq} from "../models/video.sql.js"
 import {getSimpleVideoWithVideoSql,updateCategorySql,getUnReadDummyVideoSql,getCategoryNameSql,getRecentVideoSql,insertDummyVideoSql,removeSummarySql} from "../models/video.sql.js";
 import {addCopyVideoSql,copySubheadingSql,copySummarySql,copyTagSql} from "../models/video.sql.js"
 
@@ -64,6 +64,17 @@ export const addCopyVideo= async(data)=>{
     } catch (error) {
         console.error(error);
         throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+export const isScript=async(url)=>{
+    try {
+        const conn =await pool.getConnection();
+        const isState=await pool.query(findUrlSq,[url]);
+
+        conn.release();
+        return isState;
+    } catch (error) {
+        
     }
 }
 export const getSimpleVideo=async (req)=>{
