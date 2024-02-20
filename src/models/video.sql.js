@@ -15,6 +15,7 @@ export const connectSummary="insert into summary(content, video_id, version_id) 
 export const connectTag="INSERT INTO tag(name) VALUES (?);";
 export const connectVideoTag="insert into video_tag(video_id, tag_id, version_id) VALUES (?,?,?);";
 export const findTagSql="select EXISTS (select * from tag where name=? limit 1) as success;"
+export const findUrlSq="select distinct id from video where link=? and user_id=41 ;"
 export const getTagIdSql="select id from tag where name=?;";
 //video delete 관련 sql
 

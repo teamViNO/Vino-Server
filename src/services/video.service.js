@@ -14,6 +14,7 @@ export const viewVideo=async(data)=>{
     const getTagData = await getTag(data);
     const setTimeData=await setReadTime(data,time);
     let categoryData={};
+    console.log("받아온 비디오정보",getVideoData[0]);
     if(getVideoData[0].category_id){
         categoryData=await getCategoryName(data.userID,getVideoData[0].category_id);
     }else{
