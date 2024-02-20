@@ -6,7 +6,9 @@ import  jwt  from "jsonwebtoken";
 
 export const vidoeSearchKeyWord= async (req,res)=>{
     try {
-        if(req.query.keywordName=" "){
+       
+        const keyword=req.query.keywordName;
+        if(keyword===" "){
             res.send(response(status.SUCCESS,await viewSearchKeyword({
                 "videos":[]
             })));
@@ -33,7 +35,7 @@ export const vidoeSearchTag = async (req, res)=>{
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
-    if(req.query.hashtagName=" "){
+    if(req.query.hashtagName===" "){
         res.send(response(status.SUCCESS,await viewSearchKeyword({
             "videos":[]
         })));
