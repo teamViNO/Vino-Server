@@ -6,6 +6,11 @@ import  jwt  from "jsonwebtoken";
 
 export const vidoeSearchKeyWord= async (req,res)=>{
     try {
+        if(req.query.keywordName=" "){
+            res.send(response(status.SUCCESS,await viewSearchKeyword({
+                "videos":[]
+            })));
+        }
         const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userId = decoded.id;
@@ -28,7 +33,11 @@ export const vidoeSearchTag = async (req, res)=>{
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.id;
-
+    if(req.query.hashtagName=" "){
+        res.send(response(status.SUCCESS,await viewSearchKeyword({
+            "videos":[]
+        })));
+    }
     console.log("태그 검색을 요청하셨습니다");
     const data={
         "userId":req.userId,
