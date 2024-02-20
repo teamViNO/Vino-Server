@@ -13,7 +13,7 @@ export const getSearchKeywordResponseDTO = async (video) => {
         
         for (let j = 0; j < video.length; j++) {
             for (let i = 0; i < video[j].length; i++) {
-                console.log("초기단계", videoData[i - 1]?.id);
+                
                 
                 // 이미 추가된 id인지 체크
                 if (!addedIds.includes(video[j][i].id)) {
@@ -33,7 +33,7 @@ export const getSearchKeywordResponseDTO = async (video) => {
             }
         }
         for(let i =0; i<videoData.length;i++){
-            console.log(i+"번째 영상 ",videoData[i].id);
+            
             tagData.push(await getTag({
                 "videoID":videoData[i].id,
                 "version":"revision"
