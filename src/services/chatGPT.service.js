@@ -22,7 +22,7 @@ export const chatGPTCall = async (scriptText) => {
     const response = await axios.post(
       OPENAI_API_URL,
       {
-        model: "gpt-3.5-turbo-16k",
+        model: "gpt-4o",
         messages: [
           {"role": "system", "content": system_prompt},
           {"role": "user", "content": prompt}
@@ -76,7 +76,7 @@ export const getTitle=async(title)=>{
     const response = await axios.post(
       OPENAI_API_URL,
       {
-        model: "gpt-3.5-turbo-16k",
+        model: "gpt-4o",
         messages: [
           {"role": "system", "content": system_prompt},
           {"role": "user", "content": prompt}
@@ -141,7 +141,7 @@ export const getSummary = async (scriptText) => {
     const response = await axios.post(
       OPENAI_API_URL,
       {
-        model: "gpt-3.5-turbo-16k",
+        model: "gpt-4o",
         messages: [
           {"role": "system", "content": system_prompt},
           {"role": "user", "content": prompt}
