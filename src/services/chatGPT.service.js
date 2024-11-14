@@ -13,8 +13,27 @@ export const chatGPTCall = async (scriptText) => {
   try {
     // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
-    `Step 1. Look at the example Json given with the original script and give it to me in json. "subheading" is to break up the paragraphs of the given script according to the subtopics. The name of subheading is the title of the subtopic, and subheading.content should keep the "original" script divided according to the subtopic. subheading.name and subheading.content should be different. Add the contents in subheading together and we need to divide them so that the original script comes out.(If you put together the script you split, it should be the same as the original script) This subheading should be able to be at least 1 to highest 10 and contain all of the original scripts. "tag" is the keyword for the overall scripts. Please indicate at least 2 to 5. The result should be in Korean. You need to have the above conditions and give them to the Json example below
-    {"subheading": [{"name": "Subtitle 1","content": "dividen script of original script"},{"name": "Subtitle 2","content": "dividen script of original script"}],"tag": [{"name": "Tag 1"},{"name": "Tag 2"},{"name": "Tag 3"}]}`;
+    `Convert the given Korean script into JSON format, meeting the following requirements.1. **Structure**: The result should follow this JSON format:
+   {
+     "subheading": [
+       {
+         "name": "Subheading 1",
+         "content": "Script text matching the subheading"
+       },
+       {
+         "name": "Subheading 2",
+         "content": "Script text matching the subheading"
+       }
+     ],
+     "tag": [
+       {
+         "name": "Tag 1"
+       },
+       {
+         "name": "Tag 2"
+       }
+     ]
+   }`;
     
     const prompt = `Run this script from step 1 , Make sure to fulfill the condition given to the system promport. original script: ${scriptText}\n ` ;
     
@@ -101,43 +120,37 @@ export const getTitle=async(title)=>{
 }
 export const getSummary = async (scriptText) => {
   try {
-    // ChatGPT에 전달할 프롬프트를 구성합니다.
     const system_prompt = 
-    `Proceed with a summary of the original text. Extract the core content from the full text, the summary should contain conclusions about the content, and there should be a total of 5 summaries of the core content. video_name.name is the title of the script. There should be 1 total. The responses should come in Korean, and the format of the summary should be in the form of a closing noun. Also, make sure to give it in the form of json below
+    `Proceed with a summary of the original text. Extract the core content from the full text, and provide exactly 5 key summaries of the content in Korean. Each summary should reflect the main conclusions of the content, written in the form of a closing noun. If the script content does not exceed 5 lines, extract only one summary of the core content.
 
-    Exception: If the script content does not exceed 5 lines, extract one summary of the core content.
+Respond in the following JSON format. Note that the "Summary" field is an array with five elements, each representing one key summary, and "video_name" is a single object with the title as its value.
 
+{
+  "Summary": [
     {
-      "Summary": [
-        {
-         "content": "content"
-        },
-        {
-         "content": "content"
-        },
-        {
-         "content": "content"
-        },
-        {
-         "content": "content"
-        },
-        {
-         "content": "content"
-        }
-        ...
-      ]
-
-      "video_name": [
-        {
-          "name" : "name"
-        }
-      ]
+      "content": "First key summary"
+    },
+    {
+      "content": "Second key summary"
+    },
+    {
+      "content": "Third key summary"
+    },
+    {
+      "content": "Fourth key summary"
+    },
+    {
+      "content": "Fifth key summary"
     }
+  ],
+  "video_name": {
+    "name": "Title of the video"
+  }
+}
 `;
     
-    const prompt = `Run this script from step 1 , Make sure to fulfill the condition given to the system promport, response to korean. original script: ${scriptText}\n ` ;
+    const prompt = `Run this script from step 1 , Make sure to fulfill the condition given to the system prompt, response to Korean. original script: ${scriptText}\n `;
     
-
     const response = await axios.post(
       OPENAI_API_URL,
       {
@@ -155,24 +168,10 @@ export const getSummary = async (scriptText) => {
       }
     );
 
-    // API 응답에서 생성된 텍스트 추출
     const generatedText = response.data.choices[0].message.content.trim();
-
-    // 생성된 텍스트를 JSON 객체로 변환
-    // 이 부분에서는 생성된 텍스트가 원하는 JSON 형식을 따른다고 가정합니다.
-    // 실제 구현에서는 생성된 텍스트의 형식을 확인하고, 필요에 따라 추가 처리가 필요할 수 있습니다.
-    
-    /*
-    let jsonResponse;
-    try {
-      jsonResponse = JSON.parse(generatedText);
-    } catch (error) {
-      console.error('Failed to parse generated text to JSON:', generatedText);
-      throw error;
-    }
-    */
-
-    return generatedText;
+    console.log(generatedText)
+    const cleanedText = cleanResponse(generatedText);
+    return cleanedText;
   } catch (error) {
     console.error('Error calling ChatGPT API:', error);
     throw error;
@@ -196,3 +195,37 @@ export const fineTunningData = async (script)=>{
     console.log(error);
   }
 }
+
+export const cleanResponse = (response) => {
+  // 문자열의 길이와 인덱스를 초기화합니다.
+  let index = 0;
+  const length = response.length;
+
+  // 첫 번째 '{' 문자가 나올 때까지 인덱스를 증가시킵니다.
+  while (index < length && response[index] !== '{') {
+    index++;
+  }
+
+  // 인덱스가 문자열 길이보다 작다면 '{'를 찾은 것이므로 해당 위치부터 문자열을 잘라냅니다.
+  let cleanedResponse = '';
+  if (index < length) {
+    cleanedResponse = response.slice(index);
+  } else {
+    // '{' 문자를 찾지 못한 경우 에러를 발생시킵니다.
+    throw new Error('No opening brace "{" found in the response.');
+  }
+
+  // 문자열에서 ``` 문자를 제거합니다.
+  cleanedResponse = cleanedResponse.replace(/```/g, '');
+
+  // JSON.parse로 문자열을 JSON 객체로 변환합니다.
+  let jsonResponse;
+  try {
+    jsonResponse = JSON.parse(cleanedResponse);
+  } catch (error) {
+    console.error('Failed to parse cleaned response to JSON:', cleanedResponse);
+    throw error;
+  }
+
+  return jsonResponse;
+};

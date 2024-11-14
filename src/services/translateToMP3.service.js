@@ -1,33 +1,14 @@
-import ffmpeg from 'fluent-ffmpeg';
-import ytdl from 'ytdl-core';
-import fs from 'fs';
-import path from 'path';
-import { path as FFmpegPath} from '@ffmpeg-installer/ffmpeg';
+import ytdl from '@distube/ytdl-core';
 
-// 바탕화면의 상위 폴더 경로
-const desktopPath = path.join(__dirname, '..', '..');
-
-// tempMP3 폴더 경로
-const outputPath = '/tmp';
-
-export const convertVideoToAudio = async (videoId) => {
-    return new Promise((resolve, reject) => {
-        const stream = ytdl(`http://www.youtube.com/watch?v=${videoId}`, { filter: 'audioonly' });
-        const filePath = path.join(outputPath, `${videoId}.mp3`);
-        if (!fs.existsSync(outputPath)) {
-            fs.mkdirSync(outputPath, { recursive: true });
+export const getVideoAudioStream = (videoId) => {
+    // YouTube 비디오 오디오 스트림 생성
+    return ytdl(`http://www.youtube.com/watch?v=${videoId}`, {
+        filter: 'audioonly',
+        quality: 'highestaudio',
+        requestOptions: {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'
+            }
         }
-        ffmpeg.setFfmpegPath(FFmpegPath);
-        ffmpeg(stream)
-            .audioBitrate(128) 
-            .save(filePath)
-            .on('end', () => {
-                console.log(`Download completed: ${filePath}`);
-                resolve(filePath);
-            })
-            .on('error', (err) => {
-                console.error('Error:', err);
-                reject(err);
-            });
     });
 };
