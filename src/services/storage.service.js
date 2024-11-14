@@ -36,7 +36,36 @@ export const uploadStreamToStorage = (stream, fileName) => {
             });
     });
 };
+export const readFileFromObjectStorage = async (bucketName, objectKey) => {
 
+    const params = {
+        Bucket: bucketName,
+        Key: objectKey
+    };
+
+    try {
+        const data = await s3.getObject(params).promise();
+        return JSON.parse(data.Body.toString('utf-8'));
+    } catch (error) {
+        console.error('Error in reading file from storage:', error);
+        throw error;
+    }
+};
+export const getScriptFileName = async (bucketName, videoId) => {
+    const params = {
+        Bucket: bucketName,
+        Prefix: `${process.env.OBJECT_STORAGE_BUCKET_NAME}:${videoId}.mp3`
+    };
+
+    try {
+        const data = await s3.listObjectsV2(params).promise();
+        const scriptFile = data.Contents.find(file => file.Key.endsWith('.json'));
+        return scriptFile ? scriptFile.Key : null;
+    } catch (error) {
+        console.error('Error in getting script file name:', error);
+        throw error;
+    }
+};
 // S3에서 파일 존재 여부 확인
 export const checkFileExistsInStorage = async (bucketName, fileNamePrefix) => {
     const params = {
