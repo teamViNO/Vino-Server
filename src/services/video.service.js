@@ -149,6 +149,7 @@ async function findCategory(categoryData, category, user) {
         return categoryData;
     } else {
         categoryData.push(category);
+        //해당 카테고리를 상위로 가지고 있는 하위 카테고리 찾기
         const result = await getCategory(category, user);
         for (let i = 0; i < result.length; i++) {
             await findCategory(categoryData, result[i].id, user);

@@ -1,71 +1,41 @@
-// src/services/storageService.js
 import AWS from 'aws-sdk';
-import fs from 'fs';
-import path from 'path';
-
 
 // Naver Cloud Object Storage 설정
 const endpoint = new AWS.Endpoint('https://kr.object.ncloudstorage.com');
-const region = 'kr-standard';
-const bucketName = process.env.OBJECT_STORAGE_BUCKET_NAME;
 const s3 = new AWS.S3({
     endpoint,
-    region,
+    region: 'kr-standard',
     credentials: {
         accessKeyId: process.env.OBJECT_STORAGE_ACCESS_KEY,
-        secretAccessKey: process.env.OBJECT_STORAGE_SECRET_KEY
-    }
+        secretAccessKey: process.env.OBJECT_STORAGE_SECRET_KEY,
+    },
 });
 
-// 로컬 파일을 S3에 업로드
-export const uploadFileToStorage = async (filePath) => {
-    const fileContent = fs.readFileSync(filePath);
-    const fileName = path.basename(filePath);
-
+// 오디오 스트림을 Object Storage에 직접 업로드
+export const uploadStreamToStorage = (stream, fileName) => {
     const params = {
         Bucket: process.env.OBJECT_STORAGE_BUCKET_NAME,
         Key: fileName,
         ACL: 'public-read',
-        Body: fileContent
-    };
-
-    try {
-        const { Location } = await s3.upload(params).promise();
-
-        // 업로드 성공 후 로컬 파일 삭제
-        fs.unlink(filePath, (err) => {
-            if (err) console.error('Error deleting local file:', err);
-            else console.log('Local file deleted successfully');
-        });
-
-        return Location; // S3에 업로드된 파일의 URL 반환
-    } catch (error) {
-        console.error('Error in uploading file to S3:', error);
-        throw error;
-    }
-};
-
-// S3에서 파일 다운로드
-export const downloadFileFromStorage = async (bucketName, filePath, localPath) => {
-    const params = {
-        Bucket: bucketName,
-        Key: filePath
+        Body: stream,
+        ContentType: 'audio/mpeg',
     };
 
     return new Promise((resolve, reject) => {
-        const stream = s3.getObject(params).createReadStream();
-        const fileStream = fs.createWriteStream(localPath);
-
-        stream.on('error', (error) => reject(error));
-        fileStream.on('error', (error) => reject(error));
-        fileStream.on('close', () => resolve(localPath));
-        
-        stream.pipe(fileStream);
+        s3.upload(params)
+            .on('httpUploadProgress', (progress) => {
+                console.log(`Progress: ${progress.loaded} / ${progress.total}`);
+            })
+            .send((err, data) => {
+                if (err) {
+                    console.error('Error in uploading stream to S3:', err);
+                    return reject(err);
+                }
+                console.log(`Upload completed: ${data.Location}`);
+                resolve(data.Location);
+            });
     });
 };
-
-
-//json파일 읽기
 export const readFileFromObjectStorage = async (bucketName, objectKey) => {
 
     const params = {
@@ -81,23 +51,6 @@ export const readFileFromObjectStorage = async (bucketName, objectKey) => {
         throw error;
     }
 };
-
-export const checkFileExistsInStorage = async (bucketName, fileNamePrefix) => {
-    const params = {
-        Bucket: bucketName,
-        Prefix: fileNamePrefix
-    };
-
-    try {
-        const data = await s3.listObjectsV2(params).promise();
-        return data.Contents.some(file => file.Key.startsWith(fileNamePrefix));
-    } catch (error) {
-        console.error('Error in checking file existence:', error);
-        throw error;
-    }
-};
-
-// videoId.mp3로 시작하고 .json으로 끝나는 파일 이름 가져오기
 export const getScriptFileName = async (bucketName, videoId) => {
     const params = {
         Bucket: bucketName,
@@ -113,19 +66,18 @@ export const getScriptFileName = async (bucketName, videoId) => {
         throw error;
     }
 };
-
-// S3에서 파일 삭제
-export const deleteFileFromStorage = async (bucketName, fileName) => {
+// S3에서 파일 존재 여부 확인
+export const checkFileExistsInStorage = async (bucketName, fileNamePrefix) => {
     const params = {
         Bucket: bucketName,
-        Key: fileName
+        Prefix: fileNamePrefix,
     };
 
     try {
-        await s3.deleteObject(params).promise();
-        console.log(`File deleted successfully: ${fileName}`);
+        const data = await s3.listObjectsV2(params).promise();
+        return data.Contents.some(file => file.Key.startsWith(fileNamePrefix));
     } catch (error) {
-        console.error('Error in deleting file from storage:', error);
+        console.error('Error in checking file existence:', error);
         throw error;
     }
 };

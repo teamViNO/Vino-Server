@@ -1,5 +1,5 @@
 // src/controllers/summary.controller.js
-import { fineTunningData, getSummary, getTitle } from '../services/chatGPT.service.js';
+import { cleanResponse, fineTunningData, getSummary, getTitle } from '../services/chatGPT.service.js';
 import { readFileFromObjectStorage } from '../services/storage.service.js';
 import { getScriptFileName } from '../services/storage.service.js';
 import { chatGPTCall } from '../services/chatGPT.service.js';
@@ -49,18 +49,20 @@ export const summary = async (req, res) => {
                 console.log(scriptText);
 
                 const summaryResult = await getSummary(scriptText);
-                //console.log("요약데이터",summaryResult);
+                console.log("요약데이터",summaryResult);
                 // const startSummaryIndex = summaryResult.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
                 // console.log("찾은 인덱스",startSummaryIndex);
                 // const trimmedSummaryResponse = summaryResult.substring(startSummaryIndex);
-                const summaryData=JSON.parse(summaryResult);
-                console.log("summary json 데이터",summaryData);
+                // const summaryData=JSON.parse(summaryResult);
+                console.log("summary json 데이터",summaryResult);
                 //gpt 데이터
                 const gptResponse = await chatGPTCall(scriptText);
                 console.log("gpt받아온 데이터",gptResponse);
-                const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
-                const trimmedResponse = gptResponse.substring(startIndex);
-                const gptData=JSON.parse(trimmedResponse);
+                const gptData=await cleanResponse(gptResponse);
+                console.log("가공",gptData)
+                // const startIndex = gptResponse.indexOf('{'); // 첫 번째 '{'의 인덱스 찾기
+                // const trimmedResponse = gptResponse.substring(startIndex);
+                // const gptData=JSON.parse(tempData);
 
             
 
@@ -71,7 +73,7 @@ export const summary = async (req, res) => {
                 //맵핑
                 const data=await timeStampMapping(gptData,timeStampData);
                 console.log("돌아온 데이터",data);
-                console.log(summaryData.video_name);
+                // console.log(summaryResul.video_name);
                 const tagData=await splitTag(gptData.tag);
                 
 
@@ -80,9 +82,9 @@ export const summary = async (req, res) => {
                     "title":videoTitle,
                     "youtube_created_at":youtubeDate,
                     "link":"https://www.youtube.com/embed/"+videoId,
-                    "description":summaryData.video_name[0].name,
+                    "description":summaryResult.video_name.name,
                     "subheading":data,
-                    "summary":summaryData.Summary,
+                    "summary":summaryResult.Summary,
                     "tag":tagData
                 }
                 res.send(response(status.SUCCESS,{
